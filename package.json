@@ -1,0 +1,22 @@
+{
+  "name": "koko",
+  "version": "0.0.1",
+  "description": "Yet another IRC client for me and you",
+  "author": "Jun <me@noraesae.net>",
+  "contributors": [{
+    "name": "Hyunje Alex Jun",
+    "email": "me@noraesae.net"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hachibasu/koko.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hachibasu/koko/issues"
+  },
+  "keywords": [
+    "irc",
+    "atom-shell"
+  ],
+  "license": "MIT"
+}
