@@ -1,3 +1,4 @@
+var bridge = require('../../bridge');
 var React = require('react');
 
 var ServerForm = React.createClass({
@@ -9,9 +10,12 @@ var ServerForm = React.createClass({
         <p>nickname: <input type='text' name='nickname' defaultValue='noraesae' /></p>
         <p>login name: <input type='text' name='loginName' defaultValue='noraesae' /></p>
         <p>real name: <input type='text' name='realName' defaultValue='noraesae' /></p>
-        <p><button>connect</button></p>
+        <p><button onClick={this.connect}>connect</button></p>
       </div>
     );
+  },
+  connect: function () {
+    bridge.send('connect', {ping: 'pong'});
   }
 });
 

@@ -1,4 +1,5 @@
 var app = require('app');
+var bridge = require('./bridge');
 var BrowserWindow = require('browser-window');
 
 require('crash-reporter').start();
@@ -12,8 +13,13 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   mainWindow = new BrowserWindow({width: 800, height: 600});
   mainWindow.loadUrl('file://' + __dirname + '/index.html');
-
   mainWindow.on('closed', function() {
     mainWindow = null;
+  });
+
+  bridge.initialize(mainWindow);
+  bridge.on('connect', function (data) {
+    // FIXME
+    console.log(data);
   });
 });
