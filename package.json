@@ -7,6 +7,7 @@
     "name": "Hyunje Alex Jun",
     "email": "me@noraesae.net"
   }],
+  "main": "main.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/hachibasu/koko.git"
