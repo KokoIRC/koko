@@ -1,4 +1,12 @@
-ATOM=/Applications/Atom.app/Contents/MacOS/Atom
+atom=/Applications/Atom.app/Contents/MacOS/Atom
+node_modules=./node_modules/.bin
 
-run:
-	@$(ATOM) .
+run: build
+	@$(atom) .
+
+build: clean
+	@mkdir build
+	@$(node_modules)/browserify ./frontend/index.js -o build/built.js -t reactify
+
+clean:
+	@rm -rf ./build
