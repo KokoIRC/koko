@@ -6,7 +6,7 @@ run: build
 
 build: clean
 	@mkdir build
-	@$(node_modules)/browserify ./frontend/index.js -o build/built.js -t reactify
+	@$(node_modules)/browserify ./frontend/js/app.js -o build/built.js -t reactify
 
 clean:
 	@rm -rf ./build

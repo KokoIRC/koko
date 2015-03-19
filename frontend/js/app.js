@@ -1,8 +1,9 @@
 var React = require('react');
+var ServerForm = require('./server-form');
 
 var App = React.createClass({
   render: function () {
-    return <h1>Hello!</h1>
+    return <ServerForm />;
   }
 });
 
