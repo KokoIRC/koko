@@ -28,5 +28,8 @@
     "normalize.css": "^3.0.2",
     "react": "^0.13.1",
     "reactify": "^1.1.0"
+  },
+  "devDependencies": {
+    "atom-shell": "^0.22.1"
   }
 }
