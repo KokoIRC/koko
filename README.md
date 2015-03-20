@@ -12,5 +12,14 @@ Yet another IRC client for me and you :koko:
 * Several encoding support
 * Free
 
+# Development
+
+To install deps, build and run `koko` in `atom-shell`
+
+```bash
+$ make
+$ make run
+```
+
 # License
 MIT
