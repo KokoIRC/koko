@@ -1,6 +1,7 @@
 var app = require('app');
 var bridge = require('./bridge');
 var BrowserWindow = require('browser-window');
+var irc = require('./backend/irc');
 
 require('crash-reporter').start();
 
@@ -19,7 +20,6 @@ app.on('ready', function() {
 
   bridge.initialize(mainWindow);
   bridge.on('connect', function (data) {
-    // FIXME
-    console.log(data);
+    irc.connect(data);
   });
 });
