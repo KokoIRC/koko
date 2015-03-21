@@ -1,10 +1,10 @@
 import bridge from '../common/bridge';
 import React from 'react';
 
-export default class ServerForm {
+export default class ServerForm extends React.Component {
   render() {
     return (
-      <form onSubmit={this.connect}>
+      <form onSubmit={this.connect.bind(this)}>
         <p>server: <input type='text' name='server' defaultValue='irc.freenode.net' /></p>
         <p>port: <input type='text' name='port' defaultValue='6667' /></p>
         <p>encoding: <input type='text' name='encoding' defaultValue='UTF-8' /></p>
