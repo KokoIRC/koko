@@ -12,7 +12,7 @@ dep:
 
 build: clean
 	@mkdir build
-	@$(BROWSERIFY) ./frontend/app.js -o build/built.js -t reactify --ignore ipc
+	@$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
 
 clean:
 	@rm -rf ./build

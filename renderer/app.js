@@ -1,26 +1,29 @@
-var bridge = require('../bridge');
-var IrcWindow = require('./irc-window');
-var React = require('react');
-var ServerForm = require('./server-form');
+import bridge from '../bridge';
+import IrcWindow from './irc-window';
+import React from 'react';
+import ServerForm from './server-form';
 
-var App = React.createClass({
-  getInitialState: function () {
-    return {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       connected: false,
       connectionData: {}
     };
-  },
-  componentDidMount: function () {
+  }
+
+  componentDidMount() {
     var that = this;
     bridge.on('connected', function (data) {
       that.setState({connected: true, connectionData: data});
     });
-  },
-  render: function () {
+  }
+
+  render() {
     return this.state.connected ?
       <IrcWindow data={this.state.connectionData} /> :
       <ServerForm />;
   }
-});
+};
 
 React.render(<App />, document.getElementById('app'));

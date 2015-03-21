@@ -23,11 +23,12 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "babel": "^4.7.16",
+    "babelify": "^5.0.4",
     "browserify": "^9.0.3",
     "irc": "git://github.com/hachibasu/irc",
     "normalize.css": "^3.0.2",
-    "react": "^0.13.1",
-    "reactify": "^1.1.0"
+    "react": "^0.13.1"
   },
   "devDependencies": {
     "atom-shell": "^0.22.1"

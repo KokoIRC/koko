@@ -1,8 +1,8 @@
-var bridge = require('../bridge');
-var React = require('react');
+import bridge from '../bridge';
+import React from 'react';
 
-var ServerForm = React.createClass({
-  render: function () {
+export default class ServerForm {
+  render() {
     return (
       <form onSubmit={this.connect}>
         <p>server: <input type='text' name='server' defaultValue='irc.freenode.net' /></p>
@@ -14,20 +14,20 @@ var ServerForm = React.createClass({
         <p><button>connect</button></p>
       </form>
     );
-  },
-  formToJSON: function () {
+  }
+
+  formToJSON() {
     var form = React.findDOMNode(this);
     var inputs = form.querySelectorAll('input[type="text"]');
     return Array.prototype.reduce.call(inputs, function (obj, input) {
       obj[input.name] = input.value;
       return obj;
     }, {});
-  },
-  connect: function (e) {
+  }
+
+  connect(e) {
     e.preventDefault();
 
     bridge.send('connect', this.formToJSON());
   }
-});
-
-module.exports = ServerForm;
+}
