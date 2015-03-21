@@ -1,4 +1,4 @@
-var bridge = require('../../bridge');
+var bridge = require('../bridge');
 var React = require('react');
 
 var ServerForm = React.createClass({
