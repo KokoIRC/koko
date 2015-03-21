@@ -12,12 +12,12 @@ export default class IrcWindow extends React.Component {
   }
 
   setWindowTitle(title) {
-    document.getElementsByTagName('title')[0].innerText =
-      'koko - ' + title;
+    let titleTag = document.getElementsByTagName('title')[0];
+    titleTag.innerText = `koko - ${title}`;
   }
 
   render() {
-    var data = this.props.data;
+    let data = this.props.data;
 
     this.setWindowTitle(data.server);
 

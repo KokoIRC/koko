@@ -7,7 +7,7 @@ import * as irc from './irc';
 export function run(mainUrl) {
   crashReporter.start();
 
-  var mainWindow = null;
+  let mainWindow = null;
 
   app.on('window-all-closed', function() {
     app.quit();

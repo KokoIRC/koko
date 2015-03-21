@@ -23,7 +23,7 @@ export default {
   on(eventName, handler) {
     ipc.on(eventName, function (argOrEvent, maybeArg) {
       // get arg from both browser and renderer
-      var arg = typeof argOrEvent === 'string' ? argOrEvent : maybeArg;
+      let arg = typeof argOrEvent === 'string' ? argOrEvent : maybeArg;
       handler(JSON.parse(arg));
     });
   },

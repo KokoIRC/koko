@@ -7,7 +7,7 @@ export default class IrcChannelBar extends React.Component {
   }
 
   render() {
-    var channelElements = this.props.channels.map(
+    let channelElements = this.props.channels.map(
       channel => <li>{channel.name}</li>);
 
     return (

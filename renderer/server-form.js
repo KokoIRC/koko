@@ -17,8 +17,8 @@ export default class ServerForm extends React.Component {
   }
 
   formToJSON() {
-    var form = React.findDOMNode(this);
-    var inputs = form.querySelectorAll('input[type="text"]');
+    let form = React.findDOMNode(this);
+    let inputs = form.querySelectorAll('input[type="text"]');
     return Array.prototype.reduce.call(inputs, function (obj, input) {
       obj[input.name] = input.value;
       return obj;

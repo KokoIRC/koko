@@ -13,10 +13,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    var that = this;
     bridge.on('connected', function (data) {
-      that.setState({connected: true, connectionData: data});
-    });
+      this.setState({connected: true, connectionData: data});
+    }.bind(this));
   }
 
   render() {

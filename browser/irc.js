@@ -2,7 +2,7 @@ import bridge from '../common/bridge';
 import {Client} from 'irc';
 
 export function connect(data) {
-  var client = new Client(data.server, data.nickname, {
+  let client = new Client(data.server, data.nickname, {
     userName: data.username,
     realName: data.realname,
     port: data.port,
