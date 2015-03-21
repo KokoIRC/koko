@@ -1,4 +1,4 @@
-import bridge from '../bridge';
+import bridge from '../common/bridge';
 import React from 'react';
 
 export default class IrcChannelBar extends React.Component {

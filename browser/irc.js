@@ -1,7 +1,7 @@
-var bridge = require('../bridge');
-var Client = require('irc').Client;
+import bridge from '../common/bridge';
+import {Client} from 'irc';
 
-exports.connect = function (data) {
+export function connect(data) {
   var client = new Client(data.server, data.nickname, {
     userName: data.username,
     realName: data.realname,
@@ -14,4 +14,4 @@ exports.connect = function (data) {
     server: data.server,
     nickname: data.nickname,
   }));
-};
+}

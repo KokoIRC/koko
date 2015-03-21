@@ -1,4 +1,4 @@
-import bridge from '../bridge';
+import bridge from '../common/bridge';
 import Channels from './lib/channels';
 import IrcChannelBar from './irc-channel-bar';
 import React from 'react';

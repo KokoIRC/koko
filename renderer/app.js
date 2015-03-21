@@ -1,4 +1,4 @@
-import bridge from '../bridge';
+import bridge from '../common/bridge';
 import IrcWindow from './irc-window';
 import React from 'react';
 import ServerForm from './server-form';

@@ -1,6 +1,7 @@
-NODE_MODULES=./node_modules/.bin
-ATOM=$(NODE_MODULES)/atom-shell
-BROWSERIFY=$(NODE_MODULES)/browserify
+NODE_BIN=./node_modules/.bin
+ATOM=$(NODE_BIN)/atom-shell
+BROWSERIFY=$(NODE_BIN)/browserify
+BABEL=$(NODE_BIN)/babel
 
 all: dep build
 
@@ -12,7 +13,12 @@ dep:
 
 build: clean
 	@mkdir build
+	@mkdir build/browser
+	# build renderer scripts
 	@$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
+	# build browser scripts
+	@$(BABEL) ./browser/*.js -d build
+	@$(BABEL) ./common/*.js -d build
 
 clean:
 	@rm -rf ./build
