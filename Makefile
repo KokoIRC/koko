@@ -15,10 +15,10 @@ build: clean
 	@mkdir build
 	@mkdir build/browser
 	# build renderer scripts
-	@$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
+	$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
 	# build browser scripts
-	@$(BABEL) ./browser/*.js -d build
-	@$(BABEL) ./common/*.js -d build
+	$(BABEL) ./browser/*.js -d build
+	$(BABEL) ./common/*.js -d build
 
 clean:
 	@rm -rf ./build
