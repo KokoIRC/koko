@@ -14,7 +14,7 @@ export default class IrcWindow extends React.Component {
   componentDidMount() {
     bridge.on('message', function (data) {
       this.setState({
-        channels: this.state.channels.to(data.channel).send(data.nick, data.text)
+        channels: this.state.channels.to(data.to).send(data.nick, data.text)
       });
     }.bind(this));
   }

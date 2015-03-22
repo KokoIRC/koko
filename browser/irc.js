@@ -1,9 +1,10 @@
 import bridge from '../common/bridge';
 import {Client} from 'irc';
 
-function sendRootMessage(text) {
+function sendRootMessage(text, nick) {
   bridge.send('message', {
-    channel: '~',
+    to: '~',
+    nick,
     text,
   });
 }
@@ -29,12 +30,7 @@ export function connect(data) {
   });
 
   client.on('notice', function (nick, to, text) {
-    if (typeof nick === 'undefined' || nick === 'NickServ') {
-      sendRootMessage(text);
-    } else {
-      // FIXME
-      console.log(nick, to, text);
-    }
+    sendRootMessage(text, nick);
   });
 
   client.on('ctcp', function (from, to, text, type) {
