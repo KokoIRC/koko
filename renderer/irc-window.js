@@ -1,5 +1,5 @@
 import bridge from '../common/bridge';
-import Channels from './lib/channels';
+import Buffers from './lib/buffers';
 import IrcChannelBar from './irc-channel-bar';
 import React from 'react';
 
@@ -7,14 +7,14 @@ export default class IrcWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      channels: new Channels('~'),
+      buffers: new Buffers('~'),
     };
   }
 
   componentDidMount() {
     bridge.on('message', function (data) {
       this.setState({
-        channels: this.state.channels.to(data.to).send(data.nick, data.text)
+        buffers: this.state.buffers.to(data.to).send(data.nick, data.text)
       });
     }.bind(this));
   }
@@ -31,7 +31,7 @@ export default class IrcWindow extends React.Component {
 
     return (
       <div>
-        <IrcChannelBar channels={this.state.channels} />
+        <IrcChannelBar buffers={this.state.buffers} />
         <div>{JSON.stringify(connectionData)}</div>
       </div>
     );

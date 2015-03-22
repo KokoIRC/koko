@@ -1,13 +1,13 @@
-export default class Channels {
+export default class Buffers {
   constructor(rootChannelName) {
-    this._channels = [{name: rootChannelName, current: true}];
+    this._buffers = [{name: rootChannelName, current: true}];
   }
 
   map(func) {
-    return this._channels.map(func);
+    return this._buffers.map(func);
   }
 
-  _channelOperations(target) {
+  _bufferOps(target) {
     return {
       send: function (nick, text) {
         // FIXME
@@ -18,15 +18,15 @@ export default class Channels {
   }
 
   to(name) {
-    var target = this._channels.filter(c => (c.name === name))[0];
+    var target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {
       target = {
         name,
         current: false,
       };
-      this._channels.push(target);
+      this._buffers.push(target);
     }
 
-    return this._channelOperations(target);
+    return this._bufferOps(target);
   }
 }
