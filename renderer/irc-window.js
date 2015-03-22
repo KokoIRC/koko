@@ -7,16 +7,11 @@ export default class IrcWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      connectionData: {},
       channels: new Channels('~'),
     };
   }
 
   componentDidMount() {
-    bridge.on('connected', function (data) {
-      this.setState({connectionData: data});
-    }.bind(this));
-
     bridge.on('message', function (data) {
       this.setState({
         channels: this.state.channels.to(data.channel).send(data.nick, data.text)

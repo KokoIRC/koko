@@ -20,10 +20,7 @@ export function connect(data) {
   client.connect();
 
   client.on('registered', function (message) {
-    bridge.send('connected', {
-      server: data.server,
-      nickname: data.nickname,
-    });
+    bridge.send('connected', {});
   });
 
   client.on('message', function (nick, to, text) {
