@@ -12,16 +12,14 @@ class App extends React.Component {
     };
   }
 
-  componentDidMount() {
-    bridge.on('connected', function (data) {
-      this.setState({connected: true, connectionData: data});
-    }.bind(this));
+  connect(data) {
+    this.setState({connected: true, connectionData: data});
   }
 
   render() {
     return this.state.connected ?
-      <IrcWindow data={this.state.connectionData} /> :
-      <ServerForm />;
+      <IrcWindow connectionData={this.state.connectionData} /> :
+      <ServerForm connect={this.connect.bind(this)} />;
   }
 };
 
