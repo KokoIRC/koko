@@ -17,7 +17,7 @@ export default class BufferView extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id='buffer-view'>
         <ul>
           {this.current().logs.map(this.logElement)}
         </ul>

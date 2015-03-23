@@ -7,11 +7,11 @@ export default class TabNav extends React.Component {
   }
 
   render() {
-    let tabs = this.props.buffers.map(
-      buffer => <li>{buffer.name}</li>);
+    let tabs = this.props.buffers.map(buffer =>
+      <li className={buffer.current() ? 'current' : ''}>{buffer.name}</li>);
 
     return (
-      <div>
+      <div id='tab-nav'>
         <ul>{tabs}</ul>
       </div>
     );
