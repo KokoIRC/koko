@@ -1,5 +1,6 @@
 import bridge from '../common/bridge';
 import Buffers from './lib/buffers';
+import IrcBuffer from './irc-buffer';
 import IrcChannelBar from './irc-channel-bar';
 import React from 'react';
 
@@ -32,7 +33,7 @@ export default class IrcWindow extends React.Component {
     return (
       <div>
         <IrcChannelBar buffers={this.state.buffers} />
-        <div>{JSON.stringify(connectionData)}</div>
+        <IrcBuffer buffers={this.state.buffers} />
       </div>
     );
   }

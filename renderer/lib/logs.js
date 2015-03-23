@@ -21,4 +21,8 @@ export default class Logs {
     }
     this._logs.push(new Log(nick, text));
   }
+
+  map(func) {
+    return this._logs.map(func);
+  }
 }

@@ -5,10 +5,6 @@ export default class Buffers {
     this._buffers = [{name: rootChannelName, current: true, logs: new Logs()}];
   }
 
-  map(func) {
-    return this._buffers.map(func);
-  }
-
   _bufferOps(target) {
     return {
       send: function (nick, text) {
@@ -29,5 +25,13 @@ export default class Buffers {
     }
 
     return this._bufferOps(target);
+  }
+
+  current() {
+    return this._buffers.filter(c => c.current)[0];
+  }
+
+  map(func) {
+    return this._buffers.map(func);
   }
 }

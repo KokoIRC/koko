@@ -7,12 +7,12 @@ export default class IrcChannelBar extends React.Component {
   }
 
   render() {
-    let channelElements = this.props.channels.map(
-      channel => <li>{channel.name}</li>);
+    let tabs = this.props.buffers.map(
+      buffer => <li>{buffer.name}</li>);
 
     return (
       <div>
-        <ul>{channelElements}</ul>
+        <ul>{tabs}</ul>
       </div>
     );
   }
