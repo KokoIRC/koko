@@ -1,7 +1,7 @@
 import bridge from '../common/bridge';
 import React from 'react';
 
-export default class IrcChannelBar extends React.Component {
+export default class TabNav extends React.Component {
   constructor(props) {
     super(props);
   }

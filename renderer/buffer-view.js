@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class IrcBuffer extends React.Component {
+export default class BufferView extends React.Component {
   current() {
     return this.props.buffers.current();
   }
