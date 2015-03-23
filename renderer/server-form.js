@@ -28,7 +28,7 @@ export default class ServerForm extends React.Component {
   connect(e) {
     e.preventDefault();
 
-    var data = this.formToJSON();
+    let data = this.formToJSON();
     this.props.connect(data);
     bridge.send('connect', data);
   }
