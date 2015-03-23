@@ -1,6 +1,7 @@
 import bridge from '../common/bridge';
 import Buffers from './lib/buffers';
 import BufferView from './buffer-view';
+import InputBox from './input-box';
 import TabNav from './tab-nav';
 import React from 'react';
 
@@ -34,6 +35,7 @@ export default class IrcWindow extends React.Component {
       <div>
         <TabNav buffers={this.state.buffers} />
         <BufferView buffers={this.state.buffers} />
+        <InputBox />
       </div>
     );
   }
