@@ -18,7 +18,6 @@ export default class ModeManager {
   setMode(mode) {
     let previous = this._mode;
     this._mode = mode;
-    console.log(previous, mode);
     setTimeout(this._onChange.bind(null, mode, previous), 0);
   }
 
