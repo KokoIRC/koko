@@ -46,7 +46,7 @@ export default class IrcWindow extends React.Component {
 
   initializeModeManger() {
     window.addEventListener('keydown', function (e) {
-      var currentMode = this.modeManager.current();
+      let currentMode = this.modeManager.current();
       if (currentMode === Mode.NORMAL) {
         if (e.which === 73 && !e.shiftKey) { // 'i'
           this.setMode(Mode.INSERT);
