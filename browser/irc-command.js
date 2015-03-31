@@ -1,6 +1,6 @@
 const commands = {
   'join': ['channel'],
-  'part': ['channel', 'message?'],
+  'part': ['channel', '?message'],
   'ctcp': ['target', 'type', 'text'],
   'action': ['target', 'message'],
   'whois': ['nick'],
@@ -9,11 +9,8 @@ const commands = {
 
 export const CommandParser = {
   validateArgs(info, args) {
-    if (info.length !== args.length &&
-        info.filter(s => s[s.length - 1] === '?').length !== args.length) {
-      return false;
-    }
-    return true;
+    return info.length === args.length ||
+           info.filter(s => s.charAt(0) !== '?').length === args.length;
   },
   processArgs(commandName, args) {
     if (commandName === 'join' || commandName === 'part') {
@@ -37,7 +34,7 @@ export const CommandParser = {
       args = this.processArgs(commandName, args);
       return {valid: true, name: commandName, args: args};
     } else {
-      return {valid: false, errMsg: 'Invalid command arguments: ' + commandInfo};
+      return {valid: false, errMsg: `Invalid command arguments: [${commandInfo}]`};
     }
   },
   info(commandName) {
