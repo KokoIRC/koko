@@ -9,8 +9,8 @@ export default class ServerForm extends React.Component {
         <p>port: <input type='text' name='port' defaultValue='6667' /></p>
         <p>encoding: <input type='text' name='encoding' defaultValue='UTF-8' /></p>
         <p>nickname: <input type='text' name='nick' defaultValue='noraesae' /></p>
-        <p>login name: <input type='text' name='loginName' defaultValue='noraesae' /></p>
-        <p>real name: <input type='text' name='realName' defaultValue='noraesae' /></p>
+        <p>user name: <input type='text' name='username' defaultValue='noraesae' /></p>
+        <p>real name: <input type='text' name='realname' defaultValue='noraesae' /></p>
         <p><button>connect</button></p>
       </form>
     );
