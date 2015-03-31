@@ -26,7 +26,7 @@ export default class IrcWindow extends React.Component {
       this.state.buffers.send(data.to, data.nick, data.text)));
     bridge.on('join', this.setBuffers(data =>
       this.state.buffers.join(data.channel, data.nick, data.message,
-                              data.nick === this.props.connectionData.nickname))); // FIXME
+                              data.nick === this.props.connectionData.nick))); // FIXME
   }
 
   setWindowTitle(title) {

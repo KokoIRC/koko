@@ -8,7 +8,7 @@ export default class ServerForm extends React.Component {
         <p>server: <input type='text' name='server' defaultValue='irc.freenode.net' /></p>
         <p>port: <input type='text' name='port' defaultValue='6667' /></p>
         <p>encoding: <input type='text' name='encoding' defaultValue='UTF-8' /></p>
-        <p>nickname: <input type='text' name='nickname' defaultValue='noraesae' /></p>
+        <p>nickname: <input type='text' name='nick' defaultValue='noraesae' /></p>
         <p>login name: <input type='text' name='loginName' defaultValue='noraesae' /></p>
         <p>real name: <input type='text' name='realName' defaultValue='noraesae' /></p>
         <p><button>connect</button></p>

@@ -11,7 +11,7 @@ function sendRootMessage(text, nick) {
 }
 
 export function connect(data) {
-  let client = new Client(data.server, data.nickname, {
+  let client = new Client(data.server, data.nick, {
     userName: data.username,
     realName: data.realname,
     port: data.port,
