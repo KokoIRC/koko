@@ -1,3 +1,34 @@
+@import (reference) "common";
+
 #buffer-view {
   padding: 20px 0 25px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+
+  ul {
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 2px 4px;
+      font-size: 14px;
+
+      .info {
+        .nick {
+          font-size: 16px;
+          margin-right: 6px;
+          font-weight: bold;
+        }
+        .datetime {
+          color: @gray;
+          font-size: 12px;
+        }
+      }
+      .text {
+        padding: 2px 5px;
+        color: @lightblack;
+      }
+    }
+  }
 }
