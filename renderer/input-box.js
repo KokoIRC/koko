@@ -29,10 +29,11 @@ export default class InputBox extends React.Component {
   submit(e) {
     e.preventDefault();
     let input = React.findDOMNode(this).querySelector('input');
-    bridge.send('message', input.value);
+
+    bridge.send(Mode.toString(this.props.mode), {raw: input.value});
     input.value = '';
 
-    if (this.props.mode !== Mode.INSERT) {
+    if (this.props.mode !== Mode.MESSAGE) {
       this.props.setMode(Mode.NORMAL);
     }
   }

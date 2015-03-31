@@ -1,8 +1,22 @@
 export const Mode = {
   NORMAL: 0,
-  INSERT: 1,
+  MESSAGE: 1,
   SEARCH: 2,
   COMMAND: 3,
+  toString(mode) {
+    switch (mode) {
+      case Mode.NORMAL:
+        return 'normal';
+      case Mode.MESSAGE:
+        return 'message';
+      case Mode.SEARCH:
+        return 'search';
+      case Mode.COMMAND:
+        return 'command';
+      default:
+        return null;
+    }
+  }
 };
 
 export default class ModeManager {
@@ -32,13 +46,13 @@ export default class ModeManager {
       let currentMode = this.current();
       if (currentMode === Mode.NORMAL) {
         if (e.which === 73 && !e.shiftKey) { // 'i'
-          this.setMode(Mode.INSERT);
+          this.setMode(Mode.MESSAGE);
         } else if (e.which === 191 && !e.shiftKey) { // '/'
           this.setMode(Mode.SEARCH);
         } else if (e.which === 186 && e.shiftKey) { // ':'
           this.setMode(Mode.COMMAND);
         }
-      } else if (currentMode === Mode.INSERT) {
+      } else if (currentMode === Mode.MESSAGE) {
         if (e.which === 27) { // 'esc'
           this.setMode(Mode.NORMAL);
         }
@@ -46,7 +60,7 @@ export default class ModeManager {
         if (e.which === 27) { // 'esc'
           this.setMode(Mode.NORMAL);
         } else if (e.which === 73 && !e.shiftKey) { // 'i'
-          this.setMode(Mode.INSERT);
+          this.setMode(Mode.MESSAGE);
         }
       } else if (currentMode === Mode.COMMAND) {
         if (e.which === 27) { // 'esc'

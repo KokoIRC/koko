@@ -20,6 +20,10 @@ class App extends React.Component {
     this.modeManager.onChange(function (to) {
       this.setState({mode: to});
     }.bind(this));
+    bridge.on('error', function (err) {
+      // FIXME
+      console.error(JSON.stringify(err));
+    });
   }
 
   connect(data) {

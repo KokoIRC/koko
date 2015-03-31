@@ -12,12 +12,21 @@ export default class IrcWindow extends React.Component {
     };
   }
 
-  componentDidMount() {
-    bridge.on('message', function (data) {
+  setBuffers(func) {
+    return function (data) {
+      func(data);
       this.setState({
-        buffers: this.state.buffers.to(data.to).send(data.nick, data.text)
+        buffers: this.state.buffers
       });
-    }.bind(this));
+    }.bind(this);
+  }
+
+  componentDidMount() {
+    bridge.on('message', this.setBuffers(data =>
+      this.state.buffers.send(data.to, data.nick, data.text)));
+    bridge.on('join', this.setBuffers(data =>
+      this.state.buffers.join(data.channel, data.nick, data.message,
+                              data.nick === this.props.connectionData.nickname))); // FIXME
   }
 
   setWindowTitle(title) {

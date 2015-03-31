@@ -1,5 +1,6 @@
 import bridge from '../common/bridge';
 import {Client} from 'irc';
+import {CommandParser} from './irc-command';
 
 function sendRootMessage(text, nick) {
   bridge.send('message', {
@@ -24,6 +25,14 @@ export function connect(data) {
     bridge.send('connected', {});
   });
 
+  client.on('join', function (channel, nick, message) {
+    bridge.send('join', {
+      channel,
+      nick,
+      message,
+    });
+  });
+
   client.on('message', function (nick, to, text) {
     // FIXME
     console.log(nick, to, text);
@@ -39,4 +48,17 @@ export function connect(data) {
   });
 
   client.on('motd', sendRootMessage);
+
+  client.on('error', function (message) {
+    bridge.send('error', {message});
+  });
+
+  bridge.on('command', function (data) {
+    let command = CommandParser.parse(data.raw);
+    if (command.valid) {
+      client[command.name].apply(client, command.args);
+    } else {
+      bridge.send('error', {message: command.errMsg});
+    }
+  });
 }

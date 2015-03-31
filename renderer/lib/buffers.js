@@ -23,23 +23,27 @@ export default class Buffers {
     this._buffers = [rootBuf];
   }
 
-  _bufferOps(target) {
-    return {
-      send: function (nick, text) {
-        target.logs.append(nick, text);
-        return this;
-      }.bind(this)
-    }
+  send(to, nick, text) {
+    let target = this.target(to);
+    target.logs.say(nick, text);
   }
 
-  to(name) {
+  join(channel, nick, message, isMe=false) {
+    let target = this.target(channel);
+    if (isMe) {
+      this.setCurrent(channel);
+    }
+    target.logs.join(nick, message);
+  }
+
+  target(name) {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {
       target = new Buf(name);
       this._buffers.push(target);
     }
 
-    return this._bufferOps(target);
+    return target;
   }
 
   setCurrent(bufName) {
@@ -49,6 +53,7 @@ export default class Buffers {
       } else {
         buffer.current(false);
       }
+      return buffer;
     });
   }
 
