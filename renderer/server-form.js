@@ -1,16 +1,27 @@
 import bridge from '../common/bridge';
 import React from 'react';
 
+class TextInput extends React.Component {
+  render() {
+    return <input type='text' name={this.props.name}
+                  defaultValue={this.props.defaultValue}
+                  onKeyDown={this.keydown.bind(this)} />;
+  }
+  keydown(e) {
+    e.stopPropagation();
+  }
+}
+
 export default class ServerForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.connect.bind(this)}>
-        <p>server: <input type='text' name='server' defaultValue='irc.freenode.net' /></p>
-        <p>port: <input type='text' name='port' defaultValue='6667' /></p>
-        <p>encoding: <input type='text' name='encoding' defaultValue='UTF-8' /></p>
-        <p>nickname: <input type='text' name='nick' defaultValue='noraesae' /></p>
-        <p>user name: <input type='text' name='username' defaultValue='noraesae' /></p>
-        <p>real name: <input type='text' name='realname' defaultValue='noraesae' /></p>
+        <p>server: <TextInput name='server' defaultValue='irc.freenode.net' /></p>
+        <p>port: <TextInput name='port' defaultValue='6667' /></p>
+        <p>encoding: <TextInput name='encoding' defaultValue='UTF-8' /></p>
+        <p>nickname: <TextInput name='nick' defaultValue='noraesae' /></p>
+        <p>user name: <TextInput name='username' defaultValue='noraesae' /></p>
+        <p>real name: <TextInput name='realname' defaultValue='noraesae' /></p>
         <p><button>connect</button></p>
       </form>
     );
