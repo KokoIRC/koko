@@ -51,7 +51,7 @@ export default class IrcWindow extends React.Component {
     this.setWindowTitle(connectionData.server);
 
     return (
-      <div>
+      <div id='irc-window'>
         <TabNav buffers={this.state.buffers} />
         <BufferView buffers={this.state.buffers} />
         <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)} />

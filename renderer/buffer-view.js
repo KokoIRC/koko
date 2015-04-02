@@ -1,10 +1,22 @@
 import React from 'react';
 import moment from 'moment';
+import Ps from 'perfect-scrollbar';
+
+const followLogBuffer = 20;
 
 export default class BufferView extends React.Component {
   constructor(props) {
     super(props);
     this.isFollowingLog = true;
+    this.currentBuffer = null;
+  }
+
+  view() {
+    return React.findDOMNode(this.refs.view);
+  }
+
+  componentDidMount() {
+    Ps.initialize(this.view());
   }
 
   current() {
@@ -38,14 +50,17 @@ export default class BufferView extends React.Component {
     );
   }
 
-  componentWillUpdate() {
-    let body = document.body;
-    this.isFollowingLog = body.scrollHeight - body.scrollTop === body.clientHeight;
+  componentWillUpdate(nextProps) {
+    let view = this.view();
+    let isAtBottom = view.scrollHeight - view.clientHeight - view.scrollTop < followLogBuffer;
+    let isChanged = this.currentBuffer !== nextProps.buffers.current().name;
+    this.isFollowingLog = isAtBottom || isChanged;
   }
 
   render() {
+    this.currentBuffer = this.current().name;
     return (
-      <div id='buffer-view'>
+      <div id='buffer-view' ref='view'>
         <ul>
           {this.current().logs.map(this.logElement.bind(this))}
         </ul>
@@ -55,8 +70,9 @@ export default class BufferView extends React.Component {
 
   componentDidUpdate() {
     if (this.isFollowingLog) {
-      let body = document.body;
-      body.scrollTop = body.scrollHeight;
+      let view = this.view();
+      view.scrollTop = view.scrollHeight;
     }
+    Ps.update(this.view());
   }
 }

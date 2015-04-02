@@ -1,0 +1,22 @@
+/* perfect-scrollbar v0.6.1 */
+.ps-container > .ps-scrollbar-x-rail {
+  display: none;
+}
+.ps-container.ps-active-y > .ps-scrollbar-y-rail {
+  display: block;
+}
+.ps-container.ps-in-scrolling {
+  pointer-events: none;
+}
+.ps-container > .ps-scrollbar-y-rail {
+  display: none;
+  position: absolute;
+  right: 0;
+  width: 4px;
+}
+.ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
+  position: absolute;
+  background-color: #999;
+  right: 0;
+  width: 100%;
+}

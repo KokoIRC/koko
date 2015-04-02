@@ -30,6 +30,7 @@
     "less": "^2.4.0",
     "moment": "^2.9.0",
     "normalize.css": "^3.0.2",
+    "perfect-scrollbar": "^0.6.1",
     "react": "^0.13.1"
   },
   "devDependencies": {
