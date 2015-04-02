@@ -35,6 +35,9 @@ export default class IrcWindow extends React.Component {
     bridge.on('join', this.setBuffers(data =>
       this.state.buffers.join(data.channel, data.nick, data.message,
                               data.nick === this.props.connectionData.nick))); // FIXME
+    bridge.on('part', this.setBuffers(data =>
+      this.state.buffers.part(data.channel, data.nick, data.reason, data.message,
+                              data.nick === this.props.connectionData.nick))); // FIXME
   }
 
   setWindowTitle(title) {
@@ -51,13 +54,25 @@ export default class IrcWindow extends React.Component {
       <div>
         <TabNav buffers={this.state.buffers} />
         <BufferView buffers={this.state.buffers} />
-        <InputBox mode={this.state.mode} setMode={this.setMode.bind(this)} />
+        <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)} />
       </div>
     );
   }
 
 
   setMode(mode) {
-    this.modeManager.setMode(mode);
+  }
+
+  submitInput(raw) {
+    bridge.send(Mode.toString(this.state.mode), {
+      raw,
+      context: {
+        from: this.state.buffers.current().name,
+      },
+    });
+
+    if (this.state.mode !== Mode.MESSAGE) {
+      this.modeManager.setMode(Mode.NORMAL);
+    }
   }
 }

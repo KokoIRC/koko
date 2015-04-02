@@ -25,13 +25,18 @@ export function connect(data) {
     bridge.send('connected', {});
   });
 
-  client.on('join', function (channel, nick, message) {
-    bridge.send('join', {
-      channel,
-      nick,
-      message,
+  let propagate = function (eventName, parameters) {
+    client.on(eventName, function () {
+      let args = arguments;
+      bridge.send(eventName, parameters.reduce(function (result, key, idx) {
+        result[key] = args[idx];
+        return result;
+      }, {}))
     });
-  });
+  };
+
+  propagate('join', ['channel', 'nick', 'message']);
+  propagate('part', ['channel', 'nick', 'reason', 'message']);
 
   client.on('message', function (nick, to, text) {
     // FIXME
@@ -54,7 +59,7 @@ export function connect(data) {
   });
 
   bridge.on('command', function (data) {
-    let command = CommandParser.parse(data.raw);
+    let command = CommandParser.parse(data.raw, data.context);
     if (command.valid) {
       client[command.name].apply(client, command.args);
     } else {

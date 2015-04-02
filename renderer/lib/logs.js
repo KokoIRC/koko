@@ -28,8 +28,15 @@ export default class Logs {
 
   join(nick, message) {
     // FIXME
-    message = `The user has joined. (${message.user}@${message.host})`
-    this._push(new Log(nick, message));
+    let text = `The user has joined. (${message.user}@${message.host})`;
+    this._push(new Log(nick, text));
+  }
+
+  part(nick, reason, _) {
+    // FIXME
+    reason = reason ? reason : 'no reason';
+    let text = `The user has left. (${reason})`;
+    this._push(new Log(nick, text));
   }
 
   map(func) {
