@@ -26,6 +26,14 @@ export default class InputBox extends React.Component {
     input.value = '';
   }
 
+  shouldComponentUpdate(nextProps) {
+    if (nextProps.mode !== Mode.NORMAL) {
+      let input = React.findDOMNode(this.refs.input);
+      return !input.matches(':focus');
+    }
+    return true;
+  }
+
   submit(e) {
     e.preventDefault();
     let input = React.findDOMNode(this).querySelector('input');
