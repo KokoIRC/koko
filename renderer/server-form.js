@@ -16,9 +16,9 @@ export default class ServerForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.connect.bind(this)}>
-        <p>server: <TextInput name='server' defaultValue='irc.freenode.net' /></p>
+        <p>server: <TextInput name='server' defaultValue='irc.hanirc.org' /></p>
         <p>port: <TextInput name='port' defaultValue='6667' /></p>
-        <p>encoding: <TextInput name='encoding' defaultValue='UTF-8' /></p>
+        <p>encoding: <TextInput name='encoding' defaultValue='CP949' /></p>
         <p>nickname: <TextInput name='nick' defaultValue='noraesae' /></p>
         <p>user name: <TextInput name='username' defaultValue='noraesae' /></p>
         <p>real name: <TextInput name='realname' defaultValue='noraesae' /></p>
