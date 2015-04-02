@@ -6,12 +6,14 @@ import ModeManager, {Mode} from './lib/mode-manager';
 import TabNav from './tab-nav';
 import React from 'react';
 
+const rootBufferName = '~';
+
 export default class IrcWindow extends React.Component {
   constructor(props) {
     super(props);
     this.modeManager = new ModeManager(Mode.NORMAL);
     this.state = {
-      buffers: new Buffers('~'),
+      buffers: new Buffers(rootBufferName),
       mode: this.modeManager.current(),
     };
   }
@@ -59,23 +61,27 @@ export default class IrcWindow extends React.Component {
     );
   }
 
-
-  setMode(mode) {
-  }
-
   submitInput(raw) {
     let target = this.state.buffers.current().name;
-    bridge.send(Mode.toString(this.state.mode), {
-      raw,
-      context: {target},
-    });
 
-    if (this.state.mode !== Mode.MESSAGE) {
+    let resetToNormal = true;
+    switch (this.state.mode) {
+    case Mode.COMMAND:
+      bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
+      break;
+    case Mode.MESSAGE:
+      if (target !== rootBufferName) {
+        bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
+        // FIXME: nick
+        this.state.buffers.send(target, this.props.connectionData.nick, raw);
+        this.setState({buffer: this.state.buffer});
+        resetToNormal = false;
+      }
+      break;
+    }
+
+    if (resetToNormal) {
       this.modeManager.setMode(Mode.NORMAL);
-    } else {
-      // FIXME: nick
-      this.state.buffers.send(target, this.props.connectionData.nick, raw);
-      this.setState({buffer: this.state.buffer});
     }
   }
 }

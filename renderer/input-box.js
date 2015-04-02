@@ -37,7 +37,13 @@ export default class InputBox extends React.Component {
   submit(e) {
     e.preventDefault();
     let input = React.findDOMNode(this).querySelector('input');
-    this.props.submit(input.value);
+    let inputValue = input.value;
+    if (this.props.mode === Mode.COMMAND) {
+      inputValue = inputValue.trim();
+    }
+    if (inputValue.length > 0) {
+      this.props.submit(inputValue);
+    }
     input.value = '';
   }
 }
