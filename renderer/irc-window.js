@@ -67,7 +67,7 @@ export default class IrcWindow extends React.Component {
     bridge.send(Mode.toString(this.state.mode), {
       raw,
       context: {
-        from: this.state.buffers.current().name,
+        target: this.state.buffers.current().name,
       },
     });
 

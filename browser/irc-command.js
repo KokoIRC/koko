@@ -23,7 +23,7 @@ export const CommandParser = {
       break;
     case 'part':
       if (args.length === 0) {
-        args.push(context.from);
+        args.push(context.target);
       } else if (args[0].charAt(0) !== '#') {
         args[0] = '#' + args[0];
       }

@@ -58,6 +58,10 @@ export function connect(data) {
     bridge.send('error', {message});
   });
 
+  bridge.on('message', function (data) {
+    client.say(data.context.target, data.raw);
+  });
+
   bridge.on('command', function (data) {
     let command = CommandParser.parse(data.raw, data.context);
     if (command.valid) {
