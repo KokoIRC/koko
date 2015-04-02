@@ -64,15 +64,18 @@ export default class IrcWindow extends React.Component {
   }
 
   submitInput(raw) {
+    let target = this.state.buffers.current().name;
     bridge.send(Mode.toString(this.state.mode), {
       raw,
-      context: {
-        target: this.state.buffers.current().name,
-      },
+      context: {target},
     });
 
     if (this.state.mode !== Mode.MESSAGE) {
       this.modeManager.setMode(Mode.NORMAL);
+    } else {
+      // FIXME: nick
+      this.state.buffers.send(target, this.props.connectionData.nick, raw);
+      this.setState({buffer: this.state.buffer});
     }
   }
 }

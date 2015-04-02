@@ -37,11 +37,7 @@ export function connect(data) {
 
   propagate('join', ['channel', 'nick', 'message']);
   propagate('part', ['channel', 'nick', 'reason', 'message']);
-
-  client.on('message', function (nick, to, text) {
-    // FIXME
-    console.log(nick, to, text);
-  });
+  propagate('message', ['nick', 'to', 'text']);
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
