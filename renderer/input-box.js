@@ -10,7 +10,8 @@ export default class InputBox extends React.Component {
     return (
       <div id='input-box'>
         <form onSubmit={this.submit.bind(this)}>
-          <input ref='input' type='text' disabled={inputDisabled} />
+          <input ref='input' type='text' disabled={inputDisabled}
+                 onBlur={this.blur.bind(this)} />
         </form>
       </div>
     );
@@ -19,11 +20,14 @@ export default class InputBox extends React.Component {
   componentDidUpdate() {
     let input = React.findDOMNode(this.refs.input);
     if (this.props.mode !== Mode.NORMAL) {
+      if (this.previousMode !== this.props.mode) {
+        input.value = '';
+        this.previousMode = this.props.mode;
+      }
       input.focus();
     } else {
       input.blur();
     }
-    input.value = '';
   }
 
   shouldComponentUpdate(nextProps) {
@@ -45,5 +49,10 @@ export default class InputBox extends React.Component {
       this.props.submit(inputValue);
     }
     input.value = '';
+  }
+
+  blur() {
+    let input = React.findDOMNode(this).querySelector('input');
+    this.props.blur();
   }
 }

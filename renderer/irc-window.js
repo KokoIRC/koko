@@ -61,7 +61,8 @@ export default class IrcWindow extends React.Component {
       <div id='irc-window'>
         <TabNav buffers={this.state.buffers} />
         <BufferView buffers={this.state.buffers} />
-        <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)} />
+        <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)}
+                  blur={this.blurInput.bind(this)} />
       </div>
     );
   }
@@ -87,6 +88,10 @@ export default class IrcWindow extends React.Component {
     if (resetToNormal) {
       this.modeManager.setMode(Mode.NORMAL);
     }
+  }
+
+  blurInput() {
+    this.modeManager.setMode(Mode.NORMAL);
   }
 
   changeNick(data) {
