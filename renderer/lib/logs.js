@@ -6,6 +6,7 @@ class Log {
     this.nick = nick;
     this.text = text;
     this.datetime = new Date();
+    this.adjecent = false;
   }
 }
 
@@ -22,8 +23,18 @@ export default class Logs {
     this._logs.push(newEl);
   }
 
+  last() {
+    return this._logs[this._logs.length - 1];
+  }
+
   say(nick, text) {
-    this._push(new Log(nick, text));
+    let log = new Log(nick, text);
+    if (this.last() &&
+        log.nick === this.last().nick &&
+        log.datetime.getTime() - this.last().datetime.getTime() < 20000) {
+      log.adjecent = true;
+    }
+    this._push(log);
   }
 
   join(nick, message) {

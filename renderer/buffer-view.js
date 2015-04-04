@@ -38,9 +38,13 @@ export default class BufferView extends React.Component {
   }
 
   logElement(log) {
-    var datetime = moment(log.datetime).calendar();
+    let datetime = moment(log.datetime).calendar();
+    let className = 'log';
+    if (log.adjecent) {
+      className += ' adjecent';
+    }
     return (
-      <li>
+      <li className={className}>
         <div className='info'>
           <span className='nick'>{log.nick}</span>
           <span className='datetime'>{datetime}</span>
