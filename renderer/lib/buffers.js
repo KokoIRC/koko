@@ -46,6 +46,11 @@ export default class Buffers {
     }
   }
 
+  changeNick(channel, oldNick, newNick) {
+    let target = this.target(channel);
+    target.logs.changeNick(oldNick, newNick);
+  }
+
   target(name) {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {

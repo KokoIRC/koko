@@ -22,7 +22,7 @@ export function connect(data) {
   client.connect();
 
   client.on('registered', function (message) {
-    bridge.send('connected', {});
+    bridge.send('registered', {nick: message.args[0]});
   });
 
   let propagate = function (eventName, parameters) {
@@ -38,6 +38,7 @@ export function connect(data) {
   propagate('join', ['channel', 'nick', 'message']);
   propagate('part', ['channel', 'nick', 'reason', 'message']);
   propagate('message', ['nick', 'to', 'text']);
+  propagate('nick', ['oldnick', 'newnick', 'channels']);
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
@@ -59,11 +60,15 @@ export function connect(data) {
   });
 
   bridge.on('command', function (data) {
-    let command = CommandParser.parse(data.raw, data.context);
-    if (command.valid) {
-      client[command.name].apply(client, command.args);
-    } else {
-      bridge.send('error', {message: command.errMsg});
+    try {
+      let command = CommandParser.parse(data.raw, data.context);
+      if (command.rawName) {
+        client.send.apply(client, [command.rawName].concat(command.args));
+      } else {
+        client[command.name].apply(client, command.args);
+      }
+    } catch (e) {
+      bridge.send('error', {message: e.message});
     }
   });
 }

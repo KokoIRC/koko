@@ -1,54 +1,72 @@
+import _ from 'underscore';
+
 const commands = {
-  'join': ['channel'],
-  'part': ['?channel', '?message'],
-  'ctcp': ['target', 'type', 'text'],
-  'action': ['target', 'message'],
-  'whois': ['nick'],
-  'list': [],
+  'join': {args: ['channel']},
+  'part': {args: ['?channel', '?message']},
+  'ctcp': {args: ['target', 'type', 'text']},
+  'action': {args: ['target', 'message']},
+  'whois': {args: ['nick']},
+  'list': {args: []},
+  'nick': {args: ['nick'], rawName: 'NICK'},
 };
 
 const defaultPartMessage = 'bye';
 
 export const CommandParser = {
-  validateArgs(info, args) {
-    return info.length === args.length ||
-           info.filter(s => s.charAt(0) !== '?').length === args.length;
+  applyArgs(command, args, context) {
+    let maxLength = command.args.length;
+    let minLength = command.args.filter(s => s.charAt(0) !== '?').length;
+    if (args.length < minLength || maxLength < args.length) {
+      throw new Error(`Invalid command arguments: [${command.args}]`);
+    }
+
+    command.args = _.compact(command.args.map(function (argName, idx) {
+      if (_.isUndefined(args[idx])) {
+        if (argName[0] !== '?') {
+          let argFormat = `${command.name}: [${command.args}]`;
+          throw new Error(`No ${argName} provided. ${argFormat}`);
+        } else {
+          return this.processArg(command, null, idx, context);
+        }
+      } else {
+        return this.processArg(command, args[idx], idx, context);
+      }
+    }.bind(this)));
   },
-  processArgs(commandName, args, context) {
-    switch (commandName) {
+  processArg(command, value, idx, context) {
+    switch (command.name) {
     case 'join':
-      if (args[0].charAt(0) !== '#') {
-        args[0] = '#' + args[0];
+      if (idx === 0) {
+        if (value[0] !== '#') {
+          value = '#' + value;
+        }
       }
       break;
     case 'part':
-      if (args.length === 0) {
-        args.push(context.target);
-      } else if (args[0].charAt(0) !== '#') {
-        args[0] = '#' + args[0];
+      if (idx === 0) {
+        if (value === null) {
+          value = context.target;
+        } else if (value[0] !== '#') {
+          value = '#' + value;
+        }
       }
       break;
     }
-    return args;
+    return value;
   },
   parse(raw, context) {
     let tokens = raw.split(' ');
     let commandName = tokens[0];
     let args = tokens.splice(1);
-    let commandInfo = this.info(commandName);
+    let command = _.clone(commands[commandName]);
 
-    if (!commandInfo) {
-      return {valid: false, errMsg: 'Invalid command name'};
+    if (!command) {
+      throw new Error('Invalid command name');
     }
 
-    if (this.validateArgs(commandInfo, args)) {
-      args = this.processArgs(commandName, args, context);
-      return {valid: true, name: commandName, args: args};
-    } else {
-      return {valid: false, errMsg: `Invalid command arguments: [${commandInfo}]`};
-    }
-  },
-  info(commandName) {
-    return commands[commandName];
+    command.name = commandName;
+
+    this.applyArgs(command, args, context);
+    return command;
   },
 };

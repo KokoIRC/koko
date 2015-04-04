@@ -50,6 +50,12 @@ export default class Logs {
     this._push(new Log(nick, text));
   }
 
+  changeNick(oldNick, newNick) {
+    // FIXME
+    let text = `${oldNick} has changed the nickname.`;
+    this._push(new Log(newNick, text));
+  }
+
   map(func) {
     return this._logs.map(func);
   }

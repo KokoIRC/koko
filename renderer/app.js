@@ -20,12 +20,12 @@ class App extends React.Component {
   }
 
   connect(data) {
-    this.setState({connected: true, connectionData: data});
+    this.setState({connected: true, server: data.server});
   }
 
   render() {
     return this.state.connected ?
-      <IrcWindow connectionData={this.state.connectionData} /> :
+      <IrcWindow server={this.state.server} /> :
       <ServerForm connect={this.connect.bind(this)} />;
   }
 };

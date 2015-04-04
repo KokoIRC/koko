@@ -31,7 +31,8 @@
     "moment": "^2.9.0",
     "normalize.css": "^3.0.2",
     "perfect-scrollbar": "^0.6.1",
-    "react": "^0.13.1"
+    "react": "^0.13.1",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "atom-shell": "^0.22.1"

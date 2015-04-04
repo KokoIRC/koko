@@ -13,9 +13,14 @@ export default class IrcWindow extends React.Component {
     super(props);
     this.modeManager = new ModeManager(Mode.NORMAL);
     this.state = {
+      nick: '',
       buffers: new Buffers(rootBufferName),
       mode: this.modeManager.current(),
     };
+  }
+
+  setNick(nick) {
+    this.setState({nick});
   }
 
   setBuffers(func) {
@@ -32,14 +37,16 @@ export default class IrcWindow extends React.Component {
       this.setState({mode: to});
     }.bind(this));
 
+    bridge.on('registered', data => this.setNick(data.nick));
     bridge.on('message', this.setBuffers(data =>
       this.state.buffers.send(data.to, data.nick, data.text)));
     bridge.on('join', this.setBuffers(data =>
       this.state.buffers.join(data.channel, data.nick, data.message,
-                              data.nick === this.props.connectionData.nick))); // FIXME
+                              data.nick === this.state.nick)));
     bridge.on('part', this.setBuffers(data =>
       this.state.buffers.part(data.channel, data.nick, data.reason, data.message,
-                              data.nick === this.props.connectionData.nick))); // FIXME
+                              data.nick === this.state.nick)));
+    bridge.on('nick', this.changeNick.bind(this));
   }
 
   setWindowTitle(title) {
@@ -48,9 +55,7 @@ export default class IrcWindow extends React.Component {
   }
 
   render() {
-    let connectionData = this.props.connectionData;
-
-    this.setWindowTitle(connectionData.server);
+    this.setWindowTitle(this.props.server);
 
     return (
       <div id='irc-window'>
@@ -72,8 +77,7 @@ export default class IrcWindow extends React.Component {
     case Mode.MESSAGE:
       if (target !== rootBufferName) {
         bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
-        // FIXME: nick
-        this.state.buffers.send(target, this.props.connectionData.nick, raw);
+        this.state.buffers.send(target, this.state.nick, raw);
         this.setState({buffer: this.state.buffer});
         resetToNormal = false;
       }
@@ -83,5 +87,16 @@ export default class IrcWindow extends React.Component {
     if (resetToNormal) {
       this.modeManager.setMode(Mode.NORMAL);
     }
+  }
+
+  changeNick(data) {
+    if (data.oldnick === this.state.nick) {
+      this.setState({nick: data.newnick});
+      data.channels.push(rootBufferName);
+    }
+    data.channels.forEach(function (channel) {
+      this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
+      this.setState({buffer: this.state.buffer});
+    }.bind(this));
   }
 }
