@@ -1,3 +1,5 @@
+import shortcutManager from './shortcut-manager';
+
 export const Mode = {
   NORMAL: 0,
   MESSAGE: 1,
@@ -42,31 +44,23 @@ export default class ModeManager {
   }
 
   _attachHandler() {
-    window.addEventListener('keydown', function (e) {
-      let currentMode = this.current();
-      if (currentMode === Mode.NORMAL) {
-        if (e.which === 73 && !e.shiftKey) { // 'i'
-          this.setMode(Mode.MESSAGE);
-        } else if (e.which === 191 && !e.shiftKey) { // '/'
-          this.setMode(Mode.SEARCH);
-        } else if (e.which === 186 && e.shiftKey) { // ':'
-          this.setMode(Mode.COMMAND);
-        }
-      } else if (currentMode === Mode.MESSAGE) {
-        if (e.which === 27) { // 'esc'
-          this.setMode(Mode.NORMAL);
-        }
-      } else if (currentMode === Mode.SEARCH) {
-        if (e.which === 27) { // 'esc'
-          this.setMode(Mode.NORMAL);
-        } else if (e.which === 73 && !e.shiftKey) { // 'i'
-          this.setMode(Mode.MESSAGE);
-        }
-      } else if (currentMode === Mode.COMMAND) {
-        if (e.which === 27) { // 'esc'
-          this.setMode(Mode.NORMAL);
-        }
+    shortcutManager.on('message', function () {
+      if (this.current() === Mode.NORMAL) {
+        this.setMode(Mode.MESSAGE);
       }
+    }.bind(this));
+    shortcutManager.on('search', function () {
+      if (this.current() === Mode.NORMAL) {
+        this.setMode(Mode.SEARCH);
+      }
+    }.bind(this));
+    shortcutManager.on('command', function () {
+      if (this.current() === Mode.NORMAL) {
+        this.setMode(Mode.COMMAND);
+      }
+    }.bind(this));
+    shortcutManager.on('exit', function () {
+      this.setMode(Mode.NORMAL);
     }.bind(this));
   }
 }
