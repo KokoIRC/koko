@@ -1,5 +1,6 @@
 import bridge from '../common/bridge';
 import IrcWindow from './irc-window';
+import shortcutManager from './lib/shortcut-manager';
 import React from 'react';
 import ServerForm from './server-form';
 
@@ -10,6 +11,7 @@ class App extends React.Component {
       connected: false,
       connectionData: {},
     };
+    shortcutManager.initialize();
   }
 
   componentDidMount() {

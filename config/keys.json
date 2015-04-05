@@ -1,0 +1,6 @@
+{
+  "message": ["i"],
+  "search": ["/"],
+  "command": [":"],
+  "exit": ["esc", "ctrl+c"]
+}
