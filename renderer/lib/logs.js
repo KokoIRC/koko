@@ -1,5 +1,6 @@
-// FIXME: should be setting
-const scrollBackLimit = 1000;
+import configuration from './configuration';
+
+const scrollbackLimit = configuration.get('scrollback-limit');
 
 class Log {
   constructor(nick, text) {
@@ -16,7 +17,7 @@ export default class Logs {
   }
 
   _push(newEl) {
-    if (this._logs.length === scrollBackLimit) {
+    if (this._logs.length === scrollbackLimit) {
       // pop the oldest log
       this._logs.shift();
     }

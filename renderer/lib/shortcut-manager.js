@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import configuration from './configuration';
 import keyConfig from '../../config/keys';
 
 const specialKeyIdentifiers = {
@@ -14,8 +15,7 @@ const keyAlias = {
   'cmd': 'meta',
 };
 
-// FIXME: should be a config
-const waiterClearTimeout = 800;
+const waiterClearTimeout = configuration.get('shortcut-serial-input-timeout');
 
 class KeyWaiter {
   constructor(eventName, keys) {
