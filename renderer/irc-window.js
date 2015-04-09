@@ -3,6 +3,7 @@ import Buffers from './lib/buffers';
 import BufferView from './buffer-view';
 import InputBox from './input-box';
 import ModeManager, {Mode} from './lib/mode-manager';
+import Names from './lib/names';
 import shortcutManager from './lib/shortcut-manager';
 import TabNav from './tab-nav';
 import React from 'react';
@@ -17,6 +18,7 @@ export default class IrcWindow extends React.Component {
       nick: '',
       buffers: new Buffers(rootBufferName),
       mode: this.modeManager.current(),
+      names: new Names(),
     };
   }
 
@@ -42,13 +44,10 @@ export default class IrcWindow extends React.Component {
     bridge.on('registered', data => this.setNick(data.nick));
     bridge.on('message', this.setBuffers(data =>
       this.state.buffers.send(data.to, data.nick, data.text)));
-    bridge.on('join', this.setBuffers(data =>
-      this.state.buffers.join(data.channel, data.nick, data.message,
-                              data.nick === this.state.nick)));
-    bridge.on('part', this.setBuffers(data =>
-      this.state.buffers.part(data.channel, data.nick, data.reason, data.message,
-                              data.nick === this.state.nick)));
+    bridge.on('join', this.join.bind(this));
+    bridge.on('part', this.part.bind(this));
     bridge.on('nick', this.changeNick.bind(this));
+    bridge.on('names', this.updateNames.bind(this));
 
     // window events
     bridge.on('focus', this.focusWindow.bind(this));
@@ -71,6 +70,13 @@ export default class IrcWindow extends React.Component {
 
   render() {
     this.setWindowTitle(this.props.server);
+
+    let currentBufferName = this.state.buffers.current().name;
+    let currentNames = this.state.names.get(currentBufferName);
+    // FIXME
+    if (currentNames) {
+      console.log(currentNames.map(name => name.name));
+    }
 
     return (
       <div id='irc-window'>
@@ -109,6 +115,27 @@ export default class IrcWindow extends React.Component {
     this.modeManager.setMode(Mode.NORMAL);
   }
 
+  join(data) {
+    let isMe = data.nick === this.state.nick;
+    this.state.buffers.join(data.channel, data.nick, data.message, isMe);
+    if (!isMe) {
+      this.state.names.add(data.channel, data.nick);
+      this.setState({names: this.state.names});
+    }
+    this.setState({buffer: this.state.buffer});
+  }
+
+  part(data) {
+    let isMe = data.nick === this.state.nick;
+    this.state.buffers.part(data.channel, data.nick, data.reason, data.message, isMe);
+    if (isMe) {
+      this.state.names.delete(data.channel);
+    } else {
+      this.state.names.remove(data.channel, data.nick);
+    }
+    this.setState({buffer: this.state.buffer, names: this.state.names});
+  }
+
   changeNick(data) {
     if (data.oldnick === this.state.nick) {
       this.setState({nick: data.newnick});
@@ -116,8 +143,17 @@ export default class IrcWindow extends React.Component {
     }
     data.channels.forEach(function (channel) {
       this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
-      this.setState({buffer: this.state.buffer});
+      this.state.names.update(channel, data.oldnick, data.newnick);
     }.bind(this));
+    this.setState({buffers: this.state.buffers, names: this.state.names});
+  }
+
+  updateNames(data) {
+    let names = Object.keys(data.names).map(function (name) {
+      return {name, mode: data.names[name], isMe: name === this.state.nick}
+    }.bind(this));
+    this.state.names.set(data.channel, names);
+    this.setState({names: this.state.names});
   }
 
   focusWindow() {

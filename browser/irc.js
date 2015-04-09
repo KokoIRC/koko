@@ -39,6 +39,7 @@ export function connect(data) {
   propagate('part', ['channel', 'nick', 'reason', 'message']);
   propagate('message', ['nick', 'to', 'text']);
   propagate('nick', ['oldnick', 'newnick', 'channels']);
+  propagate('names', ['channel', 'names']);
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
