@@ -10,8 +10,8 @@ export default class Names {
       return;
     }
     this._channels[channelName] = this._channels[channelName].sort(function (a, b) {
-      let aMode = a.mode === '@' ? 2 : (a.mode === 'v' ? 1 : 0);
-      let bMode = b.mode === '@' ? 2 : (b.mode === 'v' ? 1 : 0);
+      let aMode = a.mode === '@' ? 2 : (a.mode === '+' ? 1 : 0);
+      let bMode = b.mode === '@' ? 2 : (b.mode === '+' ? 1 : 0);
       if (aMode !== bMode) {
         return bMode - aMode;
       }
