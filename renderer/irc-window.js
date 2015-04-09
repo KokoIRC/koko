@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import bridge from '../common/bridge';
 import Buffers from './lib/buffers';
 import BufferView from './buffer-view';
@@ -46,6 +47,7 @@ export default class IrcWindow extends React.Component {
     bridge.on('part', this.part.bind(this));
     bridge.on('nick', this.changeNick.bind(this));
     bridge.on('names', this.updateNames.bind(this));
+    bridge.on('quit', this.quit.bind(this));
 
     // window events
     bridge.on('focus', this.focusWindow.bind(this));
@@ -151,6 +153,13 @@ export default class IrcWindow extends React.Component {
     }.bind(this));
     this.state.names.set(data.channel, names);
     this.forceUpdate();
+  }
+
+  quit(data) {
+    data.channels.forEach(function (channel) {
+      let dataForChannel = _.extend(_.omit(data, 'channels'), {channel});
+      this.part(dataForChannel);
+    }.bind(this));
   }
 
   focusWindow() {
