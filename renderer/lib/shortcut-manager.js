@@ -65,14 +65,10 @@ class ShortcutManager {
           let key, modifier;
           if (pair.length === 2) {
             modifier = pair[0].toLowerCase();
-            key = pair[1];
+            key = pair[1].toLowerCase();
           } else {
             key = pair[0];
-            if (/^[A-Z]$/.exec(key)) {
-              modifier = 'shift';
-            }
           }
-          key = key.toLowerCase();
 
           modifier = keyAlias[modifier] ? keyAlias[modifier] : modifier;
           key = keyAlias[key] ? keyAlias[key] : key;
@@ -93,7 +89,9 @@ class ShortcutManager {
       }
 
       if (typeof key === 'string') {
-        this.keyEventHandler(key.toLowerCase(), this.modifierState(e));
+        let modifierState = this.modifierState(e);
+        key = (/^[a-zA-Z]$/.exec(key) && modifierState.shift) ? key.toUpperCase() : key.toLowerCase();
+        this.keyEventHandler(key, modifierState);
       }
     }.bind(this));
   }
