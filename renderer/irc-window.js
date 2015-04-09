@@ -29,9 +29,7 @@ export default class IrcWindow extends React.Component {
   setBuffers(func) {
     return function (data) {
       func(data);
-      this.setState({
-        buffers: this.state.buffers
-      });
+      this.forceUpdate();
     }.bind(this);
   }
 
@@ -55,11 +53,11 @@ export default class IrcWindow extends React.Component {
     // shortcuts
     shortcutManager.on('next-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.next().name);
-      this.setState({buffers: this.state.buffers});
+      this.forceUpdate();
     }.bind(this));
     shortcutManager.on('previous-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.previous().name);
-      this.setState({buffers: this.state.buffers});
+      this.forceUpdate();
     }.bind(this));
   }
 
@@ -100,7 +98,7 @@ export default class IrcWindow extends React.Component {
       if (target !== rootBufferName) {
         bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
         this.state.buffers.send(target, this.state.nick, raw);
-        this.setState({buffer: this.state.buffer});
+        this.forceUpdate();
         resetToNormal = false;
       }
       break;
@@ -120,9 +118,8 @@ export default class IrcWindow extends React.Component {
     this.state.buffers.join(data.channel, data.nick, data.message, isMe);
     if (!isMe) {
       this.state.names.add(data.channel, data.nick);
-      this.setState({names: this.state.names});
     }
-    this.setState({buffer: this.state.buffer});
+    this.forceUpdate();
   }
 
   part(data) {
@@ -133,7 +130,7 @@ export default class IrcWindow extends React.Component {
     } else {
       this.state.names.remove(data.channel, data.nick);
     }
-    this.setState({buffer: this.state.buffer, names: this.state.names});
+    this.forceUpdate();
   }
 
   changeNick(data) {
@@ -145,7 +142,7 @@ export default class IrcWindow extends React.Component {
       this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
       this.state.names.update(channel, data.oldnick, data.newnick);
     }.bind(this));
-    this.setState({buffers: this.state.buffers, names: this.state.names});
+    this.forceUpdate();
   }
 
   updateNames(data) {
@@ -153,7 +150,7 @@ export default class IrcWindow extends React.Component {
       return {name, mode: data.names[name], isMe: name === this.state.nick}
     }.bind(this));
     this.state.names.set(data.channel, names);
-    this.setState({names: this.state.names});
+    this.forceUpdate();
   }
 
   focusWindow() {
