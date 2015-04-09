@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import bridge from '../common/bridge';
 import {Mode} from './lib/mode-manager';
 import React from 'react';
@@ -11,7 +12,8 @@ export default class InputBox extends React.Component {
       <div id='input-box'>
         <form onSubmit={this.submit.bind(this)}>
           <input ref='input' type='text' disabled={inputDisabled}
-                 onBlur={this.blur.bind(this)} />
+                 onBlur={this.blur.bind(this)}
+                 onKeyDown={this.keyDown.bind(this)} />
         </form>
       </div>
     );
@@ -54,5 +56,13 @@ export default class InputBox extends React.Component {
   blur() {
     let input = React.findDOMNode(this).querySelector('input');
     this.props.blur();
+  }
+
+  keyDown(e) {
+    let modified = _.some(['Alt', 'Control', 'Meta', 'Shift'], e.getModifierState.bind(e));
+    let special = _.contains(['U+001B', 'U+0020', 'U+0008', 'U+007F'], e.nativeEvent.keyIdentifier);
+    if (!modified && !special) {
+      e.stopPropagation();
+    }
   }
 }
