@@ -5,6 +5,7 @@ import BufferView from './buffer-view';
 import InputBox from './input-box';
 import ModeManager, {Mode} from './lib/mode-manager';
 import Names from './lib/names';
+import NameView from './name-view';
 import shortcutManager from './lib/shortcut-manager';
 import TabNav from './tab-nav';
 import React from 'react';
@@ -73,14 +74,11 @@ export default class IrcWindow extends React.Component {
 
     let currentBufferName = this.state.buffers.current().name;
     let currentNames = this.state.names.get(currentBufferName);
-    // FIXME
-    if (currentNames) {
-      console.log(currentNames.map(name => name.name));
-    }
 
     return (
       <div id='irc-window'>
         <TabNav buffers={this.state.buffers} />
+        <NameView names={currentNames} />
         <BufferView mode={this.state.mode} buffers={this.state.buffers} />
         <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)}
                   blur={this.blurInput.bind(this)} />
