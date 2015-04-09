@@ -75,7 +75,7 @@ export default class IrcWindow extends React.Component {
     return (
       <div id='irc-window'>
         <TabNav buffers={this.state.buffers} />
-        <BufferView buffers={this.state.buffers} />
+        <BufferView mode={this.state.mode} buffers={this.state.buffers} />
         <InputBox mode={this.state.mode} submit={this.submitInput.bind(this)}
                   blur={this.blurInput.bind(this)} />
       </div>
