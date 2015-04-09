@@ -80,6 +80,21 @@ export default class Buffers {
     return this._buffers.filter(c => c.current())[0];
   }
 
+  next() {
+    let currentIndex = this._buffers.indexOf(this.current());
+    let nextIndex = (currentIndex + 1) % this._buffers.length;
+    return this._buffers[nextIndex];
+  }
+
+  previous() {
+    let currentIndex = this._buffers.indexOf(this.current());
+    let previousIndex = (currentIndex - 1) % this._buffers.length;
+    if (previousIndex < 0) {
+      previousIndex += this._buffers.length;
+    }
+    return this._buffers[previousIndex];
+  }
+
   map(func) {
     return this._buffers.map(func);
   }

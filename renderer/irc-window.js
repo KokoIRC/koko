@@ -3,6 +3,7 @@ import Buffers from './lib/buffers';
 import BufferView from './buffer-view';
 import InputBox from './input-box';
 import ModeManager, {Mode} from './lib/mode-manager';
+import shortcutManager from './lib/shortcut-manager';
 import TabNav from './tab-nav';
 import React from 'react';
 
@@ -47,6 +48,16 @@ export default class IrcWindow extends React.Component {
       this.state.buffers.part(data.channel, data.nick, data.reason, data.message,
                               data.nick === this.state.nick)));
     bridge.on('nick', this.changeNick.bind(this));
+
+    shortcutManager.on('next-tab', function () {
+      this.state.buffers.setCurrent(this.state.buffers.next().name);
+      this.setState({buffers: this.state.buffers});
+    }.bind(this));
+
+    shortcutManager.on('previous-tab', function () {
+      this.state.buffers.setCurrent(this.state.buffers.previous().name);
+      this.setState({buffers: this.state.buffers});
+    }.bind(this));
   }
 
   setWindowTitle(title) {

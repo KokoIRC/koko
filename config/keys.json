@@ -2,5 +2,7 @@
   "message": ["i"],
   "search": ["/"],
   "command": [":"],
-  "exit": ["esc", "ctrl+c"]
+  "exit": ["esc", "ctrl+c"],
+  "next-tab": ["g>t"],
+  "previous-tab": ["g>T"]
 }
