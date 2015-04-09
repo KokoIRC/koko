@@ -56,9 +56,6 @@ export default class Names {
     if (channel) {
       this._channels[channelName] = channel.map(function (name) {
         if (name.name === oldName) {
-          console.log(name.name);
-          console.log(oldName);
-          console.log(newName);
           name.name = newName;
         }
         return name;
