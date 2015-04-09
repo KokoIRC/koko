@@ -38,6 +38,7 @@ export default class IrcWindow extends React.Component {
       this.setState({mode: to});
     }.bind(this));
 
+    // irc events
     bridge.on('registered', data => this.setNick(data.nick));
     bridge.on('message', this.setBuffers(data =>
       this.state.buffers.send(data.to, data.nick, data.text)));
@@ -49,11 +50,14 @@ export default class IrcWindow extends React.Component {
                               data.nick === this.state.nick)));
     bridge.on('nick', this.changeNick.bind(this));
 
+    // window events
+    bridge.on('focus', this.focusWindow.bind(this));
+
+    // shortcuts
     shortcutManager.on('next-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.next().name);
       this.setState({buffers: this.state.buffers});
     }.bind(this));
-
     shortcutManager.on('previous-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.previous().name);
       this.setState({buffers: this.state.buffers});
@@ -114,5 +118,11 @@ export default class IrcWindow extends React.Component {
       this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
       this.setState({buffer: this.state.buffer});
     }.bind(this));
+  }
+
+  focusWindow() {
+    if (this.state.buffers.current().name !== rootBufferName) {
+      this.modeManager.setMode(Mode.MESSAGE);
+    }
   }
 }

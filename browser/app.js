@@ -19,6 +19,9 @@ export function run(mainUrl) {
     mainWindow.on('closed', function() {
       mainWindow = null;
     });
+    mainWindow.on('focus', function () {
+      bridge.send('focus', {});
+    });
 
     bridge.initialize(mainWindow);
     bridge.on('connect', function (data) {
