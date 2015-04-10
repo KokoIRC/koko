@@ -4,12 +4,29 @@ import {Mode} from './lib/mode-manager';
 import React from 'react';
 
 export default class InputBox extends React.Component {
+  getSymbol(mode) {
+    if (mode === Mode.COMMAND) {
+      return ':';
+    } else if (mode === Mode.SEARCH) {
+      return '/';
+    } else if (mode === Mode.NORMAL) {
+      let input = React.findDOMNode(this.refs.input);
+      return (input && input.value) ? this.getSymbol(this.previousMode) : '';
+    } else {
+      return '';
+    }
+  }
+
   render() {
     let mode = this.props.mode;
     let inputDisabled = (mode === Mode.NORMAL);
 
+    let symbol = this.getSymbol(mode);
+    let cls = symbol.length > 0 ? 'show-symbol' : '';
+
     return (
-      <div id='input-box'>
+      <div id='input-box' className={cls}>
+        <div className='symbol'>{symbol}</div>
         <form onSubmit={this.submit.bind(this)}>
           <input ref='input' type='text' disabled={inputDisabled}
                  onBlur={this.blur.bind(this)}
