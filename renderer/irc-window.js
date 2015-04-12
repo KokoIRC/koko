@@ -205,7 +205,11 @@ export default class IrcWindow extends React.Component {
   }
 
   handleError(error) {
-    // FIXME
-    console.log(error);
+    switch (error.command) {
+    case "err_nosuchnick":
+      this.state.buffers.send(error.args[1], error.args[1], error.args[2]);
+      this.forceUpdate();
+      break;
+    }
   }
 }
