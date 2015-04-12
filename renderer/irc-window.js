@@ -84,8 +84,9 @@ export default class IrcWindow extends React.Component {
     let resetToNormal = true;
     switch (this.state.mode) {
     case Mode.COMMAND:
-      if (raw === 'part' && target[0] !== '#') {
-        this.part({channel: target, nick: this.state.nick, reason: null, message: null});
+      let methodName = this.tryGetLocalHandler(raw);
+      if (methodName) {
+        this[methodName](raw);
       } else {
         bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
       }
@@ -102,6 +103,16 @@ export default class IrcWindow extends React.Component {
 
     if (resetToNormal) {
       this.modeManager.setMode(Mode.NORMAL);
+    }
+  }
+
+  tryGetLocalHandler(raw) {
+    let tokens = raw.split(' ');
+    if (tokens.length === 1 && tokens[0] === 'part' &&
+        this.state.buffers.current().name !== '#') {
+      return 'partPersonalMessage';
+    } else if (tokens[0] === 'pm') {
+      return 'sendPersonalMessage';
     }
   }
 
@@ -132,6 +143,26 @@ export default class IrcWindow extends React.Component {
     } else {
       this.state.names.remove(data.channel, data.nick);
     }
+    this.forceUpdate();
+  }
+
+  sendPersonalMessage(raw) {
+    let tokens = raw.split(' ');
+    if (tokens.length < 3) {
+      this.props.errorHandler('Invalid command arguments: [nick,message]');
+    } else {
+      let target = tokens[1];
+      let raw = tokens.splice(2).join(' ');
+      bridge.send(Mode.toString(Mode.MESSAGE), {raw, context: {target}});
+      this.state.buffers.send(target, this.state.nick, raw);
+      this.state.buffers.setCurrent(target);
+      this.forceUpdate();
+    }
+  }
+
+  partPersonalMessage() {
+    let target = this.state.buffers.current().name;
+    this.state.buffers.remove(target);
     this.forceUpdate();
   }
 

@@ -15,10 +15,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    bridge.on('error', function (err) {
-      // FIXME
-      console.error(JSON.stringify(err));
-    });
+    bridge.on('error', data => this.errorHandler(data.message));
   }
 
   connect(data) {
@@ -27,8 +24,13 @@ class App extends React.Component {
 
   render() {
     return this.state.connected ?
-      <IrcWindow server={this.state.server} /> :
+      <IrcWindow server={this.state.server} errorHandler={this.errorHandler.bind(this)}/> :
       <ServerForm connect={this.connect.bind(this)} />;
+  }
+
+  errorHandler(message) {
+    // FIXME
+    console.error(message);
   }
 };
 

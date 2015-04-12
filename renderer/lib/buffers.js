@@ -38,8 +38,7 @@ export default class Buffers {
 
   part(channel, nick, reason, message, isMe=false) {
     if (isMe) {
-      let index = this.remove(channel);
-      this.setCurrent(this._buffers[0].name);
+      this.remove(channel);
     } else {
       let target = this.target(channel);
       target.logs.part(nick, reason, message);
@@ -63,6 +62,7 @@ export default class Buffers {
 
   remove(name) {
     this._buffers = this._buffers.filter(c => (c.name !== name));
+    this.setCurrent(this._buffers[0].name);
   }
 
   setCurrent(bufName) {
