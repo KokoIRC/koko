@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import bridge from '../common/bridge';
 import {Client} from 'irc';
 import {CommandParser} from './irc-command';
@@ -53,8 +54,8 @@ export function connect(data) {
 
   client.on('motd', sendRootMessage);
 
-  client.on('error', function (message) {
-    bridge.send('error', {message});
+  client.on('error', function (error) {
+    bridge.send('error', {type: 'irc', error});
   });
 
   bridge.on('message', function (data) {
@@ -69,8 +70,8 @@ export function connect(data) {
       } else {
         client[command.name].apply(client, command.args);
       }
-    } catch (e) {
-      bridge.send('error', {message: e.message});
+    } catch (error) {
+      bridge.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
     }
   });
 }

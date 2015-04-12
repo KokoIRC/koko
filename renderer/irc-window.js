@@ -54,6 +54,8 @@ export default class IrcWindow extends React.Component {
       this.state.buffers.setCurrent(this.state.buffers.previous().name);
       this.forceUpdate();
     }.bind(this));
+
+    this.props.errorHandler.on('irc', this.handleError.bind(this));
   }
 
   setWindowTitle(title) {
@@ -149,7 +151,10 @@ export default class IrcWindow extends React.Component {
   sendPersonalMessage(raw) {
     let tokens = raw.split(' ');
     if (tokens.length < 3) {
-      this.props.errorHandler('Invalid command arguments: [nick,message]');
+      this.props.errorHandler.handle({
+        type: 'normal',
+        error: new Error('Invalid command arguments: [nick,message]'),
+      });
     } else {
       let target = tokens[1];
       let raw = tokens.splice(2).join(' ');
@@ -197,5 +202,10 @@ export default class IrcWindow extends React.Component {
     if (this.state.buffers.current().name !== rootBufferName) {
       this.modeManager.setMode(Mode.MESSAGE);
     }
+  }
+
+  handleError(error) {
+    // FIXME
+    console.log(error);
   }
 }

@@ -1,3 +1,4 @@
+import AppErrorHandler from './lib/app-error-handler';
 import bridge from '../common/bridge';
 import IrcWindow from './irc-window';
 import shortcutManager from './lib/shortcut-manager';
@@ -11,11 +12,12 @@ class App extends React.Component {
       connected: false,
       connectionData: {},
     };
+    this.errorHandler = new AppErrorHandler();
     shortcutManager.initialize();
   }
 
   componentDidMount() {
-    bridge.on('error', data => this.errorHandler(data.message));
+    bridge.on('error', this.errorHandler.handle.bind(this.errorHandler));
   }
 
   connect(data) {
@@ -24,13 +26,8 @@ class App extends React.Component {
 
   render() {
     return this.state.connected ?
-      <IrcWindow server={this.state.server} errorHandler={this.errorHandler.bind(this)}/> :
+      <IrcWindow server={this.state.server} errorHandler={this.errorHandler}/> :
       <ServerForm connect={this.connect.bind(this)} />;
-  }
-
-  errorHandler(message) {
-    // FIXME
-    console.error(message);
   }
 };
 
