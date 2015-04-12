@@ -28,13 +28,6 @@ export default class IrcWindow extends React.Component {
     this.setState({nick});
   }
 
-  setBuffers(func) {
-    return function (data) {
-      func(data);
-      this.forceUpdate();
-    }.bind(this);
-  }
-
   componentDidMount() {
     this.modeManager.onChange(function (to) {
       this.setState({mode: to});
@@ -42,8 +35,7 @@ export default class IrcWindow extends React.Component {
 
     // irc events
     bridge.on('registered', data => this.setNick(data.nick));
-    bridge.on('message', this.setBuffers(data =>
-      this.state.buffers.send(data.to, data.nick, data.text)));
+    bridge.on('message', this.message.bind(this));
     bridge.on('join', this.join.bind(this));
     bridge.on('part', this.part.bind(this));
     bridge.on('nick', this.changeNick.bind(this));
@@ -92,7 +84,11 @@ export default class IrcWindow extends React.Component {
     let resetToNormal = true;
     switch (this.state.mode) {
     case Mode.COMMAND:
-      bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
+      if (raw === 'part' && target[0] !== '#') {
+        this.part({channel: target, nick: this.state.nick, reason: null, message: null});
+      } else {
+        bridge.send(Mode.toString(this.state.mode), {raw, context: {target}});
+      }
       break;
     case Mode.MESSAGE:
       if (target !== rootBufferName) {
@@ -111,6 +107,12 @@ export default class IrcWindow extends React.Component {
 
   blurInput() {
     this.modeManager.setMode(Mode.NORMAL);
+  }
+
+  message(data) {
+    let to = data.to[0] === '#' || data.to === rootBufferName ? data.to : data.nick;
+    this.state.buffers.send(to, data.nick, data.text);
+    this.forceUpdate();
   }
 
   join(data) {
