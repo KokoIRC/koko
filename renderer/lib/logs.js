@@ -3,6 +3,7 @@ import escapeHTML from 'escape-html';
 import IrcColorParser from './irc-color-parser';
 
 const scrollbackLimit = configuration.get('scrollback-limit');
+const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 
 class Log {
   constructor(nick, text) {
@@ -17,6 +18,7 @@ class Log {
     text = escapeHTML(text);
     text = this.processNewline(text);
     text = this.processColor(text);
+    text = this.processLink(text);
     return text;
   }
 
@@ -27,6 +29,17 @@ class Log {
   processColor(text) {
     let parser = new IrcColorParser(text);
     return parser.process();
+  }
+
+  processLink(text) {
+    let match;
+    let result = text;
+    while (match = urlRegex.exec(text)) {
+      let url = match[0];
+      let newContent = `<a href='${url}'>${url}</a>`;
+      result = result.replace(url, newContent);
+    }
+    return result;
   }
 }
 
