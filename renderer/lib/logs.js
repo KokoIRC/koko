@@ -1,4 +1,6 @@
 import configuration from './configuration';
+import escapeHTML from 'escape-html';
+import IrcColorParser from './irc-color-parser';
 
 const scrollbackLimit = configuration.get('scrollback-limit');
 
@@ -8,6 +10,23 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
+    this.textEl = this.processText(this.text);
+  }
+
+  processText(text) {
+    text = escapeHTML(text);
+    text = this.processNewline(text);
+    text = this.processColor(text);
+    return text;
+  }
+
+  processNewline(text) {
+    return text.replace(/\n/g, '<br />');
+  }
+
+  processColor(text) {
+    let parser = new IrcColorParser(text);
+    return parser.process();
   }
 }
 

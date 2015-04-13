@@ -33,20 +33,6 @@ export default class BufferView extends React.Component {
     return this.props.buffers.current();
   }
 
-  processText(text) {
-    let result = <span>{text}</span>;
-    if (text.indexOf('\n') >= 0) {
-      result = text.split('\n').reduce(function (result, line, idx) {
-        if (idx > 0) {
-          result.push(<br />);
-        }
-        result.push(<span>{line}</span>);
-        return result;
-      }, []);
-    }
-    return result;
-  }
-
   logElement(log) {
     let datetime = moment(log.datetime).calendar();
     let className = 'log';
@@ -59,7 +45,7 @@ export default class BufferView extends React.Component {
           <span className='nick'>{log.nick}</span>
           <span className='datetime'>{datetime}</span>
         </div>
-        <div className='text'>{this.processText(log.text)}</div>
+        <div className='text' dangerouslySetInnerHTML={{__html: log.textEl}}></div>
       </li>
     );
   }
