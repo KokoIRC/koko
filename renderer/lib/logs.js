@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import configuration from './configuration';
 import escapeHTML from 'escape-html';
 import IrcColorParser from './irc-color-parser';
@@ -11,6 +12,7 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
+    this.images = [];
     this.textEl = this.processText(this.text);
   }
 
@@ -18,7 +20,7 @@ class Log {
     text = escapeHTML(text);
     text = this.processNewline(text);
     text = this.processColor(text);
-    text = this.processLink(text);
+    text = this.processURL(text);
     return text;
   }
 
@@ -31,15 +33,26 @@ class Log {
     return parser.process();
   }
 
-  processLink(text) {
+  processURL(text) {
     let match;
     let result = text;
     while (match = urlRegex.exec(text)) {
       let url = match[0];
       let newContent = `<a href='${url}'>${url}</a>`;
+      if (this.isImageURL(url)) {
+        this.images.push(url);
+      }
       result = result.replace(url, newContent);
     }
     return result;
+  }
+
+  isImageURL(url) {
+    const imageExts = ['.jpg', '.jpeg', '.png'];
+    let lowerCasedURL = url;
+    return _.some(imageExts, function (ext) {
+      return lowerCasedURL.substring(lowerCasedURL.length - ext.length) === ext;
+    });
   }
 }
 

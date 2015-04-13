@@ -46,6 +46,9 @@ export default class BufferView extends React.Component {
           <span className='datetime'>{datetime}</span>
         </div>
         <div className='text' dangerouslySetInnerHTML={{__html: log.textEl}}></div>
+        <div className='image'>
+          {log.images.map(url => <img src={url}/>)}
+        </div>
       </li>
     );
   }
