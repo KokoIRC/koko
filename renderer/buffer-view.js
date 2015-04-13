@@ -7,6 +7,7 @@ import shortcutManager from './lib/shortcut-manager';
 
 const followLogBuffer = 20;
 const minimumScrollHeight = 10;
+const shell = _require('shell');
 
 export default class BufferView extends React.Component {
   constructor(props) {
@@ -77,6 +78,8 @@ export default class BufferView extends React.Component {
       view.scrollTop = view.scrollHeight;
     }
     Ps.update(this.view());
+
+    this.makeLinksOpenWithExternalBrowser();
   }
 
   scrollDown() {
@@ -140,5 +143,14 @@ export default class BufferView extends React.Component {
       let view = this.view();
       view.scrollTop = view.scrollTop - view.clientHeight;
     }
+  }
+
+  makeLinksOpenWithExternalBrowser() {
+    Array.prototype.forEach.call(this.view().getElementsByTagName('a'), function (a) {
+      a.onclick = function (e) {
+        shell.openExternal(a.href);
+        e.preventDefault();
+      };
+    });
   }
 }
