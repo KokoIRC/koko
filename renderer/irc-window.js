@@ -130,19 +130,23 @@ export default class IrcWindow extends React.Component {
 
   join(data) {
     let isMe = data.nick === this.state.nick;
-    this.state.buffers.join(data.channel, data.nick, data.message, isMe);
-    if (!isMe) {
+    if (isMe) {
+      this.state.buffers.add(data.channel);
+      this.state.buffers.setCurrent(data.channel);
+    } else {
       this.state.names.add(data.channel, data.nick);
     }
+    this.state.buffers.joinMessage(data.channel, data.nick, data.message);
     this.forceUpdate();
   }
 
   part(data) {
     let isMe = data.nick === this.state.nick;
-    this.state.buffers.part(data.channel, data.nick, data.reason, data.message, isMe);
     if (isMe) {
+      this.state.buffers.remove(data.channel);
       this.state.names.delete(data.channel);
     } else {
+      this.state.buffers.partMessage(data.channel, data.nick, data.reason, data.message);
       this.state.names.remove(data.channel, data.nick);
     }
     this.forceUpdate();

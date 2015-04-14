@@ -28,21 +28,14 @@ export default class Buffers {
     target.logs.say(nick, text);
   }
 
-  join(channel, nick, message, isMe=false) {
+  joinMessage(channel, nick, message, isMe=false) {
     let target = this.target(channel);
-    if (isMe) {
-      this.setCurrent(channel);
-    }
     target.logs.join(nick, message);
   }
 
-  part(channel, nick, reason, message, isMe=false) {
-    if (isMe) {
-      this.remove(channel);
-    } else {
-      let target = this.target(channel);
-      target.logs.part(nick, reason, message);
-    }
+  partMessage(channel, nick, reason, message) {
+    let target = this.target(channel);
+    target.logs.part(nick, reason, message);
   }
 
   changeNick(channel, oldNick, newNick) {
@@ -58,6 +51,10 @@ export default class Buffers {
     }
 
     return target;
+  }
+
+  add(name) {
+    this.target(name);
   }
 
   remove(name) {
