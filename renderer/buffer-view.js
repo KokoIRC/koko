@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import imageLib from './lib/image';
 import React from 'react';
 import {Mode} from './lib/mode-manager';
 import moment from 'moment';
@@ -80,6 +81,7 @@ export default class BufferView extends React.Component {
     Ps.update(this.view());
 
     this.makeLinksOpenWithExternalBrowser();
+    this.loadImages();
   }
 
   scrollDown() {
@@ -146,11 +148,41 @@ export default class BufferView extends React.Component {
   }
 
   makeLinksOpenWithExternalBrowser() {
-    Array.prototype.forEach.call(this.view().getElementsByTagName('a'), function (a) {
+    let links = this.view().getElementsByTagName('a');
+    Array.prototype.forEach.call(links, function (a) {
       a.onclick = function (e) {
         shell.openExternal(a.href);
         e.preventDefault();
       };
     });
+  }
+
+  loadImages() {
+    let view = this.view();
+    let images = view.getElementsByTagName('img');
+    Array.prototype.forEach.call(images, function (image) {
+      if (!image.classList.contains('loaded')) {
+        imageLib.getMeta(image.src, function (width, height) {
+          let maxWidth = parseInt(image.parentElement.clientWidth, 10);
+          let maxHeight = parseInt(getComputedStyle(image).maxHeight, 10);
+          if (maxWidth < width) {
+            height = height * maxWidth / width;
+            width = maxWidth;
+          }
+          if (maxHeight < height) {
+            width = width * maxHeight / height;
+            height = maxHeight;
+          }
+          image.style.width = width + 'px';
+          image.style.height = height + 'px';
+          image.classList.add('loaded');
+          if (this.isFollowingLog) {
+            view.scrollTop += height;
+          }
+        }.bind(this), function () {
+          image.remove();
+        });
+      }
+    }.bind(this));
   }
 }
