@@ -59,7 +59,7 @@ class ShortcutManager {
     return _.pairs(rawConfig).map(function (pair) {
       let action = pair[0];
       let shortcuts = pair[1].map(function (keyStr) {
-        let keys = keyStr.indexOf('>') >= 0 ? keyStr.split('>') : [keyStr];
+        let keys = keyStr.includes('>') ? keyStr.split('>') : [keyStr];
         return keys.map(function (keyString) {
           let pair = keyString.split('+');
           let key, modifier;
@@ -82,7 +82,7 @@ class ShortcutManager {
   initialize() {
     window.addEventListener('keydown', function (e) {
       let key = e.keyIdentifier;
-      if (key.indexOf('U+') === 0) {
+      if (key.startsWith('U+')) {
         key = specialKeyIdentifiers[key]
           ? specialKeyIdentifiers[key]
           : String.fromCodePoint(parseInt(key.substring(2), 16));
