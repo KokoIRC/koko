@@ -46,7 +46,7 @@ export default class BufferView extends React.Component {
     if (log.media) {
       switch (log.media.type) {
       case 'image':
-        media = <img src={log.media.url} />;
+        media = <a href={log.media.url}><img src={log.media.url} /></a>;
         break;
       }
     }

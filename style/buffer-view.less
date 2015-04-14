@@ -51,11 +51,16 @@
         .reverse { color: @white; background-color: @lightblack; }
       }
       .media {
+        a {
+          display: block;
+          margin: 0;
+          padding: 0;
+        }
         img {
           display: none;
           max-height: 300px;
           &.loaded {
-            display: inline-block;
+            display: block;
           }
         }
       }
