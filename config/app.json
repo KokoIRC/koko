@@ -1,4 +1,6 @@
 {
   "scrollback-limit": 1000,
-  "shortcut-serial-input-timeout": 800
+  "shortcut-serial-input-timeout": 800,
+  "command-symbol": "/",
+  "root-buffer-name": "~"
 }

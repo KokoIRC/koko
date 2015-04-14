@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import imageLib from './lib/image';
 import React from 'react';
-import {Mode} from './lib/mode-manager';
 import moment from 'moment';
 import Ps from 'perfect-scrollbar';
 import shortcutManager from './lib/shortcut-manager';
@@ -98,66 +97,54 @@ export default class BufferView extends React.Component {
   }
 
   scrollDown() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      let logs = _.toArray(view.getElementsByTagName('li'));
+    let view = this.view();
+    let logs = _.toArray(view.getElementsByTagName('li'));
 
-      let logToScroll = null;
-      for (let log of logs) {
-        if (log.offsetTop < view.scrollTop - minimumScrollHeight) {
-          logToScroll = log;
-        } else {
-          break;
-        }
+    let logToScroll = null;
+    for (let log of logs) {
+      if (log.offsetTop < view.scrollTop - minimumScrollHeight) {
+        logToScroll = log;
+      } else {
+        break;
       }
-      let scrollTop = logToScroll ? logToScroll.offsetTop : 0;
-      view.scrollTop = scrollTop;
     }
+    let scrollTop = logToScroll ? logToScroll.offsetTop : 0;
+    view.scrollTop = scrollTop;
   }
 
   scrollUp() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      let logs = _.toArray(view.getElementsByTagName('li'));
+    let view = this.view();
+    let logs = _.toArray(view.getElementsByTagName('li'));
 
-      let logToScroll = null;
-      for (let log of logs) {
-        if (log.offsetTop > view.scrollTop + minimumScrollHeight) {
-          logToScroll = log;
-          break;
-        }
+    let logToScroll = null;
+    for (let log of logs) {
+      if (log.offsetTop > view.scrollTop + minimumScrollHeight) {
+        logToScroll = log;
+        break;
       }
-      let scrollTop = logToScroll ? logToScroll.offsetTop : 0;
-      view.scrollTop = scrollTop;
     }
+    let scrollTop = logToScroll ? logToScroll.offsetTop : 0;
+    view.scrollTop = scrollTop;
   }
 
   scrollTop() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      view.scrollTop = 0;
-    }
+    let view = this.view();
+    view.scrollTop = 0;
   }
 
   scrollBottom() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      view.scrollTop = view.scrollHeight;
-    }
+    let view = this.view();
+    view.scrollTop = view.scrollHeight;
   }
 
   pageDown() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      view.scrollTop = view.scrollTop + view.clientHeight;
-    }
+    let view = this.view();
+    view.scrollTop = view.scrollTop + view.clientHeight;
   }
 
   pageUp() {
-    if (this.props.mode === Mode.NORMAL) {
-      let view = this.view();
-      view.scrollTop = view.scrollTop - view.clientHeight;
-    }
+    let view = this.view();
+    view.scrollTop = view.scrollTop - view.clientHeight;
   }
 
   loadImages() {

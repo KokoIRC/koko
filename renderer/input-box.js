@@ -1,78 +1,86 @@
 import _ from 'underscore';
 import bridge from '../common/bridge';
-import {Mode} from './lib/mode-manager';
+import configuration from './lib/configuration';
 import React from 'react';
+import shortcutManager from './lib/shortcut-manager';
+
+const rootBufferName = configuration.get('root-buffer-name');
+const commandSymbol = configuration.get('command-symbol');
 
 export default class InputBox extends React.Component {
-  getSymbol(mode) {
-    if (mode === Mode.COMMAND) {
-      return ':';
-    } else if (mode === Mode.SEARCH) {
-      return '/';
-    } else if (mode === Mode.NORMAL) {
-      let input = React.findDOMNode(this.refs.input);
-      return (input && input.value) ? this.getSymbol(this.previousMode) : '';
-    } else {
-      return '';
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    shortcutManager.on('message', this.onMessageKey.bind(this));
+    shortcutManager.on('command', this.onCommandKey.bind(this));
+    shortcutManager.on('exit', this.onExitKey.bind(this));
+
+    // window events
+    bridge.on('focus', this.onFocusWindow.bind(this));
+  }
+
+  onMessageKey() {
+    let input = React.findDOMNode(this.refs.input);
+    if (input.value.startsWith(commandSymbol)) {
+      input.value = '';
+    }
+    this.focus();
+  }
+
+  onCommandKey() {
+    let input = React.findDOMNode(this.refs.input);
+    if (!input.value.startsWith(commandSymbol)) {
+      input.value = commandSymbol;
+    }
+    this.focus();
+  }
+
+  onExitKey() {
+    this.blur();
+  }
+
+  onFocusWindow() {
+    if (this.props.channel !== rootBufferName) {
+      this.focus();
     }
   }
 
   render() {
-    let mode = this.props.mode;
-    let inputDisabled = (mode === Mode.NORMAL);
-
-    let symbol = this.getSymbol(mode);
-    let cls = symbol.length > 0 ? 'show-symbol' : '';
-
     return (
-      <div id='input-box' className={cls}>
-        <div className='symbol'>{symbol}</div>
+      <div id='input-box'>
         <form onSubmit={this.submit.bind(this)}>
-          <input ref='input' type='text' disabled={inputDisabled}
-                 onBlur={this.blur.bind(this)}
+          <input ref='input' type='text'
                  onKeyDown={this.keyDown.bind(this)} />
         </form>
       </div>
     );
   }
 
-  componentDidUpdate() {
-    let input = React.findDOMNode(this.refs.input);
-    if (this.props.mode !== Mode.NORMAL) {
-      if (this.previousMode !== this.props.mode) {
-        input.value = '';
-        this.previousMode = this.props.mode;
-      }
-      input.focus();
-    } else {
-      input.blur();
-    }
-  }
-
   shouldComponentUpdate(nextProps) {
-    if (nextProps.mode !== Mode.NORMAL) {
-      let input = React.findDOMNode(this.refs.input);
-      return !input.matches(':focus');
-    }
-    return true;
+    let input = React.findDOMNode(this.refs.input);
+    return !input.matches(':focus');
   }
 
   submit(e) {
     e.preventDefault();
     let input = React.findDOMNode(this).querySelector('input');
     let inputValue = input.value;
-    if (this.props.mode === Mode.COMMAND) {
-      inputValue = inputValue.trim();
-    }
     if (inputValue.length > 0) {
       this.props.submit(inputValue);
     }
     input.value = '';
   }
 
+  focus() {
+    let input = React.findDOMNode(this).querySelector('input');
+    input.focus();
+  }
+
   blur() {
     let input = React.findDOMNode(this).querySelector('input');
-    this.props.blur();
+    input.blur();
   }
 
   keyDown(e) {
