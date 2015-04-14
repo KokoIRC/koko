@@ -5,6 +5,7 @@ import IrcColorParser from './irc-color-parser';
 
 const scrollbackLimit = configuration.get('scrollback-limit');
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g;
 
 class Log {
   constructor(nick, text) {
@@ -38,9 +39,12 @@ class Log {
     let result = text;
     while (match = urlRegex.exec(text)) {
       let url = match[0];
-      let newContent = `<a href='${url}'>${url}</a>`;
+      let newContent = `<a href='${url}' target='_blank'>${url}</a>`;
       if (this.isImageURL(url)) {
         this.media = { type: 'image', url };
+      } else if (match = youtubeRegex.exec(url)) {
+        let uuid = match[1];
+        this.media = { type: 'youtube', uuid };
       }
       result = result.replace(url, newContent);
     }

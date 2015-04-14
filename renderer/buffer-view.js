@@ -46,7 +46,11 @@ export default class BufferView extends React.Component {
     if (log.media) {
       switch (log.media.type) {
       case 'image':
-        media = <a href={log.media.url}><img src={log.media.url} /></a>;
+        media = <a href={log.media.url} target='_blank'><img src={log.media.url} /></a>;
+        break;
+      case 'youtube':
+        let embedSrc = `https://www.youtube.com/embed/${log.media.uuid}?rel=0`;
+        media = <iframe src={embedSrc} frameBorder="0"></iframe>
         break;
       }
     }
@@ -90,7 +94,6 @@ export default class BufferView extends React.Component {
     }
     Ps.update(this.view());
 
-    this.makeLinksOpenWithExternalBrowser();
     this.loadImages();
   }
 
@@ -155,16 +158,6 @@ export default class BufferView extends React.Component {
       let view = this.view();
       view.scrollTop = view.scrollTop - view.clientHeight;
     }
-  }
-
-  makeLinksOpenWithExternalBrowser() {
-    let links = this.view().getElementsByTagName('a');
-    Array.prototype.forEach.call(links, function (a) {
-      a.onclick = function (e) {
-        shell.openExternal(a.href);
-        e.preventDefault();
-      };
-    });
   }
 
   loadImages() {
