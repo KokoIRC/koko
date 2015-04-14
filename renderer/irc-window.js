@@ -133,6 +133,7 @@ export default class IrcWindow extends React.Component {
     if (isMe) {
       this.state.buffers.add(data.channel);
       this.state.buffers.setCurrent(data.channel);
+      this.modeManager.setMode(Mode.MESSAGE);
     } else {
       this.state.names.add(data.channel, data.nick);
     }
