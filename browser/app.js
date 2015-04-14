@@ -15,9 +15,9 @@ export function run(mainUrl) {
   });
 
   app.on('ready', function() {
-    menu.initialize(app);
-
     mainWindow = new BrowserWindow({width: 800, height: 600});
+    menu.initialize(app, mainWindow);
+
     mainWindow.loadUrl(mainUrl);
     mainWindow.on('closed', function() {
       mainWindow = null;
@@ -30,5 +30,6 @@ export function run(mainUrl) {
     bridge.on('connect', function (data) {
       irc.connect(data);
     });
+
   });
 }

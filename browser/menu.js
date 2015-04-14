@@ -2,7 +2,7 @@ import Menu from 'menu';
 import MenuItem from 'menu-item';
 
 export default {
-  initialize(app) {
+  initialize(app, mainWindow) {
     var template = [
       { label: 'koko',
         submenu: [
@@ -51,11 +51,11 @@ export default {
         submenu: [
           { label: 'Reload',
             click: function() {
-              BrowserWindow.getFocusedWindow().reloadIgnoringCache(); } },
+              mainWindow.reloadIgnoringCache(); } },
           { label: 'Toggle DevTools',
             accelerator: 'Alt+Command+I',
             click: function() {
-              BrowserWindow.getFocusedWindow().toggleDevTools(); } },
+              mainWindow.toggleDevTools(); } },
         ] },
       { label: 'Window',
         submenu: [
