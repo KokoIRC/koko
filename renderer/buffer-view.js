@@ -41,6 +41,16 @@ export default class BufferView extends React.Component {
     if (log.adjecent) {
       className += ' adjecent';
     }
+
+    let media = null;
+    if (log.media) {
+      switch (log.media.type) {
+      case 'image':
+        media = <img src={log.media.url} />;
+        break;
+      }
+    }
+
     return (
       <li className={className}>
         <div className='info'>
@@ -48,8 +58,8 @@ export default class BufferView extends React.Component {
           <span className='datetime'>{datetime}</span>
         </div>
         <div className='text' dangerouslySetInnerHTML={{__html: log.textEl}}></div>
-        <div className='image'>
-          {log.images.map(url => <img src={url}/>)}
+        <div className='media'>
+          {media}
         </div>
       </li>
     );

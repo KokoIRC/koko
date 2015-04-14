@@ -12,7 +12,7 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
-    this.images = [];
+    this.media = null;
     this.textEl = this.processText(this.text);
   }
 
@@ -40,7 +40,7 @@ class Log {
       let url = match[0];
       let newContent = `<a href='${url}'>${url}</a>`;
       if (this.isImageURL(url)) {
-        this.images.push(url);
+        this.media = { type: 'image', url };
       }
       result = result.replace(url, newContent);
     }
