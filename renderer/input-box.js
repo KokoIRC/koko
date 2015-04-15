@@ -1,9 +1,10 @@
 import _ from 'underscore';
+import Autocompleter from './lib/autocompleter';
 import bridge from '../common/bridge';
 import configuration from './lib/configuration';
 import InputHistory from './lib/input-history';
 import React from 'react';
-import shortcutManager from './lib/shortcut-manager';
+import shortcutManager, {specialKeyIdentifiers}  from './lib/shortcut-manager';
 
 const rootBufferName = configuration.get('root-buffer-name');
 const commandSymbol = configuration.get('command-symbol');
@@ -12,6 +13,7 @@ export default class InputBox extends React.Component {
   constructor(props) {
     super(props);
     this.inputHistory = new InputHistory();
+    this.autocompleter = new Autocompleter();
   }
 
   componentDidMount() {
@@ -20,6 +22,7 @@ export default class InputBox extends React.Component {
     shortcutManager.on('exit', this.onExitKey.bind(this));
     shortcutManager.on('input-history-back', this.onInputHistoryKey.bind(this, +1));
     shortcutManager.on('input-history-forward', this.onInputHistoryKey.bind(this, -1));
+    shortcutManager.on('autocomplete', this.onAutocompleteKey.bind(this));
 
     // window events
     bridge.on('focus', this.onFocusWindow.bind(this));
@@ -56,6 +59,26 @@ export default class InputBox extends React.Component {
     }
   }
 
+  onAutocompleteKey() {
+    let input = React.findDOMNode(this.refs.input);
+    let value = input.value;
+    if (input.matches(':focus') && value.length > 0) {
+      let caretIdx = input.selectionStart;
+      let wordIdx = value.lastIndexOf(' ', caretIdx - 1) + 1;
+      let word = value.substring(wordIdx, caretIdx);
+
+      if (word) {
+        this.autocompleter.setNames(this.props.names.map(n => n.name));
+        let wordToReplace = this.autocompleter.complete(word);
+        if (wordToReplace) {
+          input.value = value.substring(0, wordIdx) + wordToReplace + value.substring(caretIdx);
+          let newCaretIdx = wordIdx + wordToReplace.length;
+          input.setSelectionRange(newCaretIdx, newCaretIdx);
+        }
+      }
+    }
+  }
+
   onFocusWindow() {
     if (this.props.channel !== rootBufferName) {
       this.focus();
@@ -88,6 +111,7 @@ export default class InputBox extends React.Component {
       this.inputHistory.reset();
     }
     input.value = '';
+    this.autocompleter.reset();
   }
 
   focus() {
@@ -102,10 +126,16 @@ export default class InputBox extends React.Component {
 
   keyDown(e) {
     let modified = _.some(['Alt', 'Control', 'Meta', 'Shift'], e.getModifierState.bind(e));
-    let special = _.contains(['U+001B', 'U+0020', 'U+0008', 'U+007F'], e.nativeEvent.keyIdentifier);
+    let special = _.contains(_.keys(specialKeyIdentifiers), e.nativeEvent.keyIdentifier);
     let arrow = _.contains(['Up', 'Down'], e.nativeEvent.keyIdentifier);
     if (!(modified || special || arrow)) {
       e.stopPropagation();
+    }
+
+    if (e.nativeEvent.keyIdentifier === _.invert(specialKeyIdentifiers)['tab']) {
+      e.preventDefault();
+    } else {
+      this.autocompleter.reset();
     }
   }
 }

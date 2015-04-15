@@ -67,6 +67,7 @@ export default class IrcWindow extends React.Component {
         <NameView names={currentNames} />
         <BufferView buffers={this.state.buffers} />
         <InputBox channel={this.state.buffers.current().name}
+                  names={currentNames}
                   submit={this.submitInput.bind(this)} />
       </div>
     );

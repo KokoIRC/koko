@@ -11,5 +11,6 @@
   "page-down": ["ctrl+f"],
   "page-up": ["ctrl+b"],
   "input-history-back": ["up"],
-  "input-history-forward": ["down"]
+  "input-history-forward": ["down"],
+  "autocomplete": ["tab"]
 }

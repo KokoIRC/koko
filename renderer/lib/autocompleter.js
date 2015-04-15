@@ -1,0 +1,38 @@
+import _ from 'underscore';
+
+export default class Autocompleter {
+  constructor() {
+    this.completeIdx = -1;
+    this.wordsToComplete = [];
+    this.names = [];
+  }
+
+  setNames(names) {
+    if (_.isArray(names)) {
+      this.names = names;
+    }
+  }
+
+  complete(word) {
+    if (this.wordsToComplete.length > 0 && this.completeIdx >= 0) {
+      this.completeIdx = (this.completeIdx + 1) % this.wordsToComplete.length;
+      return this.wordsToComplete[this.completeIdx];
+    } else {
+      let properNames = this.names.filter(n => n.startsWith(word));
+      if (properNames.length === 0) {
+        return null;
+      } else if (properNames.length === 1) {
+        return properNames[0];
+      } else {
+        this.wordsToComplete = properNames;
+        this.completeIdx = 0;
+        return properNames[0];
+      }
+    }
+  }
+
+  reset() {
+    this.wordsToComplete = [];
+    this.completeIdx = -1;
+  }
+}

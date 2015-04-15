@@ -2,11 +2,12 @@ import _ from 'underscore';
 import configuration from './configuration';
 import keyConfig from '../../config/keys';
 
-const specialKeyIdentifiers = {
+export const specialKeyIdentifiers = {
   'U+001B': 'escape',
   'U+0020': 'space',
   'U+0008': 'backspace',
   'U+007F': 'delete',
+  'U+0009': 'tab',
 };
 
 const keyAlias = {
