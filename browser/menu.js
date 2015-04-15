@@ -3,7 +3,7 @@ import MenuItem from 'menu-item';
 
 export default {
   initialize(app, mainWindow) {
-    var template = [
+    let template = [
       { label: 'koko',
         submenu: [
           { label: 'About koko',
