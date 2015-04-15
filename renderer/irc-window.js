@@ -121,7 +121,7 @@ export default class IrcWindow extends React.Component {
 
   onPart(data) {
     let isMe = data.nick === this.state.nick;
-    if (isMe) {
+    if (isMe && data.channel !== rootBufferName) {
       this.state.buffers.remove(data.channel);
       this.state.names.delete(data.channel);
     } else {
