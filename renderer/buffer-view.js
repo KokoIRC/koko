@@ -7,7 +7,6 @@ import shortcutManager from './lib/shortcut-manager';
 
 const followLogBuffer = 20;
 const minimumScrollHeight = 10;
-const shell = _require('shell');
 
 export default class BufferView extends React.Component {
   constructor(props) {
