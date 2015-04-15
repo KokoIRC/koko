@@ -9,5 +9,7 @@
   "scroll-top": ["g>g"],
   "scroll-bottom": ["G"],
   "page-down": ["ctrl+f"],
-  "page-up": ["ctrl+b"]
+  "page-up": ["ctrl+b"],
+  "input-history-back": ["up"],
+  "input-history-forward": ["down"]
 }
