@@ -18,9 +18,9 @@ class Buf { // Buffer exists as a default class
 
 export default class Buffers {
   constructor(rootBufName) {
-    let rootBuf = new Buf(rootBufName);
-    rootBuf.current(true);
-    this._buffers = [rootBuf];
+    this._rootBuf = new Buf(rootBufName);
+    this._rootBuf.current(true);
+    this._buffers = [this._rootBuf];
   }
 
   send(to, nick, text) {
@@ -58,8 +58,20 @@ export default class Buffers {
   }
 
   remove(name) {
-    this._buffers = this._buffers.filter(c => (c.name !== name));
-    this.setCurrent(this._buffers[0].name);
+    if (name === this._rootBuf.name) {
+      return;
+    }
+
+    let lastBufferName = this._rootBuf.name;
+    this._buffers = this._buffers.filter(function (buffer) {
+      if (buffer.name === name) {
+        return false;
+      } else {
+        lastBufferName = buffer.name;
+        return true;
+      }
+    });
+    this.setCurrent(lastBufferName);
   }
 
   setCurrent(bufName) {
