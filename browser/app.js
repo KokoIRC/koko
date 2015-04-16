@@ -11,7 +11,7 @@ export function run(mainUrl) {
   });
 
   app.on('ready', function() {
-    menu.initialize(app);
+    menu.initialize(app, mainUrl);
     IrcWindow.create(mainUrl);
   });
 }

@@ -3,7 +3,7 @@ import Menu from 'menu';
 import MenuItem from 'menu-item';
 
 export default {
-  initialize(app, windows) {
+  initialize(app, mainUrl) {
     let template = [
       { label: 'koko',
         submenu: [
@@ -64,8 +64,9 @@ export default {
             accelerator: 'Command+W',
             selector: 'performClose:' },
           { type: 'separator' },
-          { label: 'Bring All to Front',
-            selector: 'arrangeInFront:' },
+          { label: 'New Window',
+            accelerator: 'Command+N',
+            click: IrcWindow.create.bind(null, mainUrl) },
         ] },
       { label: 'Help',
         submenu: [] },
