@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import bridge from '../common/bridge';
+import ipc from './lib/ipc';
 import Buffers from './lib/buffers';
 import BufferView from './buffer-view';
 import configuration from './lib/configuration';
@@ -29,13 +29,13 @@ export default class IrcWindow extends React.Component {
 
   componentDidMount() {
     // irc events
-    bridge.on('registered', data => this.setNick(data.nick));
-    bridge.on('message', this.onMessage.bind(this));
-    bridge.on('join', this.onJoin.bind(this));
-    bridge.on('part', this.onPart.bind(this));
-    bridge.on('nick', this.onChangeNick.bind(this));
-    bridge.on('names', this.onNames.bind(this));
-    bridge.on('quit', this.onQuit.bind(this));
+    ipc.on('registered', data => this.setNick(data.nick));
+    ipc.on('message', this.onMessage.bind(this));
+    ipc.on('join', this.onJoin.bind(this));
+    ipc.on('part', this.onPart.bind(this));
+    ipc.on('nick', this.onChangeNick.bind(this));
+    ipc.on('names', this.onNames.bind(this));
+    ipc.on('quit', this.onQuit.bind(this));
 
     // shortcuts
     shortcutManager.on('next-tab', function () {
@@ -81,11 +81,11 @@ export default class IrcWindow extends React.Component {
       if (methodName) {
         this[methodName](raw);
       } else {
-        bridge.send('command', {raw, context: {target}});
+        ipc.send('command', {raw, context: {target}});
       }
     } else {
       if (target !== rootBufferName) {
-        bridge.send('message', {raw, context: {target}});
+        ipc.send('message', {raw, context: {target}});
         this.state.buffers.send(target, this.state.nick, raw);
         this.forceUpdate();
       }
@@ -142,7 +142,7 @@ export default class IrcWindow extends React.Component {
     } else {
       let target = tokens[1];
       let raw = tokens.splice(2).join(' ');
-      bridge.send('message', {raw, context: {target}});
+      ipc.send('message', {raw, context: {target}});
       this.state.buffers.send(target, this.state.nick, raw);
       this.state.buffers.setCurrent(target);
       this.forceUpdate();

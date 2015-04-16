@@ -1,8 +1,9 @@
+import IrcWindow from './irc-window';
 import Menu from 'menu';
 import MenuItem from 'menu-item';
 
 export default {
-  initialize(app, mainWindow) {
+  initialize(app, windows) {
     let template = [
       { label: 'koko',
         submenu: [
@@ -49,13 +50,10 @@ export default {
         ] },
       { label: 'View',
         submenu: [
-          { label: 'Reload',
-            click: function() {
-              mainWindow.reloadIgnoringCache(); } },
           { label: 'Toggle DevTools',
             accelerator: 'Alt+Command+I',
             click: function() {
-              mainWindow.toggleDevTools(); } },
+              IrcWindow.currentBrowserWindow().toggleDevTools(); } },
         ] },
       { label: 'Window',
         submenu: [

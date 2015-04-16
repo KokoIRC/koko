@@ -1,5 +1,5 @@
 import AppErrorHandler from './lib/app-error-handler';
-import bridge from '../common/bridge';
+import ipc from './lib/ipc';
 import IrcWindow from './irc-window';
 import shortcutManager from './lib/shortcut-manager';
 import React from 'react';
@@ -17,7 +17,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    bridge.on('error', this.errorHandler.handle.bind(this.errorHandler));
+    ipc.on('error', this.errorHandler.handle.bind(this.errorHandler));
   }
 
   connect(data) {

@@ -1,17 +1,16 @@
 import _ from 'underscore';
-import bridge from '../common/bridge';
 import {Client} from 'irc';
 import {CommandParser} from './irc-command';
 
-function sendRootMessage(text, nick) {
-  bridge.send('message', {
-    to: '~',
-    nick,
-    text,
-  });
-}
+export function connect(data, ipc) {
+  function sendRootMessage(text, nick) {
+    ipc.send('message', {
+      to: '~',
+      nick,
+      text,
+    });
+  }
 
-export function connect(data) {
   let client = new Client(data.server, data.nick, {
     userName: data.username,
     realName: data.realname,
@@ -23,13 +22,13 @@ export function connect(data) {
   client.connect();
 
   client.on('registered', function (message) {
-    bridge.send('registered', {nick: message.args[0]});
+    ipc.send('registered', {nick: message.args[0]});
   });
 
   let propagate = function (eventName, parameters) {
     client.on(eventName, function () {
       let args = arguments;
-      bridge.send(eventName, parameters.reduce(function (result, key, idx) {
+      ipc.send(eventName, parameters.reduce(function (result, key, idx) {
         result[key] = args[idx];
         return result;
       }, {}))
@@ -55,14 +54,14 @@ export function connect(data) {
   client.on('motd', sendRootMessage);
 
   client.on('error', function (error) {
-    bridge.send('error', {type: 'irc', error});
+    ipc.send('error', {type: 'irc', error});
   });
 
-  bridge.on('message', function (data) {
+  ipc.on('message', function (data) {
     client.say(data.context.target, data.raw);
   });
 
-  bridge.on('command', function (data) {
+  ipc.on('command', function (data) {
     try {
       let command = CommandParser.parse(data.raw, data.context);
       if (command.rawName) {
@@ -71,7 +70,7 @@ export function connect(data) {
         client[command.name].apply(client, command.args);
       }
     } catch (error) {
-      bridge.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
+      ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
     }
   });
 }

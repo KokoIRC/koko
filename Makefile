@@ -19,7 +19,6 @@ build: clean
 	$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
 	# build browser scripts
 	$(BABEL) ./browser/*.js -d build
-	$(BABEL) ./common/*.js -d build
 	# build styles
 	$(LESS) ./style/main.less > build/built.css
 

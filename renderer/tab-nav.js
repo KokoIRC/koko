@@ -1,4 +1,3 @@
-import bridge from '../common/bridge';
 import React from 'react';
 
 export default class TabNav extends React.Component {

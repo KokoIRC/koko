@@ -1,8 +1,8 @@
 import _ from 'underscore';
 import Autocompleter from './lib/autocompleter';
-import bridge from '../common/bridge';
 import configuration from './lib/configuration';
 import InputHistory from './lib/input-history';
+import ipc from './lib/ipc';
 import React from 'react';
 import shortcutManager, {specialKeyIdentifiers}  from './lib/shortcut-manager';
 
@@ -25,7 +25,7 @@ export default class InputBox extends React.Component {
     shortcutManager.on('autocomplete', this.onAutocompleteKey.bind(this));
 
     // window events
-    bridge.on('focus', this.onFocusWindow.bind(this));
+    ipc.on('focus', this.onFocusWindow.bind(this));
   }
 
   onMessageKey() {

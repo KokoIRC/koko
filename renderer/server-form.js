@@ -1,4 +1,4 @@
-import bridge from '../common/bridge';
+import ipc from './lib/ipc';
 import React from 'react';
 
 class TextInput extends React.Component {
@@ -41,6 +41,6 @@ export default class ServerForm extends React.Component {
 
     let data = this.formToJSON();
     this.props.connect(data);
-    bridge.send('connect', data);
+    ipc.send('connect', data);
   }
 }
