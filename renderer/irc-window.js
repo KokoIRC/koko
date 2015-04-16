@@ -52,7 +52,7 @@ export default class IrcWindow extends React.Component {
 
   setWindowTitle(title) {
     let titleTag = document.getElementsByTagName('title')[0];
-    titleTag.innerText = `koko - ${title}`;
+    titleTag.innerText = title;
   }
 
   render() {
