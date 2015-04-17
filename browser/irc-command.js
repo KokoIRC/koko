@@ -10,8 +10,6 @@ const commands = {
   'nick': {args: ['nick']},
 };
 
-const defaultPartMessage = 'bye';
-
 export const CommandParser = {
   applyArgs(command, args, context) {
     let maxLength = command.args.length;
