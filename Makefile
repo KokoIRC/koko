@@ -1,7 +1,7 @@
 NODE_BIN=./node_modules/.bin
 ATOM=$(NODE_BIN)/atom-shell
 BROWSERIFY=$(NODE_BIN)/browserify
-BABEL=$(NODE_BIN)/babel
+TSC=$(NODE_BIN)/tsc
 LESS=$(NODE_BIN)/lessc
 
 all: dep build
@@ -16,9 +16,10 @@ build: clean
 	@mkdir build
 	@mkdir build/browser
 	# build renderer scripts
-	$(BROWSERIFY) ./renderer/app.js -o build/renderer.js -t babelify --ignore ipc
+	# FIXME
+	# $(BROWSERIFY) ./renderer/app.js -o build/renderer.js --ignore ipc
 	# build browser scripts
-	$(BABEL) ./browser/*.js -d build
+	$(TSC) -p ./browser
 	# build styles
 	$(LESS) ./style/main.less > build/built.css
 

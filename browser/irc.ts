@@ -1,9 +1,12 @@
-import _ from 'underscore';
-import {Client} from 'irc';
-import {CommandParser} from './irc-command';
+import _ = require('underscore');
+import Ipc = require('./ipc');
+import irc = require('irc');
+import IrcCommand = require('./irc-command');
 
-export function connect(data, ipc) {
-  function sendRootMessage(text, nick) {
+const Client = irc.Client;
+
+export function connect(data: ConnectionData, ipc: Ipc) {
+  function sendRootMessage(text: string, nick: string) {
     ipc.send('message', {
       to: '~',
       nick,
@@ -25,7 +28,7 @@ export function connect(data, ipc) {
     ipc.send('registered', {nick: message.args[0]});
   });
 
-  let propagate = function (eventName, parameters) {
+  function propagate(eventName: string, parameters: string[]) {
     client.on(eventName, function () {
       let args = arguments;
       ipc.send(eventName, parameters.reduce(function (result, key, idx) {
@@ -64,9 +67,9 @@ export function connect(data, ipc) {
     client.say(data.context.target, data.raw);
   });
 
-  ipc.on('command', function (data) {
+  ipc.on('command', function (data: {raw: string, context: CommandContext}) {
     try {
-      let command = CommandParser.parse(data.raw, data.context);
+      let command = IrcCommand.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);
     } catch (error) {
       if (error.name === 'CommandError') {

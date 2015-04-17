@@ -1,12 +1,14 @@
-import BrowserWindow from 'browser-window';
-import Ipc from './ipc';
-import * as irc from './irc';
-import shell from 'shell';
+import BrowserWindow = require('browser-window');
+import Ipc = require('./ipc');
+import irc = require('./irc');
+import shell = require('shell');
 
-let windows = [];
+class IrcWindow {
+  private _window: BrowserWindow;
+  ipc: Ipc;
+  focused: boolean;
 
-export default class IrcWindow {
-  constructor(url) {
+  constructor(url: string) {
     this._window = new BrowserWindow({width: 800, height: 600});
 
     this.ipc = new Ipc(this._window);
@@ -15,7 +17,7 @@ export default class IrcWindow {
     this._window.on('closed', function() {
       this._window = null;
       IrcWindow.remove(this);
-    });
+    }.bind(this));
     this._window.on('focus', function () {
       this.ipc.send('focus', {});
       IrcWindow.focus(this);
@@ -41,14 +43,17 @@ export default class IrcWindow {
     this.focused = false;
   }
 
-  static create(url) {
-    windows.push(new IrcWindow(url));
+  static windows: IrcWindow[] = [];
+
+
+  static create(url: string) {
+    IrcWindow.windows.push(new IrcWindow(url));
   }
 
-  static remove(wToRemove) {
-    windows = windows.filter(function (w, idx) {
+  static remove(wToRemove: IrcWindow) {
+    IrcWindow.windows = IrcWindow.windows.filter(function (w, idx) {
       if (w === wToRemove) {
-        delete windows[idx];
+        delete IrcWindow.windows[idx];
         return false;
       } else {
         return true;
@@ -56,8 +61,8 @@ export default class IrcWindow {
     });
   }
 
-  static focus(wToFocus) {
-    windows.forEach(function (w) {
+  static focus(wToFocus: IrcWindow) {
+    IrcWindow.windows.forEach(function (w) {
       if (wToFocus === w) {
         w.focus();
       } else {
@@ -66,7 +71,9 @@ export default class IrcWindow {
     });
   }
 
-  static currentBrowserWindow() {
-    return windows.filter(w => w.focused)[0]._window;
+  static currentBrowserWindow(): BrowserWindow {
+    return IrcWindow.windows.filter(w => w.focused)[0]._window;
   }
 }
+
+export = IrcWindow;

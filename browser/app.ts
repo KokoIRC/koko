@@ -1,9 +1,9 @@
-import app from 'app';
-import crashReporter from 'crash-reporter';
-import IrcWindow from './irc-window';
-import menu from './menu';
+import app = require('app');
+import crashReporter = require('crash-reporter');
+import IrcWindow = require('./irc-window');
+import menu = require('./menu');
 
-export function run(mainUrl) {
+export function run(mainUrl: string) {
   crashReporter.start();
 
   app.on('window-all-closed', function() {

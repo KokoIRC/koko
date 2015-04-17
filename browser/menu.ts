@@ -1,10 +1,9 @@
-import IrcWindow from './irc-window';
-import Menu from 'menu';
-import MenuItem from 'menu-item';
+import IrcWindow = require('./irc-window');
+import Menu = require('menu');
 
-export default {
-  initialize(app, mainUrl) {
-    let template = [
+export = {
+  initialize(app, mainUrl: string) {
+    var template = [
       { label: 'koko',
         submenu: [
           { label: 'About koko',
@@ -72,7 +71,7 @@ export default {
         submenu: [] },
     ];
 
-    let menu = Menu.buildFromTemplate(template);
+    var menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   }
 };

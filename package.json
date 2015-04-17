@@ -23,8 +23,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "babel": "^4.7.16",
-    "babelify": "^5.0.4",
     "browserify": "^9.0.3",
     "escape-html": "^1.0.1",
     "irc": "git://github.com/hachibasu/irc",
@@ -33,6 +31,7 @@
     "normalize.css": "^3.0.2",
     "perfect-scrollbar": "^0.6.1",
     "react": "^0.13.1",
+    "typescript": "^1.5.0-alpha",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
