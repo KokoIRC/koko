@@ -8,21 +8,38 @@ const commands = {
   'whois': {args: ['nick']},
   'list': {args: []},
   'nick': {args: ['nick']},
+  'mode': {args: ['mode', 'nick', '?channel']},
 };
+
+class CommandError extends Error {
+  constructor(message) {
+    super(message);
+    if (Error.hasOwnProperty('captureStackTrace')) {
+      Error.captureStackTrace(this, this.constructor);
+    } else {
+      Object.defineProperty(this, 'stack', { value: (new Error()).stack });
+    }
+    Object.defineProperty(this, 'message', { value: message });
+  }
+
+  get name() {
+    return this.constructor.name;
+  }
+}
 
 export const CommandParser = {
   applyArgs(command, args, context) {
     let maxLength = command.args.length;
     let minLength = command.args.filter(s => s.charAt(0) !== '?').length;
     if (args.length < minLength || maxLength < args.length) {
-      throw new Error(`Invalid command arguments: [${command.args}]`);
+      throw new CommandError(`Invalid command arguments: [${command.args}]`);
     }
 
     command.args = _.compact(command.args.map(function (argName, idx) {
       if (_.isUndefined(args[idx])) {
         if (argName[0] !== '?') {
           let argFormat = `${command.name}: [${command.args}]`;
-          throw new Error(`No ${argName} provided. ${argFormat}`);
+          throw new CommandError(`No ${argName} provided. ${argFormat}`);
         } else {
           return this.processArg(command, null, idx, context);
         }
@@ -49,6 +66,16 @@ export const CommandParser = {
         }
       }
       break;
+    case 'mode':
+      if (idx === 0 && !(value[0] === '+' || value[0] === '0')) {
+        value = '+' + value;
+      } else if(idx === 2) {
+        if (value === null) {
+          value = context.target;
+        } else if (value[0] !== '#') {
+          value = '#' + value;
+        }
+      }
     }
     return value;
   },

@@ -43,6 +43,16 @@ export default class Buffers {
     target.logs.changeNick(oldNick, newNick);
   }
 
+  giveMode(channel, mode, by, to) {
+    let target = this.target(channel);
+    target.logs.giveMode(mode, by, to);
+  }
+
+  takeMode(channel, mode, by, to) {
+    let target = this.target(channel);
+    target.logs.takeMode(mode, by, to);
+  }
+
   target(name) {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {

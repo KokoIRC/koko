@@ -106,6 +106,20 @@ export default class Logs {
     this._push(new Log(newNick, text));
   }
 
+  giveMode(mode, by, to) {
+    // FIXME
+    let m = mode === 'o' ? 'op' : (mode === 'v' ? 'voice' : mode);
+    let text = `${by} gives ${m} to ${to}.`;
+    this._push(new Log(to, text));
+  }
+
+  takeMode(mode, by, to) {
+    // FIXME
+    let m = mode === 'o' ? 'op' : (mode === 'v' ? 'voice' : mode);
+    let text = `${by} removes ${m} from ${to}.`;
+    this._push(new Log(to, text));
+  }
+
   map(func) {
     return this._logs.map(func);
   }

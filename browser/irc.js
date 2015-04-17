@@ -41,6 +41,8 @@ export function connect(data, ipc) {
   propagate('nick', ['oldnick', 'newnick', 'channels']);
   propagate('names', ['channel', 'names']);
   propagate('quit', ['nick', 'reason', 'channels', 'message']);
+  propagate('+mode', ['channel', 'by', 'mode', 'target', 'message']);
+  propagate('-mode', ['channel', 'by', 'mode', 'target', 'message']);
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
@@ -66,7 +68,11 @@ export function connect(data, ipc) {
       let command = CommandParser.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);
     } catch (error) {
-      ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
+      if (error.name === 'CommandError') {
+        ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
+      } else {
+        throw error;
+      }
     }
   });
 }

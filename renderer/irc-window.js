@@ -35,6 +35,8 @@ export default class IrcWindow extends React.Component {
     ipc.on('part', this.onPart.bind(this));
     ipc.on('nick', this.onChangeNick.bind(this));
     ipc.on('names', this.onNames.bind(this));
+    ipc.on('+mode', this.onMode.bind(this, true));
+    ipc.on('-mode', this.onMode.bind(this, false));
     ipc.on('quit', this.onQuit.bind(this));
 
     // shortcuts
@@ -171,6 +173,32 @@ export default class IrcWindow extends React.Component {
     let names = Object.keys(data.names).map(function (name) {
       return {name, mode: data.names[name], isMe: name === this.state.nick}
     }.bind(this));
+    this.state.names.set(data.channel, names);
+    this.forceUpdate();
+  }
+
+  onMode(isGiving, data) {
+    let names = this.state.names.get(data.channel);
+    // FIXME: handles only 'o' and 'v' here.
+    if (isGiving) {
+      this.state.buffers.giveMode(data.channel, data.mode, data.by, data.target);
+      names = names.map(function (name) {
+        if (name.name === data.target) {
+          name.mode = data.mode === 'o' ? '@' : (data.mode === 'v' ? '+' : name.mode);
+        }
+        return name;
+      });
+    } else {
+      this.state.buffers.takeMode(data.channel, data.mode, data.by, data.target);
+      if (data.mode === 'o' || data.mode === 'v') {
+        names = names.map(function (name) {
+          if (name.name === data.target) {
+            name.mode = '';
+          }
+          return name;
+        });
+      }
+    }
     this.state.names.set(data.channel, names);
     this.forceUpdate();
   }
