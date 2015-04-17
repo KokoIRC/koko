@@ -38,6 +38,7 @@ export default class IrcView extends React.Component {
     ipc.on('+mode', this.onMode.bind(this, true));
     ipc.on('-mode', this.onMode.bind(this, false));
     ipc.on('quit', this.onQuit.bind(this));
+    ipc.on('whois', this.onWhois.bind(this));
 
     // shortcuts
     shortcutManager.on('next-tab', function () {
@@ -208,6 +209,14 @@ export default class IrcView extends React.Component {
       let dataForChannel = _.extend(_.omit(data, 'channels'), {channel});
       this.onPart(dataForChannel);
     }.bind(this));
+  }
+
+  onWhois(data) {
+    let info = data.info;
+    let currentBufferName = this.state.buffers.current().name;
+    this.state.buffers.whois(rootBufferName, info);
+    this.state.buffers.whois(currentBufferName, info);
+    this.forceUpdate();
   }
 
   onError(error) {

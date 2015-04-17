@@ -53,6 +53,11 @@ export default class Buffers {
     target.logs.takeMode(mode, by, to);
   }
 
+  whois(channel, info) {
+    let target = this.target(channel);
+    target.logs.whois(info);
+  }
+
   target(name) {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {

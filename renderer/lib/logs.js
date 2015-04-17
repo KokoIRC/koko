@@ -70,6 +70,11 @@ export default class Logs {
       // pop the oldest log
       this._logs.shift();
     }
+    if (this.last() &&
+        newEl.nick === this.last().nick &&
+        newEl.datetime.getTime() - this.last().datetime.getTime() < 20000) {
+      newEl.adjecent = true;
+    }
     this._logs.push(newEl);
   }
 
@@ -78,13 +83,7 @@ export default class Logs {
   }
 
   say(nick, text) {
-    let log = new Log(nick, text);
-    if (this.last() &&
-        log.nick === this.last().nick &&
-        log.datetime.getTime() - this.last().datetime.getTime() < 20000) {
-      log.adjecent = true;
-    }
-    this._push(log);
+    this._push(new Log(nick, text));
   }
 
   join(nick, message) {
@@ -118,6 +117,13 @@ export default class Logs {
     let m = mode === 'o' ? 'op' : (mode === 'v' ? 'voice' : mode);
     let text = `${by} removes ${m} from ${to}.`;
     this._push(new Log(to, text));
+  }
+
+  whois(info) {
+    // FIXME
+    for (let key in info) {
+      this._push(new Log(info.nick, `${key}: ${info[key]}\n`));
+    }
   }
 
   map(func) {
