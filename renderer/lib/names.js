@@ -16,7 +16,7 @@ export default class Names {
         return bMode - aMode;
       }
 
-      return a.name.localeCompare(b.name);
+      return a.nick.localeCompare(b.nick);
     });
   }
 
@@ -29,11 +29,11 @@ export default class Names {
     return this._channels[channelName]
   }
 
-  add(channelName, nameToAdd) {
+  add(channelName, nickToAdd) {
     let channel = this._channels[channelName];
     if (channel) {
       channel.push({
-        name: nameToAdd,
+        nick: nickToAdd,
         mode: '',
         isMe: false,
       });
@@ -41,22 +41,22 @@ export default class Names {
     }
   }
 
-  remove(channelName, nameToRemove) {
+  remove(channelName, nickToRemove) {
     let channel = this._channels[channelName];
     if (channel) {
       this._channels[channelName] = _.reject(channel, function (name) {
-        return name.name === nameToRemove;
+        return name.nick === nickToRemove;
       });
       this._sort(channelName);
     }
   }
 
-  update(channelName, oldName, newName) {
+  update(channelName, oldNick, newNick) {
     let channel = this._channels[channelName];
     if (channel) {
       this._channels[channelName] = channel.map(function (name) {
-        if (name.name === oldName) {
-          name.name = newName;
+        if (name.nick === oldNick) {
+          name.nick = newNick;
         }
         return name;
       });

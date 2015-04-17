@@ -68,7 +68,7 @@ export default class InputBox extends React.Component {
       let word = value.substring(wordIdx, caretIdx);
 
       if (word) {
-        this.autocompleter.setNames(this.props.names.map(n => n.name));
+        this.autocompleter.setNames(this.props.names.map(n => n.nick));
         let wordToReplace = this.autocompleter.complete(word);
         if (wordToReplace) {
           input.value = value.substring(0, wordIdx) + wordToReplace + value.substring(caretIdx);

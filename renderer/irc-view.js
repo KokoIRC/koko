@@ -170,8 +170,8 @@ export default class IrcView extends React.Component {
   }
 
   onNames(data) {
-    let names = Object.keys(data.names).map(function (name) {
-      return {name, mode: data.names[name], isMe: name === this.state.nick}
+    let names = Object.keys(data.names).map(function (nick) {
+      return {nick, mode: data.names[nick], isMe: nick === this.state.nick}
     }.bind(this));
     this.state.names.set(data.channel, names);
     this.forceUpdate();
@@ -183,7 +183,7 @@ export default class IrcView extends React.Component {
     if (isGiving) {
       this.state.buffers.giveMode(data.channel, data.mode, data.by, data.target);
       names = names.map(function (name) {
-        if (name.name === data.target) {
+        if (name.nick === data.target) {
           name.mode = data.mode === 'o' ? '@' : (data.mode === 'v' ? '+' : name.mode);
         }
         return name;
@@ -192,7 +192,7 @@ export default class IrcView extends React.Component {
       this.state.buffers.takeMode(data.channel, data.mode, data.by, data.target);
       if (data.mode === 'o' || data.mode === 'v') {
         names = names.map(function (name) {
-          if (name.name === data.target) {
+          if (name.nick === data.target) {
             name.mode = '';
           }
           return name;

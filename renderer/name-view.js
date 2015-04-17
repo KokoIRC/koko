@@ -25,7 +25,7 @@ export default class NameView extends React.Component {
       return (
         <li className={cls}>
           <span className='mode'>{name.mode}</span>
-          <span className='name'>{name.name}</span>
+          <span className='nick'>{name.nick}</span>
         </li>
       );
     });
