@@ -1,6 +1,6 @@
 import AppErrorHandler from './lib/app-error-handler';
 import ipc from './lib/ipc';
-import IrcWindow from './irc-window';
+import IrcView from './irc-view';
 import shortcutManager from './lib/shortcut-manager';
 import React from 'react';
 import ServerForm from './server-form';
@@ -26,7 +26,7 @@ class App extends React.Component {
 
   render() {
     return this.state.connected ?
-      <IrcWindow server={this.state.server} errorHandler={this.errorHandler}/> :
+      <IrcView server={this.state.server} errorHandler={this.errorHandler}/> :
       <ServerForm connect={this.connect.bind(this)} />;
   }
 };

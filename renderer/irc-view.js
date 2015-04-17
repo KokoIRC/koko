@@ -13,7 +13,7 @@ import React from 'react';
 const rootBufferName = configuration.get('root-buffer-name');
 const commandSymbol = configuration.get('command-symbol');
 
-export default class IrcWindow extends React.Component {
+export default class IrcView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
