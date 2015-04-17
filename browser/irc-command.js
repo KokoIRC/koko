@@ -8,7 +8,7 @@ const commands = {
   'whois': {args: ['nick']},
   'list': {args: []},
   'nick': {args: ['nick']},
-  'mode': {args: ['mode', 'nick', '?channel']},
+  'mode': {args: ['?channel', 'mode', 'nick']},
 };
 
 class CommandError extends Error {
@@ -28,28 +28,53 @@ class CommandError extends Error {
 }
 
 export const CommandParser = {
-  applyArgs(command, args, context) {
-    let maxLength = command.args.length;
-    let minLength = command.args.filter(s => s.charAt(0) !== '?').length;
-    if (args.length < minLength || maxLength < args.length) {
-      throw new CommandError(`Invalid command arguments: [${command.args}]`);
+  parse(raw, context) {
+    let tokens = raw.split(' ');
+    let name = tokens[0];
+    let args = tokens.splice(1);
+    let command = commands[name];
+
+    if (!command) {
+      throw new Error('Invalid command name');
     }
 
-    command.args = _.compact(command.args.map(function (argName, idx) {
-      if (_.isUndefined(args[idx])) {
-        if (argName[0] !== '?') {
-          let argFormat = `${command.name}: [${command.args}]`;
-          throw new CommandError(`No ${argName} provided. ${argFormat}`);
+    args = this.parseArgs(name, _.clone(command.args), args, context);
+    return {name, args};
+  },
+  parseArgs(name, argList, args, context) {
+    function getNeededArgsLength(args) {
+      return args.filter(s => s.charAt(0) !== '?').length;
+    }
+
+    let parsedArgs = [];
+    while (true) {
+      let argNeeded = argList.shift();
+      if (_.isUndefined(argNeeded)) {
+        break;
+      }
+      if (argNeeded[0] !== '?') {
+        let arg = args.shift();
+        if (_.isUndefined(arg)) {
+          throw new CommandError(`Invalid command arguments: [${argNeeded}]`);
         } else {
-          return this.processArg(command, null, idx, context);
+          parsedArgs.push(arg);
         }
       } else {
-        return this.processArg(command, args[idx], idx, context);
+        if (getNeededArgsLength(argList) < args.length) {
+          parsedArgs.push(args.shift());
+        } else if (getNeededArgsLength(argList) === args.length) {
+          parsedArgs.push(undefined);
+        } else {
+          throw new CommandError(`Invalid command arguments: [${argNeeded}]`);
+        }
       }
-    }.bind(this)));
+    }
+    return parsedArgs.map(function (arg, idx) {
+      return this.processArg(name, arg, idx, context);
+    }.bind(this));
   },
-  processArg(command, value, idx, context) {
-    switch (command.name) {
+  processArg(name, value, idx, context) {
+    switch (name) {
     case 'join':
       if (idx === 0) {
         if (value[0] !== '#') {
@@ -59,7 +84,7 @@ export const CommandParser = {
       break;
     case 'part':
       if (idx === 0) {
-        if (value === null) {
+        if (_.isUndefined(value)) {
           value = context.target;
         } else if (value[0] !== '#') {
           value = '#' + value;
@@ -67,31 +92,18 @@ export const CommandParser = {
       }
       break;
     case 'mode':
-      if (idx === 0 && !(value[0] === '+' || value[0] === '0')) {
-        value = '+' + value;
-      } else if(idx === 2) {
-        if (value === null) {
+      if (idx === 0) {
+        if (_.isUndefined(value)) {
           value = context.target;
         } else if (value[0] !== '#') {
           value = '#' + value;
         }
+      } else if (idx === 1) {
+        if (!(value[0] === '+' || value[0] === '0')) {
+          value = '+' + value;
+        }
       }
     }
     return value;
-  },
-  parse(raw, context) {
-    let tokens = raw.split(' ');
-    let commandName = tokens[0];
-    let args = tokens.splice(1);
-    let command = _.clone(commands[commandName]);
-
-    if (!command) {
-      throw new Error('Invalid command name');
-    }
-
-    command.name = commandName;
-
-    this.applyArgs(command, args, context);
-    return command;
   },
 };
