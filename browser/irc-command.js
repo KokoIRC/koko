@@ -7,7 +7,7 @@ const commands = {
   'action': {args: ['target', 'message']},
   'whois': {args: ['nick']},
   'list': {args: []},
-  'nick': {args: ['nick'], rawName: 'NICK'},
+  'nick': {args: ['nick']},
 };
 
 const defaultPartMessage = 'bye';

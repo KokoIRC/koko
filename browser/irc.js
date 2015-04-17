@@ -64,11 +64,7 @@ export function connect(data, ipc) {
   ipc.on('command', function (data) {
     try {
       let command = CommandParser.parse(data.raw, data.context);
-      if (command.rawName) {
-        client.send.apply(client, [command.rawName].concat(command.args));
-      } else {
-        client[command.name].apply(client, command.args);
-      }
+      client[command.name].apply(client, command.args);
     } catch (error) {
       ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
     }
