@@ -7,7 +7,7 @@ class Ipc {
     this._webContents = w.webContents;
   }
 
-  on(eventName: string, handler: (json: any) => void) {
+  on(eventName: string, handler: JsonCallback) {
     ipc.on(eventName, function (event , arg) {
       if (event.sender === this._webContents) {
         handler(JSON.parse(arg));

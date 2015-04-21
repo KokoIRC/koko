@@ -1,8 +1,7 @@
-import _ from 'underscore';
-import configuration from './configuration';
-import keyConfig from '../../config/keys';
+import _ = require('underscore');
+import configuration = require('./configuration');
 
-export const specialKeyIdentifiers = {
+export const specialKeys: Dict<string> = {
   'U+001B': 'escape',
   'U+0020': 'space',
   'U+0008': 'backspace',
@@ -10,7 +9,7 @@ export const specialKeyIdentifiers = {
   'U+0009': 'tab',
 };
 
-const keyAlias = {
+const keyAlias: Dict<string> = {
   'esc': 'escape',
   'ctrl': 'control',
   'cmd': 'meta',
@@ -19,17 +18,20 @@ const keyAlias = {
 const waiterClearTimeout = configuration.get('shortcut-serial-input-timeout');
 
 class KeyWaiter {
-  constructor(eventName, keys) {
+  eventName: string;
+  private _waitingKeys: ShortcutKeyInput[];
+
+  constructor(eventName: string, keys) {
     this.eventName = eventName;
     this._waitingKeys = keys;
   }
 
-  static matches(configInput, key, modifierState) {
+  static matches(configInput: ShortcutKeyInput, key: string, modifierState: ModifierState) {
     return configInput.key === key &&
            (!configInput.modifier || modifierState[configInput.modifier]);
   }
 
-  isWaiting(key, modifierState) {
+  isWaiting(key: string, modifierState: ModifierState) {
     return KeyWaiter.matches(this._waitingKeys[0], key, modifierState);
   }
 
@@ -37,26 +39,31 @@ class KeyWaiter {
     this._waitingKeys.shift();
   }
 
-  consume(key, modifierState) {
+  consume(key: string, modifierState: ModifierState) {
     if (this.isWaiting(key, modifierState)) {
       this.consumeOne();
     }
   }
 
-  isDone() {
+  isDone(): boolean {
     return this._waitingKeys.length === 0;
   }
 }
 
 class ShortcutManager {
-  constructor(rawConfig) {
+  private config: ShortcutKeyConfig[];
+  private _handlers: {[eventName: string]: ShortcutCallback[]};
+  private _waiters: KeyWaiter[];
+  private _waiterClearTimer: number;
+
+  constructor(rawConfig: any) {
     this.config = this.parseRawConfig(rawConfig);
     this._handlers = {};
     this._waiters = [];
     this._waiterClearTimer = null;
   }
 
-  parseRawConfig(rawConfig) {
+  parseRawConfig(rawConfig: any): ShortcutKeyConfig[] {
     return _.pairs(rawConfig).map(function (pair) {
       let action = pair[0];
       let shortcuts = pair[1].map(function (keyStr) {
@@ -84,9 +91,9 @@ class ShortcutManager {
     window.addEventListener('keydown', function (e) {
       let key = e.keyIdentifier;
       if (key.startsWith('U+')) {
-        key = specialKeyIdentifiers[key]
-          ? specialKeyIdentifiers[key]
-          : String.fromCodePoint(parseInt(key.substring(2), 16));
+        key = specialKeys[key]
+          ? specialKeys[key]
+          : (<any>String).fromCodePoint(parseInt(key.substring(2), 16));
       }
 
       if (typeof key === 'string') {
@@ -97,12 +104,12 @@ class ShortcutManager {
     }.bind(this));
   }
 
-  modifierState(e) {
+  modifierState(e: KeyboardEvent) {
     return ['Alt', 'Control', 'Meta', 'Shift'].reduce((result, key) =>
       _.extend(result, {[key.toLowerCase()]: e.getModifierState(key)}), {});
   }
 
-  keyEventHandler(key, modifierState) {
+  keyEventHandler(key: string, modifierState: ModifierState) {
     if (this._waiters.length > 0) {
       for (let waiter of this._waiters) {
         waiter.consume(key, modifierState);
@@ -143,7 +150,7 @@ class ShortcutManager {
     this._waiters = [];
   }
 
-  on(eventName, handler) {
+  on(eventName: string, handler: ShortcutCallback) {
     let eventList = this._handlers[eventName];
     if (_.isUndefined(eventList)) {
       this._handlers[eventName] = [];
@@ -152,7 +159,7 @@ class ShortcutManager {
     eventList.push(handler);
   }
 
-  happen(eventName) {
+  happen(eventName: string) {
     let eventList = this._handlers[eventName];
     if (eventList) {
       eventList.forEach(eventHandler =>
@@ -160,9 +167,9 @@ class ShortcutManager {
     }
   }
 
-  off(eventName) {
+  off(eventName: string) {
     delete this._handlers[eventName];
   }
 }
 
-export default new ShortcutManager(keyConfig);
+export let Manager = new ShortcutManager(configuration.getConfig('key'));

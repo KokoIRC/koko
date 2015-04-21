@@ -5,4 +5,10 @@ declare module 'irc' {
     on(eventName: string, handler: (...args: any[]) => void);
     say(target: string, text: string);
   }
+
+  interface Colors {
+    codes: {[colorName: string]: string};
+  }
+
+  export var colors: Colors;
 }

@@ -1,39 +1,51 @@
-import _ from 'underscore';
-import imageLib from './lib/image';
-import React from 'react';
-import moment from 'moment';
-import Ps from 'perfect-scrollbar';
-import shortcutManager from './lib/shortcut-manager';
+import _ = require('underscore');
+import buf = require('./lib/buffers');
+import imageLib = require('./lib/image');
+import log = require('./lib/logs');
+import moment = require('moment');
+import Ps = require('perfect-scrollbar');
+import React = require('react');
+import shortcut = require('./lib/shortcut-manager');
+import TypedReact = require('typed-react');
+
+const D = React.DOM;
 
 const followLogBuffer = 20;
 const minimumScrollHeight = 10;
 
-export default class BufferView extends React.Component {
-  constructor(props) {
-    super(props);
+interface BufferViewProps {
+  buffers: buf.Buffers;
+}
+
+class BufferView extends TypedReact.Component<BufferViewProps, {}> {
+  isFollowingLog: boolean;
+  currentBuffer: string;
+
+  constructor() {
+    super();
     this.isFollowingLog = true;
     this.currentBuffer = null;
   }
 
-  view() {
-    return React.findDOMNode(this.refs.view);
+  view(): HTMLDivElement {
+    return React.findDOMNode<HTMLDivElement>(this.refs['view']);
   }
 
   componentDidMount() {
     Ps.initialize(this.view());
-    shortcutManager.on('scroll-down', this.scrollDown.bind(this));
-    shortcutManager.on('scroll-up', this.scrollUp.bind(this));
-    shortcutManager.on('scroll-top', this.scrollTop.bind(this));
-    shortcutManager.on('scroll-bottom', this.scrollBottom.bind(this));
-    shortcutManager.on('page-down', this.pageDown.bind(this));
-    shortcutManager.on('page-up', this.pageUp.bind(this));
+    shortcut.Manager.on('scroll-down', this.scrollDown);
+    shortcut.Manager.on('scroll-up', this.scrollUp);
+    shortcut.Manager.on('scroll-top', this.scrollTop);
+    shortcut.Manager.on('scroll-bottom', this.scrollBottom);
+    shortcut.Manager.on('page-down', this.pageDown);
+    shortcut.Manager.on('page-up', this.pageUp);
   }
 
-  current() {
+  current(): buf.Buf {
     return this.props.buffers.current();
   }
 
-  logElement(log) {
+  logElement(log: log.Log): React.ReactElement<any> {
     let datetime = moment(log.datetime).calendar();
     let className = 'log';
     if (log.adjecent) {
@@ -44,30 +56,29 @@ export default class BufferView extends React.Component {
     if (log.media) {
       switch (log.media.type) {
       case 'image':
-        media = <a href={log.media.url} target='_blank'><img src={log.media.url} /></a>;
+        media = D.a({href: log.media.url, target: '_blank'},
+                  D.img({src: log.media.url}));
         break;
       case 'youtube':
         let embedSrc = `https://www.youtube.com/embed/${log.media.uuid}?rel=0`;
-        media = <iframe src={embedSrc} frameBorder="0"></iframe>
+        media = D.iframe({src: embedSrc, frameBorder: 0});
         break;
       }
     }
 
     return (
-      <li className={className}>
-        <div className='info'>
-          <span className='nick'>{log.nick}</span>
-          <span className='datetime'>{datetime}</span>
-        </div>
-        <div className='text' dangerouslySetInnerHTML={{__html: log.textEl}}></div>
-        <div className='media'>
-          {media}
-        </div>
-      </li>
+      D.li({className: className},
+        D.div({className: 'info'},
+          D.span({className: 'nick'}, log.nick),
+          D.span({className: 'datetime'}, datetime)
+        ),
+        D.div({className: 'text', dangerouslySetInnerHTML: {__html: log.textEl}}),
+        D.div({className: 'media'}, media)
+      )
     );
   }
 
-  componentWillUpdate(nextProps) {
+  componentWillUpdate(nextProps: BufferViewProps) {
     let view = this.view();
     let isAtBottom = view.scrollHeight - view.clientHeight - view.scrollTop < followLogBuffer;
     let isChanged = this.currentBuffer !== nextProps.buffers.current().name;
@@ -77,11 +88,9 @@ export default class BufferView extends React.Component {
   render() {
     this.currentBuffer = this.current().name;
     return (
-      <div id='buffer-view' ref='view'>
-        <ul>
-          {this.current().logs.map(this.logElement.bind(this))}
-        </ul>
-      </div>
+      D.div({id: 'buffer-view', ref: 'view'},
+        D.ul(null, this.current().logs.map(this.logElement))
+      )
     );
   }
 
@@ -97,10 +106,11 @@ export default class BufferView extends React.Component {
 
   scrollDown() {
     let view = this.view();
-    let logs = _.toArray(view.getElementsByTagName('li'));
+    let logs = _.toArray<HTMLLIElement>(view.getElementsByTagName('li'));
 
     let logToScroll = null;
-    for (let log of logs) {
+    for (let i = 0; i < logs.length; i++) {
+      let log = logs[i];
       if (log.offsetTop < view.scrollTop - minimumScrollHeight) {
         logToScroll = log;
       } else {
@@ -113,10 +123,11 @@ export default class BufferView extends React.Component {
 
   scrollUp() {
     let view = this.view();
-    let logs = _.toArray(view.getElementsByTagName('li'));
+    let logs = _.toArray<HTMLLIElement>(view.getElementsByTagName('li'));
 
     let logToScroll = null;
-    for (let log of logs) {
+    for (let i = 0; i < logs.length; i++) {
+      let log = logs[i];
       if (log.offsetTop > view.scrollTop + minimumScrollHeight) {
         logToScroll = log;
         break;
@@ -175,3 +186,5 @@ export default class BufferView extends React.Component {
     }.bind(this));
   }
 }
+
+export = React.createFactory(TypedReact.createClass(BufferView));

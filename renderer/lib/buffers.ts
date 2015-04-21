@@ -1,64 +1,71 @@
-import Logs from './logs';
+import _ = require('underscore');
+import log = require('./logs');
 
-class Buf { // Buffer exists as a default class
-  constructor(name) {
+export class Buf { // Buffer exists as a default class
+  name: string;
+  logs: log.Logs;
+  private _current: boolean;
+
+  constructor(name: string) {
     this.name = name;
-    this.logs = new Logs();
+    this.logs = new log.Logs();
     this._current = false;
   }
 
-  current(set) {
-    if (typeof set === 'undefined') {
-      return this._current;
-    } else {
-      this._current = set;
+  current(isCurrent?: boolean): boolean {
+    if (!_.isUndefined(isCurrent)) {
+      this._current = isCurrent;
     }
+    return this._current;
   }
 }
 
-export default class Buffers {
-  constructor(rootBufName) {
+export class Buffers {
+  private _rootBuf: Buf;
+  private _buffers: Buf[];
+
+  constructor(rootBufName: string) {
     this._rootBuf = new Buf(rootBufName);
     this._rootBuf.current(true);
     this._buffers = [this._rootBuf];
   }
 
-  send(to, nick, text) {
+  send(to: string, nick: string, text: string) {
     let target = this.target(to);
     target.logs.say(nick, text);
   }
 
-  joinMessage(channel, nick, message, isMe=false) {
+  joinMessage(channel: string, nick: string, message: IrcRawMessage) {
     let target = this.target(channel);
     target.logs.join(nick, message);
   }
 
-  partMessage(channel, nick, reason, message) {
+  partMessage(channel: string, nick: string, reason: string, message: IrcRawMessage) {
     let target = this.target(channel);
     target.logs.part(nick, reason, message);
   }
 
-  changeNick(channel, oldNick, newNick) {
+  changeNick(channel: string, oldNick: string, newNick: string) {
     let target = this.target(channel);
     target.logs.changeNick(oldNick, newNick);
   }
 
-  giveMode(channel, mode, by, to) {
+  giveMode(channel: string, mode: string, by: string, to: string) {
     let target = this.target(channel);
     target.logs.giveMode(mode, by, to);
   }
 
-  takeMode(channel, mode, by, to) {
+  takeMode(channel: string, mode: string, by: string, to: string) {
     let target = this.target(channel);
     target.logs.takeMode(mode, by, to);
   }
 
-  whois(channel, info) {
+  whois(channel: string, info: Dict<string>) {
     let target = this.target(channel);
     target.logs.whois(info);
   }
 
-  target(name) {
+  target(name: string): Buf {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {
       target = new Buf(name);
@@ -68,11 +75,11 @@ export default class Buffers {
     return target;
   }
 
-  add(name) {
+  add(name: string) {
     this.target(name);
   }
 
-  remove(name) {
+  remove(name: string) {
     if (name === this._rootBuf.name) {
       return;
     }
@@ -89,7 +96,7 @@ export default class Buffers {
     this.setCurrent(lastBufferName);
   }
 
-  setCurrent(bufName) {
+  setCurrent(bufName: string) {
     this._buffers = this._buffers.map(function (buffer) {
       if (buffer.name === bufName) {
         buffer.current(true);
@@ -100,17 +107,17 @@ export default class Buffers {
     });
   }
 
-  current() {
+  current(): Buf {
     return this._buffers.filter(c => c.current())[0];
   }
 
-  next() {
+  next(): Buf {
     let currentIndex = this._buffers.indexOf(this.current());
     let nextIndex = (currentIndex + 1) % this._buffers.length;
     return this._buffers[nextIndex];
   }
 
-  previous() {
+  previous(): Buf {
     let currentIndex = this._buffers.indexOf(this.current());
     let previousIndex = (currentIndex - 1) % this._buffers.length;
     if (previousIndex < 0) {
@@ -119,7 +126,7 @@ export default class Buffers {
     return this._buffers[previousIndex];
   }
 
-  map(func) {
-    return this._buffers.map(func);
+  map<T>(func: (buf: Buf) => T): T[] {
+    return this._buffers.map<T>(func);
   }
 }

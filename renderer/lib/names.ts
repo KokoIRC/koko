@@ -1,11 +1,13 @@
-import _ from 'underscore';
+import _ = require('underscore');
 
-export default class Names {
+class Names {
+  private _channels: {[name: string]: IrcName[]};
+
   constructor() {
     this._channels = {};
   }
 
-  _sort(channelName) {
+  _sort(channelName: string) {
     if (!this._channels[channelName]) {
       return;
     }
@@ -20,16 +22,16 @@ export default class Names {
     });
   }
 
-  set(channelName, names) {
+  set(channelName: string, names: IrcName[]) {
     this._channels[channelName] = names;
     this._sort(channelName);
   }
 
-  get(channelName) {
+  get(channelName: string): IrcName[] {
     return this._channels[channelName]
   }
 
-  add(channelName, nickToAdd) {
+  add(channelName: string, nickToAdd: string) {
     let channel = this._channels[channelName];
     if (channel) {
       channel.push({
@@ -41,7 +43,7 @@ export default class Names {
     }
   }
 
-  remove(channelName, nickToRemove) {
+  remove(channelName: string, nickToRemove: string) {
     let channel = this._channels[channelName];
     if (channel) {
       this._channels[channelName] = _.reject(channel, function (name) {
@@ -51,7 +53,7 @@ export default class Names {
     }
   }
 
-  update(channelName, oldNick, newNick) {
+  update(channelName: string, oldNick: string, newNick: string) {
     let channel = this._channels[channelName];
     if (channel) {
       this._channels[channelName] = channel.map(function (name) {
@@ -64,7 +66,9 @@ export default class Names {
     }
   }
 
-  delete(channelName) {
+  delete(channelName: string) {
     delete this._channels[channelName];
   }
 }
+
+export = Names;

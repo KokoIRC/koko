@@ -1,24 +1,28 @@
-import _ from 'underscore';
+import _ = require('underscore');
 
-export default class Autocompleter {
+class Autocompleter {
+  private completeIdx: number;
+  private wordsToComplete: string[];
+  private names: string[];
+
   constructor() {
     this.completeIdx = -1;
     this.wordsToComplete = [];
     this.names = [];
   }
 
-  setNames(names) {
+  setNames(names: string[]) {
     if (_.isArray(names)) {
       this.names = names;
     }
   }
 
-  complete(word) {
+  complete(word: string): string {
     if (this.wordsToComplete.length > 0 && this.completeIdx >= 0) {
       this.completeIdx = (this.completeIdx + 1) % this.wordsToComplete.length;
       return this.wordsToComplete[this.completeIdx];
     } else {
-      let properNames = this.names.filter(n => n.startsWith(word));
+      let properNames = this.names.filter(n => n.indexOf(word) === 0);
       if (properNames.length === 0) {
         return null;
       } else if (properNames.length === 1) {
@@ -36,3 +40,5 @@ export default class Autocompleter {
     this.completeIdx = -1;
   }
 }
+
+export = Autocompleter;

@@ -1,59 +1,73 @@
-import _ from 'underscore';
-import ipc from './lib/ipc';
-import Buffers from './lib/buffers';
-import BufferView from './buffer-view';
-import configuration from './lib/configuration';
-import InputBox from './input-box';
-import Names from './lib/names';
-import NameView from './name-view';
-import shortcutManager from './lib/shortcut-manager';
-import TabNav from './tab-nav';
-import React from 'react';
+import _ = require('underscore');
+import AppErrorHandler = require('./lib/app-error-handler');
+import buf = require('./lib/buffers');
+import BufferView = require('./buffer-view');
+import configuration = require('./lib/configuration');
+import InputBox = require('./input-box');
+import ipc = require('./lib/ipc');
+import Names = require('./lib/names');
+import NameView = require('./name-view');
+import React = require('react');
+import shortcut = require('./lib/shortcut-manager');
+import TabNav = require('./tab-nav');
+import TypedReact = require('typed-react');
+
+const D = React.DOM;
 
 const rootBufferName = configuration.get('root-buffer-name');
 const commandSymbol = configuration.get('command-symbol');
 
-export default class IrcView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+interface IrcViewProps {
+  errorHandler: AppErrorHandler;
+  server: string;
+}
+
+interface IrcViewState {
+  nick: string;
+  buffers: buf.Buffers;
+  names: Names;
+}
+
+class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
+  getInitialState(): IrcViewState {
+    return {
       nick: '',
-      buffers: new Buffers(rootBufferName),
+      buffers: new buf.Buffers(rootBufferName),
       names: new Names(),
     };
   }
 
-  setNick(nick) {
-    this.setState({nick});
+  setNick(nick: string) {
+    this.setState(<IrcViewState>{nick});
   }
 
   componentDidMount() {
     // irc events
     ipc.on('registered', data => this.setNick(data.nick));
-    ipc.on('message', this.onMessage.bind(this));
-    ipc.on('join', this.onJoin.bind(this));
-    ipc.on('part', this.onPart.bind(this));
-    ipc.on('nick', this.onChangeNick.bind(this));
-    ipc.on('names', this.onNames.bind(this));
+    ipc.on('message', this.onMessage);
+    ipc.on('join', this.onJoin);
+    ipc.on('part', this.onPart);
+    ipc.on('nick', this.onChangeNick);
+    ipc.on('names', this.onNames);
     ipc.on('+mode', this.onMode.bind(this, true));
     ipc.on('-mode', this.onMode.bind(this, false));
-    ipc.on('quit', this.onQuit.bind(this));
-    ipc.on('whois', this.onWhois.bind(this));
+    ipc.on('quit', this.onQuit);
+    ipc.on('whois', this.onWhois);
 
     // shortcuts
-    shortcutManager.on('next-tab', function () {
+    shortcut.Manager.on('next-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.next().name);
       this.forceUpdate();
     }.bind(this));
-    shortcutManager.on('previous-tab', function () {
+    shortcut.Manager.on('previous-tab', function () {
       this.state.buffers.setCurrent(this.state.buffers.previous().name);
       this.forceUpdate();
     }.bind(this));
 
-    this.props.errorHandler.on('irc', this.onError.bind(this));
+    this.props.errorHandler.on('irc', this.onError);
   }
 
-  setWindowTitle(title) {
+  setWindowTitle(title: string) {
     let titleTag = document.getElementsByTagName('title')[0];
     titleTag.innerText = title;
   }
@@ -65,20 +79,20 @@ export default class IrcView extends React.Component {
     let currentNames = this.state.names.get(currentBufferName);
 
     return (
-      <div id='irc-window'>
-        <TabNav buffers={this.state.buffers} />
-        <NameView names={currentNames} />
-        <BufferView buffers={this.state.buffers} />
-        <InputBox channel={this.state.buffers.current().name}
-                  names={currentNames}
-                  submit={this.submitInput.bind(this)} />
-      </div>
+      D.div({id: 'irc-window'},
+        TabNav({buffers: this.state.buffers}),
+        NameView({names: currentNames}),
+        BufferView({buffers: this.state.buffers}),
+        InputBox({channel: this.state.buffers.current().name,
+                  names: currentNames,
+                  submit: this.submitInput})
+      )
     );
   }
 
-  submitInput(raw) {
+  submitInput(raw: string) {
     let target = this.state.buffers.current().name;
-    if (raw.startsWith(commandSymbol)) {
+    if (raw.indexOf(commandSymbol) === 0) {
       raw = raw.substring(1);
       let methodName = this.tryGetLocalHandler(raw);
       if (methodName) {
@@ -95,7 +109,7 @@ export default class IrcView extends React.Component {
     }
   }
 
-  tryGetLocalHandler(raw) {
+  tryGetLocalHandler(raw: string): string {
     let tokens = raw.split(' ');
     if (tokens.length === 1 && tokens[0] === 'part' &&
         this.state.buffers.current().name[0] !== '#') {
@@ -135,7 +149,7 @@ export default class IrcView extends React.Component {
     this.forceUpdate();
   }
 
-  startPersonalChat(raw) {
+  startPersonalChat(raw: string) {
     let tokens = raw.split(' ');
     if (tokens.length < 3) {
       this.props.errorHandler.handle({
@@ -160,7 +174,7 @@ export default class IrcView extends React.Component {
 
   onChangeNick(data) {
     if (data.oldnick === this.state.nick) {
-      this.setState({nick: data.newnick});
+      this.setState(<IrcViewState>{nick: data.newnick});
       data.channels.push(rootBufferName);
     }
     data.channels.forEach(function (channel) {
@@ -171,14 +185,14 @@ export default class IrcView extends React.Component {
   }
 
   onNames(data) {
-    let names = Object.keys(data.names).map(function (nick) {
+    let names = Object.keys(data.names).map<IrcName>(function (nick: string) {
       return {nick, mode: data.names[nick], isMe: nick === this.state.nick}
     }.bind(this));
     this.state.names.set(data.channel, names);
     this.forceUpdate();
   }
 
-  onMode(isGiving, data) {
+  onMode(isGiving: boolean, data) {
     let names = this.state.names.get(data.channel);
     // FIXME: handles only 'o' and 'v' here.
     if (isGiving) {
@@ -228,3 +242,5 @@ export default class IrcView extends React.Component {
     }
   }
 }
+
+export = React.createFactory(TypedReact.createClass(IrcView));

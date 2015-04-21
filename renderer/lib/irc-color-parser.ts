@@ -1,22 +1,27 @@
-import _ from 'underscore';
-import irc from 'irc';
+import _ = require('underscore');
+import irc = require('irc');
 
-export default class IrcColorParser {
-  constructor(text) {
+class IrcColorParser {
+  text: string;
+  private _idx: number;
+  private _reversed: boolean;
+  private _colorCount: number;
+
+  constructor(text: string) {
     this.text = text;
     this._idx = 0;
     this._reversed = false;
     this._colorCount = 0;
   }
 
-  replaceTextStyle(code, className) {
+  replaceTextStyle(code: string, className: string) {
     let tag = `<span class='${className}'>`;
     this.text = this.text.replace(code, tag);
     this._colorCount += 1;
     this._idx += tag.length;
   }
 
-  getCodes() {
+  getCodes(): string[] {
     let code = '';
     let bgCode = '';
     let originalCode = '';
@@ -39,7 +44,7 @@ export default class IrcColorParser {
         originalCode += codeChunk;
       }
     }
-    code = code.length === 0 ? 1 : code;
+    code = code.length === 0 ? '1' : code;
     code = (parseInt(code, 10) % 16) + '';
     code = code.length === 1 ? '0' + code : code;
     if (bgCode) {
@@ -49,7 +54,7 @@ export default class IrcColorParser {
     return [code, bgCode, originalCode];
   }
 
-  toClassName(code) {
+  toClassName(code: string): string {
     let camelcased = _.invert(irc.colors.codes)['\u0003' + code];
     if (camelcased) {
       return camelcased.replace(/([A-Z])/g, '-$1').toLowerCase();
@@ -58,7 +63,7 @@ export default class IrcColorParser {
     }
   }
 
-  process() {
+  process(): string {
     while (true) {
       let c = this.text[this._idx];
       if (c === '\u0003') {
@@ -85,7 +90,7 @@ export default class IrcColorParser {
           this._idx += closeSpanTag.length;
         }
       } else if (c === '\u000f') {
-        let closeSpanTag = '</span>'.repeat(this._colorCount);
+        let closeSpanTag = this.repeat('</span>', this._colorCount);
         this.text = this.text.replace('\u000f', closeSpanTag);
         this._colorCount = 0;
         this._reversed = false;
@@ -97,8 +102,18 @@ export default class IrcColorParser {
       }
     }
     if (this._colorCount > 0) {
-      this.text = this.text + '</span>'.repeat(this._colorCount);
+      this.text = this.text + this.repeat('</span>', this._colorCount);
     }
     return this.text;
   }
+
+  repeat(str: string, times: number): string {
+    let result = '';
+    for (let i = 0; i < times; i++) {
+      result += str;
+    }
+    return result;
+  }
 };
+
+export = IrcColorParser;

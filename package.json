@@ -31,6 +31,7 @@
     "normalize.css": "^3.0.2",
     "perfect-scrollbar": "^0.6.1",
     "react": "^0.13.1",
+    "typed-react": "^3.4.1",
     "typescript": "^1.5.0-alpha",
     "underscore": "^1.8.3"
   },

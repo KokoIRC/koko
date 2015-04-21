@@ -15,9 +15,12 @@ dep:
 build: clean
 	@mkdir build
 	@mkdir build/browser
+	@mkdir build/renderer
+	# move config
+	cp -r config build/
 	# build renderer scripts
-	# FIXME
-	# $(BROWSERIFY) ./renderer/app.js -o build/renderer.js --ignore ipc
+	$(TSC) -p ./renderer
+	$(BROWSERIFY) ./build/renderer/app.js -o build/renderer.js --ignore ipc --debug
 	# build browser scripts
 	$(TSC) -p ./browser
 	# build styles

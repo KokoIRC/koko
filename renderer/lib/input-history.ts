@@ -1,22 +1,25 @@
-import _ from 'underscore';
-import configuration from './configuration';
+import _ = require('underscore');
+import configuration = require('./configuration');
+import React = require('react');
 
 const inputHistoryLimit = configuration.get('input-history-limit');
 
-export default class InputHistory {
-  constructor(props) {
-    super(props);
+class InputHistory {
+  private _history: string[];
+  private _idx: number;
+  private _tempInput: string;
 
+  constructor() {
     this._history = [];
     this._idx = -1; // -1 is the initial index
     this._tempInput = '';
   }
 
-  index() {
+  index(): number {
     return this._idx;
   }
 
-  moveIndex(diff) {
+  moveIndex(diff: number) {
     let originalIdx = this._idx;
     this._idx += diff;
     if (this._idx < 0) {
@@ -28,7 +31,7 @@ export default class InputHistory {
     }
   }
 
-  currentText() {
+  currentText(): string {
     if (this._idx < 0) {
       return this._tempInput;
     } else {
@@ -36,11 +39,11 @@ export default class InputHistory {
     }
   }
 
-  setTempInput(tempInput) {
+  setTempInput(tempInput: string) {
     this._tempInput = tempInput;
   }
 
-  add(text) {
+  add(text: string) {
     this._history = [text].concat(this._history);
     if (this._history.length > inputHistoryLimit) {
       this._history = this._history.splice(0, inputHistoryLimit);
@@ -52,3 +55,5 @@ export default class InputHistory {
     this._idx = -1;
   }
 }
+
+export = InputHistory;
