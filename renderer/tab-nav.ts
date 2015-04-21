@@ -11,7 +11,7 @@ interface TabNavProps {
 class TabNav extends TypedReact.Component<TabNavProps, {}> {
   render() {
     let tabs = this.props.buffers.map(buffer =>
-      D.li({className: buffer.current() ? 'current': ''}, buffer.name));
+      D.li({key: buffer.id, className: buffer.current() ? 'current': ''}, buffer.name));
 
     return (
       D.div({id: 'tab-nav'},

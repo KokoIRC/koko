@@ -7,7 +7,16 @@ const scrollbackLimit = configuration.get('scrollback-limit');
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g;
 
+let generateLogId = (function () {
+  let currentLogId = 0;
+  return function () {
+    currentLogId++;
+    return currentLogId;
+  };
+})();
+
 export class Log {
+  id: number;
   nick: string;
   text: string;
   datetime: Date;
@@ -16,6 +25,7 @@ export class Log {
   textEl: string;
 
   constructor(nick: string, text: string) {
+    this.id = generateLogId();
     this.nick = nick;
     this.text = text;
     this.datetime = new Date();

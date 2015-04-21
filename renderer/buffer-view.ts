@@ -67,7 +67,7 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
     }
 
     return (
-      D.li({className: className},
+      D.li({key: log.id, className: className},
         D.div({className: 'info'},
           D.span({className: 'nick'}, log.nick),
           D.span({className: 'datetime'}, datetime)
