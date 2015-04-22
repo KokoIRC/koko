@@ -55,14 +55,14 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     ipc.on('whois', this.onWhois);
 
     // shortcuts
-    shortcut.Manager.on('next-tab', function () {
+    shortcut.Manager.on('next-tab', () => {
       this.state.buffers.setCurrent(this.state.buffers.next().name);
       this.forceUpdate();
-    }.bind(this));
-    shortcut.Manager.on('previous-tab', function () {
+    });
+    shortcut.Manager.on('previous-tab', () => {
       this.state.buffers.setCurrent(this.state.buffers.previous().name);
       this.forceUpdate();
-    }.bind(this));
+    });
 
     this.props.errorHandler.on('irc', this.onError);
   }
@@ -177,17 +177,17 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       this.setState(<IrcViewState>{nick: data.newnick});
       data.channels.push(rootBufferName);
     }
-    data.channels.forEach(function (channel) {
+    data.channels.forEach((channel) => {
       this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
       this.state.names.update(channel, data.oldnick, data.newnick);
-    }.bind(this));
+    });
     this.forceUpdate();
   }
 
   onNames(data) {
-    let names = Object.keys(data.names).map<IrcName>(function (nick: string) {
+    let names = Object.keys(data.names).map<IrcName>((nick: string) => {
       return {nick, mode: data.names[nick], isMe: nick === this.state.nick}
-    }.bind(this));
+    });
     this.state.names.set(data.channel, names);
     this.forceUpdate();
   }
@@ -219,10 +219,10 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   onQuit(data) {
-    data.channels.forEach(function (channel) {
+    data.channels.forEach((channel) => {
       let dataForChannel = _.extend(_.omit(data, 'channels'), {channel});
       this.onPart(dataForChannel);
-    }.bind(this));
+    });
   }
 
   onWhois(data) {

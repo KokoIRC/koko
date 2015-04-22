@@ -90,7 +90,7 @@ class IrcColorParser {
           this._idx += closeSpanTag.length;
         }
       } else if (c === '\u000f') {
-        let closeSpanTag = this.repeat('</span>', this._colorCount);
+        let closeSpanTag = '</span>'.repeat(this._colorCount);
         this.text = this.text.replace('\u000f', closeSpanTag);
         this._colorCount = 0;
         this._reversed = false;
@@ -102,17 +102,9 @@ class IrcColorParser {
       }
     }
     if (this._colorCount > 0) {
-      this.text = this.text + this.repeat('</span>', this._colorCount);
+      this.text = this.text + '</span>'.repeat(this._colorCount);
     }
     return this.text;
-  }
-
-  repeat(str: string, times: number): string {
-    let result = '';
-    for (let i = 0; i < times; i++) {
-      result += str;
-    }
-    return result;
   }
 };
 

@@ -14,22 +14,22 @@ class IrcWindow {
     this.ipc = new Ipc(this._window);
 
     this._window.loadUrl(url);
-    this._window.on('closed', function() {
+    this._window.on('closed', () => {
       this._window = null;
       IrcWindow.remove(this);
-    }.bind(this));
-    this._window.on('focus', function () {
+    });
+    this._window.on('focus', () => {
       this.ipc.send('focus', {});
       IrcWindow.focus(this);
-    }.bind(this));
+    });
     this._window.webContents.on('new-window', function (e, url) {
       shell.openExternal(url);
       e.preventDefault();
     });
 
-    this.ipc.on('connect', function (data) {
+    this.ipc.on('connect', (data) => {
       irc.connect(data, this.ipc);
-    }.bind(this));
+    });
 
     this.focused = true;
     IrcWindow.focus(this);

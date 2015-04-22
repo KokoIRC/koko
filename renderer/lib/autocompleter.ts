@@ -22,7 +22,7 @@ class Autocompleter {
       this.completeIdx = (this.completeIdx + 1) % this.wordsToComplete.length;
       return this.wordsToComplete[this.completeIdx];
     } else {
-      let properNames = this.names.filter(n => n.indexOf(word) === 0);
+      let properNames = this.names.filter(n => n.startsWith(word));
       if (properNames.length === 0) {
         return null;
       } else if (properNames.length === 1) {

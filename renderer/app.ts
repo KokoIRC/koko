@@ -31,7 +31,7 @@ class App extends TypedReact.Component<{}, AppState> {
   }
 
   componentDidMount() {
-    ipc.on('error', this.errorHandler.handle.bind(this.errorHandler));
+    ipc.on('error', (data) => this.errorHandler.handle(data));
   }
 
   connect(data) {

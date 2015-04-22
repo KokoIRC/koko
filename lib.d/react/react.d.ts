@@ -3,9 +3,7 @@
 // Definitions by: Asana <https://asana.com>, AssureSign <http://www.assuresign.com>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 
-interface NativeKeyboardEvent extends KeyboardEvent {
-  keyIdentifier: string;
-}
+interface NativeKeyboardEvent extends KeyboardEvent { }
 
 declare module "react" {
     //

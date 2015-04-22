@@ -1,5 +1,5 @@
-var app = require('../../config/app');
-var key = require('../../config/keys');
+const app = require('../../config/app');
+const key = require('../../config/keys');
 
 import _ = require('underscore');
 

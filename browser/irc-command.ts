@@ -1,10 +1,6 @@
 import _ = require('underscore');
 
-interface CommandMap {
-  [name: string]: string[]
-}
-
-const commands: CommandMap = {
+const commands: Dict<string[]> = {
   'join': ['channel'],
   'part': ['?channel', '?message'],
   'ctcp': ['target', 'type', 'text'],
@@ -19,7 +15,6 @@ class CommandError implements Error {
   message: string;
   constructor(message: string) {
     this.message = message;
-    var Error: any = Error;
     if (Error.hasOwnProperty('captureStackTrace')) {
       Error.captureStackTrace(this, this.constructor);
     } else {
@@ -28,8 +23,7 @@ class CommandError implements Error {
   }
 
   get name() {
-    var constructor: any = this.constructor;
-    return constructor.name;
+    return (<any>this.constructor).name;
   }
 }
 
@@ -75,9 +69,9 @@ const IrcCommand = {
         }
       }
     }
-    return parsedArgs.map<string>(function (arg, idx) {
+    return parsedArgs.map<string>((arg, idx) => {
       return this.processArg(name, arg, idx, context);
-    }.bind(this));
+    });
   },
   processArg(name: string, value: string, idx: number, context: CommandContext): string {
     switch (name) {

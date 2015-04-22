@@ -3,7 +3,7 @@ import Menu = require('menu');
 
 export = {
   initialize(app, mainUrl: string) {
-    var template = [
+    let template = [
       { label: 'koko',
         submenu: [
           { label: 'About koko',
@@ -71,7 +71,7 @@ export = {
         submenu: [] },
     ];
 
-    var menu = Menu.buildFromTemplate(template);
+    let menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   }
 };

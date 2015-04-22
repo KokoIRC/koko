@@ -32,8 +32,8 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
     shortcut.Manager.on('message', this.onMessageKey);
     shortcut.Manager.on('command', this.onCommandKey);
     shortcut.Manager.on('exit', this.onExitKey);
-    shortcut.Manager.on('input-history-back', this.onInputHistoryKey.bind(this, +1));
-    shortcut.Manager.on('input-history-forward', this.onInputHistoryKey.bind(this, -1));
+    shortcut.Manager.on('input-history-back', () => this.onInputHistoryKey(+1));
+    shortcut.Manager.on('input-history-forward', () => this.onInputHistoryKey(-1));
     shortcut.Manager.on('autocomplete', this.onAutocompleteKey);
 
     // window events
@@ -42,7 +42,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
   onMessageKey() {
     let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
-    if (input.value.indexOf(commandSymbol) === 0) {
+    if (input.value.startsWith(commandSymbol)) {
       input.value = '';
     }
     this.focus();
@@ -50,7 +50,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
   onCommandKey() {
     let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
-    if (input.value.indexOf(commandSymbol) !== 0) {
+    if (!input.value.startsWith(commandSymbol)) {
       input.value = commandSymbol;
     }
     this.focus();

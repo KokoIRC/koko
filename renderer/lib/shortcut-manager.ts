@@ -88,7 +88,7 @@ class ShortcutManager {
   }
 
   initialize() {
-    window.addEventListener('keydown', function (e) {
+    window.addEventListener('keydown', (e: NativeKeyboardEvent) => {
       let key = e.keyIdentifier;
       if (key.startsWith('U+')) {
         key = specialKeys[key]
@@ -101,7 +101,7 @@ class ShortcutManager {
         key = (/^[a-zA-Z]$/.exec(key) && modifierState.shift) ? key.toUpperCase() : key.toLowerCase();
         this.keyEventHandler(key, modifierState);
       }
-    }.bind(this));
+    });
   }
 
   modifierState(e: KeyboardEvent) {
@@ -140,7 +140,7 @@ class ShortcutManager {
 
   resetWaiterClearTimer() {
     clearTimeout(this._waiterClearTimer);
-    this._waiterClearTimer = setTimeout(this.clearWaiters.bind(this),
+    this._waiterClearTimer = setTimeout(() => this.clearWaiters(),
                                         waiterClearTimeout);
   }
 
