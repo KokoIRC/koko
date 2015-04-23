@@ -72,7 +72,7 @@ export function connect(data: ConnectionData, ipc: Ipc) {
       let command = IrcCommand.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);
     } catch (error) {
-      if (error.name === 'CommandError') {
+      if (error instanceof IrcCommand.CommandError) {
         ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
       } else {
         throw error;
