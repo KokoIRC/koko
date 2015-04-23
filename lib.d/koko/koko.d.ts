@@ -37,12 +37,6 @@ interface IrcRawMessage {
   host: string;
 }
 
-interface IrcName {
-  nick: string;
-  mode: string;
-  isMe: boolean;
-}
-
 interface ShortcutCallback {
   (): void;
 }

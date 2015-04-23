@@ -5,7 +5,7 @@ import BufferView = require('./buffer-view');
 import configuration = require('./lib/configuration');
 import InputBox = require('./input-box');
 import ipc = require('./lib/ipc');
-import Names = require('./lib/names');
+import namelib = require('./lib/names');
 import NameView = require('./name-view');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
@@ -25,7 +25,7 @@ interface IrcViewProps {
 interface IrcViewState {
   nick: string;
   buffers: buf.Buffers;
-  names: Names;
+  names: namelib.Names;
 }
 
 class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
@@ -33,7 +33,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     return {
       nick: '',
       buffers: new buf.Buffers(rootBufferName),
-      names: new Names(),
+      names: new namelib.Names(),
     };
   }
 
@@ -186,8 +186,8 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   onNames(data) {
-    let names = Object.keys(data.names).map<IrcName>((nick: string) => {
-      return {nick, mode: data.names[nick], isMe: nick === this.state.nick}
+    let names = Object.keys(data.names).map<namelib.Name>((nick: string) => {
+      return new namelib.Name(nick, data.names[nick], nick === this.state.nick);
     });
     this.state.names.set(data.channel, names);
     this.forceUpdate();

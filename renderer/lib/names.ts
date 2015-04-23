@@ -1,7 +1,22 @@
 import _ = require('underscore');
+import generateId = require('./id-generator');
 
-class Names {
-  private _channels: {[name: string]: IrcName[]};
+export class Name {
+  id: number;
+  nick: string;
+  mode: string;
+  isMe: boolean;
+
+  constructor(nick: string, mode: string, isMe = false) {
+    this.id = generateId('name');
+    this.nick = nick;
+    this.mode = mode;
+    this.isMe = isMe;
+  }
+}
+
+export class Names {
+  private _channels: {[name: string]: Name[]};
 
   constructor() {
     this._channels = {};
@@ -22,23 +37,19 @@ class Names {
     });
   }
 
-  set(channelName: string, names: IrcName[]) {
+  set(channelName: string, names: Name[]) {
     this._channels[channelName] = names;
     this._sort(channelName);
   }
 
-  get(channelName: string): IrcName[] {
+  get(channelName: string): Name[] {
     return this._channels[channelName]
   }
 
   add(channelName: string, nickToAdd: string) {
     let channel = this._channels[channelName];
     if (channel) {
-      channel.push({
-        nick: nickToAdd,
-        mode: '',
-        isMe: false,
-      });
+      channel.push(new Name(nickToAdd, ''));
       this._sort(channelName);
     }
   }
@@ -70,5 +81,3 @@ class Names {
     delete this._channels[channelName];
   }
 }
-
-export = Names;

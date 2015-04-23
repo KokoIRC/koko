@@ -1,13 +1,6 @@
 import _ = require('underscore');
+import generateId = require('./id-generator');
 import log = require('./logs');
-
-let generateBufId = (function () {
-  let currentBufId = 0;
-  return function () {
-    currentBufId++;
-    return currentBufId;
-  };
-})();
 
 export class Buf { // Buffer exists as a default class
   id: number;
@@ -16,7 +9,7 @@ export class Buf { // Buffer exists as a default class
   private _current: boolean;
 
   constructor(name: string) {
-    this.id = generateBufId();
+    this.id = generateId('buf');
     this.name = name;
     this.logs = new log.Logs();
     this._current = false;
