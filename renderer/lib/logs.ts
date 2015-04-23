@@ -145,6 +145,12 @@ export class Logs {
     }
   }
 
+  kick(channel: string, nick: string, by: string, reason: string) {
+    // FIXME
+    let text = `${nick} has been kicked from ${channel} by ${by}. (${reason})`;
+    this._push(new Log(nick, text));
+  }
+
   map<T>(func: (log: Log) => T) {
     return this._logs.map<T>(func);
   }

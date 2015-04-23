@@ -75,6 +75,11 @@ export class Buffers {
     target.logs.whois(info);
   }
 
+  kick(bufferToShow: string, channel: string, nick: string, by: string, reason: string) {
+    let target = this.target(bufferToShow);
+    target.logs.kick(channel, nick, by, reason);
+  }
+
   target(name: string): Buf {
     let target = this._buffers.filter(c => (c.name === name))[0];
     if (!target) {

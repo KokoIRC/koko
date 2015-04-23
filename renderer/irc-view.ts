@@ -53,6 +53,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     ipc.on('-mode', this.onMode.bind(this, false));
     ipc.on('quit', this.onQuit);
     ipc.on('whois', this.onWhois);
+    ipc.on('kick', this.onKick);
 
     // shortcuts
     shortcut.Manager.on('next-tab', () => {
@@ -230,6 +231,20 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let currentBufferName = this.state.buffers.current().name;
     this.state.buffers.whois(rootBufferName, info);
     this.state.buffers.whois(currentBufferName, info);
+    this.forceUpdate();
+  }
+
+  onKick(data) {
+    let isMe = data.nick === this.state.nick;
+    if (isMe) {
+      this.state.buffers.kick(rootBufferName, data.channel, data.nick, data.by, data.reason);
+      this.state.buffers.remove(data.channel);
+      this.state.names.delete(data.channel);
+      this.state.buffers.setCurrent(rootBufferName);
+    } else {
+      this.state.buffers.kick(data.channel, data.channel, data.nick, data.by, data.reason);
+      this.state.names.remove(data.channel, data.nick);
+    }
     this.forceUpdate();
   }
 

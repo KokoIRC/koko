@@ -9,6 +9,7 @@ const commands: Dict<string[]> = {
   'list': [],
   'nick': ['nick'],
   'mode': ['?channel', 'mode', 'nick'],
+  'kick': ['?channel', 'nick', '?message'],
 };
 
 export class CommandError implements Error {
@@ -88,6 +89,14 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
     } else if (idx === 1) {
       if (!(value[0] === '+' || value[0] === '0')) {
         value = '+' + value;
+      }
+    }
+  case 'kick':
+    if (idx === 0) {
+      if (_.isUndefined(value)) {
+        value = context.target;
+      } else if (value[0] !== '#') {
+        value = '#' + value;
       }
     }
   }
