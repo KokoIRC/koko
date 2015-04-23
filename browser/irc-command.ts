@@ -34,10 +34,6 @@ export function parse(raw: string, context: CommandContext): IrcCommand {
 }
 
 function parseArgs(name: string, argList: string[], args: string[], context: CommandContext): string[] {
-  function getNeededArgsLength(args) {
-    return args.filter(s => s.charAt(0) !== '?').length;
-  }
-
   let parsedArgs = [];
   while (true) {
     let argNeeded = argList.shift();
@@ -47,17 +43,15 @@ function parseArgs(name: string, argList: string[], args: string[], context: Com
     if (argNeeded[0] !== '?') {
       let arg = args.shift();
       if (_.isUndefined(arg)) {
-        throw new CommandError(`Invalid command arguments: [${argNeeded}]`);
+        throw new CommandError(`Command argument needed: [${argNeeded}]`);
       } else {
         parsedArgs.push(arg);
       }
     } else {
-      if (getNeededArgsLength(argList) < args.length) {
-        parsedArgs.push(args.shift());
-      } else if (getNeededArgsLength(argList) === args.length) {
+      if (argList.length >= args.length) {
         parsedArgs.push(undefined);
       } else {
-        throw new CommandError(`Invalid command arguments: [${argNeeded}]`);
+        parsedArgs.push(args.shift());
       }
     }
   }
