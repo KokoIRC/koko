@@ -1,4 +1,4 @@
-/// <reference path="../lib.d/atom-shell/atom-shell.d.ts" />
+/// <reference path="../lib.d/electron/electron.d.ts" />
 /// <reference path="../lib.d/default/default.d.ts" />
 /// <reference path="../lib.d/escape-html/escape-html.d.ts" />
 /// <reference path="../lib.d/irc/irc.d.ts" />

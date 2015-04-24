@@ -8,7 +8,7 @@ Yet another IRC client for me and you :koko:
 for me and possibly for others.
 
 It provides simple UI and VIM-like interaction. Its UI depends on the power of
-HTML5, CSS and JavaScript through [atom-shell](https://github.com/atom/atom-shell),
+HTML5, CSS and JavaScript through [Electron](http://electron.atom.io),
 so you can customise it as you want.
 
 `ココ` is pronounced `koko`, which means `here` in Japanese.
@@ -18,7 +18,7 @@ The logo is strongly inspired by
 
 # Features
 
-* Built on atom-shell
+* Built on Electron
 * Mainly for OS X
 * VIM-like shortcuts
 * Minimalistic design and function
@@ -32,7 +32,7 @@ The logo is strongly inspired by
 If interested in the development, please refer to the
 [TODO](https://github.com/hachibasu/koko/issues/1) list.
 
-To install deps, build and run `koko` in `atom-shell`
+To install deps, build and run `koko` in Electron
 
 ```bash
 $ make

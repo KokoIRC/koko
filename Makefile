@@ -1,5 +1,5 @@
 NODE_BIN=./node_modules/.bin
-ATOM=$(NODE_BIN)/atom-shell
+ELECTRON=$(NODE_BIN)/electron
 BROWSERIFY=$(NODE_BIN)/browserify
 TSC=$(NODE_BIN)/tsc
 LESS=$(NODE_BIN)/lessc
@@ -7,7 +7,7 @@ LESS=$(NODE_BIN)/lessc
 all: dep build
 
 run: build
-	@$(ATOM) .
+	@$(ELECTRON) .
 
 dep:
 	@npm install
