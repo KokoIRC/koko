@@ -70,15 +70,6 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
       }
     }
     break;
-  case 'part':
-    if (idx === 0) {
-      if (_.isUndefined(value)) {
-        value = context.target;
-      } else if (value[0] !== '#') {
-        value = '#' + value;
-      }
-    }
-    break;
   case 'mode':
     if (idx === 0) {
       if (_.isUndefined(value)) {
@@ -91,6 +82,8 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
         value = '+' + value;
       }
     }
+    break;
+  case 'part':
   case 'kick':
     if (idx === 0) {
       if (_.isUndefined(value)) {
@@ -99,6 +92,7 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
         value = '#' + value;
       }
     }
+    break;
   }
   return value;
 }
