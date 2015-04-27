@@ -19,7 +19,7 @@ The logo is strongly inspired by
 # Features
 
 * Built on Electron
-* Mainly for OS X
+* Cross platform
 * VIM-like shortcuts
 * Minimalistic design and function
 * Several encoding support
