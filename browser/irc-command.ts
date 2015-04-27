@@ -10,6 +10,9 @@ const commands: Dict<string[]> = {
   'nick': ['nick'],
   'mode': ['?channel', 'mode', 'nick'],
   'kick': ['?channel', 'nick', '?message'],
+  'ban': ['?channel', 'nick'],
+  'unban': ['?channel', 'nick'],
+  'kickban': ['?channel', 'nick', '?message'],
 };
 
 export class CommandError implements Error {
@@ -85,6 +88,9 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
     break;
   case 'part':
   case 'kick':
+  case 'kickban':
+  case 'ban':
+  case 'unban':
     if (idx === 0) {
       if (_.isUndefined(value)) {
         value = context.target;
