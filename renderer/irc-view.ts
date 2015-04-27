@@ -93,7 +93,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   submitInput(raw: string) {
     let target = this.state.buffers.current().name;
-    if (raw.indexOf(commandSymbol) === 0) {
+    if (raw.startsWith(commandSymbol)) {
       raw = raw.substring(1);
       let methodName = this.tryGetLocalHandler(raw);
       if (methodName) {
