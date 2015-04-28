@@ -9,6 +9,7 @@ class Channel {
   logs: Log[];
   name: string;
   names: Name[];
+  topic: string;
 
   constructor(name: string, current: boolean = false) {
     this.id = generateId('channel');
@@ -16,6 +17,7 @@ class Channel {
     this.name = name;
     this.names = [];
     this.current = current;
+    this.topic = '';
   }
 
   send(nick: string, text: string) {
@@ -64,6 +66,11 @@ class Channel {
   takeMode(mode: string, by: string, from: string) {
     this.logs = Log.append(this.logs, Log.takeMode(mode, by, from));
     this.names = Name.sort(Name.takeMode(this.names, from, mode));
+  }
+
+  setTopic(topic: string, by: string) {
+    this.topic = topic;
+    this.logs = Log.append(this.logs, Log.topic(this.name, topic, by));
   }
 
   static current(channels: Channel[]): Channel {

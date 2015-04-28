@@ -13,6 +13,7 @@ const commands: Dict<string[]> = {
   'ban': ['?channel', 'nick'],
   'unban': ['?channel', 'nick'],
   'kickban': ['?channel', 'nick', '?message'],
+  'topic': ['?channel', 'topic'],
 };
 
 export class CommandError implements Error {
@@ -91,6 +92,7 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
   case 'kickban':
   case 'ban':
   case 'unban':
+  case 'topic':
     if (idx === 0) {
       if (_.isUndefined(value)) {
         value = context.target;

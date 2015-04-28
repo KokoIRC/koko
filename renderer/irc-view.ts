@@ -52,6 +52,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     ipc.on('quit', this.onQuit);
     ipc.on('whois', this.onWhois);
     ipc.on('kick', this.onKick);
+    ipc.on('topic', this.onTopic);
 
     // shortcuts
     shortcut.Manager.on('next-tab', () => {
@@ -144,6 +145,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let isMe = data.nick === this.state.nick;
     if (isMe && data.channel !== rootChannelName) {
       this.state.channels = Channel.remove(this.state.channels, data.channel);
+      this.state.channels = Channel.setCurrent(this.state.channels, rootChannelName);
     } else {
       let channel = Channel.get(this.state.channels, data.channel);
       channel.part(data.nick, data.reason, data.message);
@@ -173,6 +175,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   partPersonalChat() {
     let current = Channel.current(this.state.channels);
     this.state.channels = Channel.remove(this.state.channels, current.name);
+    this.state.channels = Channel.setCurrent(this.state.channels, rootChannelName);
     this.forceUpdate();
   }
 
@@ -230,11 +233,17 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       let root = Channel.get(this.state.channels, rootChannelName);
       root.kick(data.channel, data.nick, data.by, data.reason);
       this.state.channels = Channel.remove(this.state.channels, channel.name);
-      this.state.channels = Channel.setCurrent(this.state.channels, root.name);
+      this.state.channels = Channel.setCurrent(this.state.channels, rootChannelName);
     } else {
       channel.kick(data.channel, data.nick, data.by, data.reason);
       channel.removeName(data.nick);
     }
+    this.forceUpdate();
+  }
+
+  onTopic(data) {
+    let channel = Channel.get(this.state.channels, data.channel);
+    channel.setTopic(data.topic, data.nick);
     this.forceUpdate();
   }
 

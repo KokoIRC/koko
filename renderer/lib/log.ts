@@ -135,6 +135,11 @@ class Log {
     let text = `${nick} has been kicked from ${channel} by ${by}. (${reason})`;
     return new Log(nick, text);
   }
+
+  static topic(channel: string, topic: string, by: string): Log {
+    let text = `Topic: "${topic}" set by ${by}.`;
+    return new Log(channel, text);
+  }
 }
 
 export = Log;

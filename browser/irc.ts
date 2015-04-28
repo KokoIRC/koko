@@ -48,6 +48,7 @@ export function connect(data: ConnectionData, ipc: Ipc) {
   propagate('-mode', ['channel', 'by', 'mode', 'target', 'message']);
   propagate('whois', ['info']);
   propagate('kick', ['channel', 'nick', 'by', 'reason', 'message']);
+  propagate('topic', ['channel', 'topic', 'nick', 'message']);
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
