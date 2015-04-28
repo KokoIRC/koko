@@ -80,7 +80,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let currentNames = Channel.current(this.state.channels).names;
 
     return (
-      D.div({id: 'irc-window'},
+      D.div({id: 'irc-view'},
         TabNav({channels: this.state.channels}),
         NameView({names: currentNames}),
         BufferView({channels: this.state.channels}),
