@@ -1,22 +1,21 @@
-/* perfect-scrollbar v0.6.1 */
-.ps-container > .ps-scrollbar-x-rail {
-  display: none;
+@import (reference) "common";
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 9;
 }
-.ps-container.ps-active-y > .ps-scrollbar-y-rail {
-  display: block;
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
 }
-.ps-container.ps-in-scrolling {
-  pointer-events: none;
+::-webkit-scrollbar-thumb {
+  background: @gray;
+  border: 0px none @white;
 }
-.ps-container > .ps-scrollbar-y-rail {
-  display: none;
-  position: absolute;
-  right: 0;
-  width: 4px;
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0px none @white;
 }
-.ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
-  position: absolute;
-  background-color: #999;
-  right: 0;
-  width: 100%;
+::-webkit-scrollbar-corner {
+  background: transparent;
 }

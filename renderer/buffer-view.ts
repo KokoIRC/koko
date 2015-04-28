@@ -3,7 +3,6 @@ import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
 import Log = require('./lib/log');
 import moment = require('moment');
-import Ps = require('perfect-scrollbar');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
 import TypedReact = require('typed-react');
@@ -32,7 +31,6 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
   }
 
   componentDidMount() {
-    Ps.initialize(this.view());
     shortcut.Manager.on('scroll-down', this.scrollDown);
     shortcut.Manager.on('scroll-up', this.scrollUp);
     shortcut.Manager.on('scroll-top', this.scrollTop);
@@ -99,7 +97,6 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
       let view = this.view();
       view.scrollTop = view.scrollHeight;
     }
-    Ps.update(this.view());
 
     this.loadImages();
   }
