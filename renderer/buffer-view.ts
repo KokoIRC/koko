@@ -2,6 +2,7 @@ import _ = require('underscore');
 import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
 import Log = require('./lib/log');
+import LogContent = require('./log-content');
 import moment = require('moment');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
@@ -50,28 +51,13 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
       className += ' adjecent';
     }
 
-    let media = null;
-    if (log.media) {
-      switch (log.media.type) {
-      case 'image':
-        media = D.a({href: log.media.url, target: '_blank'},
-                  D.img({src: log.media.url}));
-        break;
-      case 'youtube':
-        let embedSrc = `https://www.youtube.com/embed/${log.media.uuid}?rel=0`;
-        media = D.iframe({src: embedSrc, frameBorder: 0});
-        break;
-      }
-    }
-
     return (
       D.li({key: log.id, className: className},
         D.div({className: 'info'},
           D.span({className: 'nick'}, log.nick),
           D.span({className: 'datetime'}, datetime)
         ),
-        D.div({className: 'text', dangerouslySetInnerHTML: {__html: log.textEl}}),
-        D.div({className: 'media'}, media)
+        LogContent({text: log.text})
       )
     );
   }

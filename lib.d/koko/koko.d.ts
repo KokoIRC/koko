@@ -26,12 +26,6 @@ interface JsonCallback {
 
 declare function _require(moduleName: string): any;
 
-interface MediaLog {
-  type: string;
-  uuid?: string;
-  url?: string;
-}
-
 interface IrcRawMessage {
   user: string;
   host: string;
