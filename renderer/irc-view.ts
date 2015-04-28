@@ -215,6 +215,10 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   onMode(isGiving: boolean, data) {
+    if (!data.target) {
+      // channel mode
+      data.target = data.channel;
+    }
     let channel = Channel.get(this.state.channels, data.channel);
     if (isGiving) {
       channel.giveMode(data.mode, data.by, data.target);
