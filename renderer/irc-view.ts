@@ -10,6 +10,7 @@ import NameView = require('./name-view');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
 import TabNav = require('./tab-nav');
+import TopicView = require('./topic-view');
 import TypedReact = require('typed-react');
 
 const D = React.DOM;
@@ -77,15 +78,20 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   render() {
     this.setWindowTitle(this.props.server);
 
-    let currentNames = Channel.current(this.state.channels).names;
+    let channel = Channel.current(this.state.channels);
+    let names = channel.names;
+    let topic = channel.topic;
+
+    let className = topic ? 'with-topic' : '';
 
     return (
-      D.div({id: 'irc-view'},
+      D.div({id: 'irc-view', className},
         TabNav({channels: this.state.channels}),
-        NameView({names: currentNames}),
+        TopicView({topic}),
+        NameView({names}),
         BufferView({channels: this.state.channels}),
         InputBox({channel: Channel.current(this.state.channels).name,
-                  names: currentNames,
+                  names,
                   submit: this.submitInput})
       )
     );
