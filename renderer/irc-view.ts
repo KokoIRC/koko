@@ -117,6 +117,8 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       return 'partPersonalChat';
     } else if (tokens[0] === 'pm') {
       return 'startPersonalChat';
+    } else if (tokens.length === 1 && tokens[0] === 'topic') {
+      return 'showTopic';
     }
   }
 
@@ -170,6 +172,12 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       this.state.channels = Channel.setCurrent(this.state.channels, target);
       this.forceUpdate();
     }
+  }
+
+  showTopic() {
+    let channel = Channel.current(this.state.channels);
+    channel.showTopic();
+    this.forceUpdate();
   }
 
   partPersonalChat() {

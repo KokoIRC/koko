@@ -2,6 +2,7 @@ import _ = require('underscore');
 import generateId = require('./id-generator');
 import Log = require('./log');
 import Name = require('./name');
+import Topic = require('./topic');
 
 class Channel {
   id: number;
@@ -9,7 +10,7 @@ class Channel {
   logs: Log[];
   name: string;
   names: Name[];
-  topic: string;
+  topic: Topic;
 
   constructor(name: string, current: boolean = false) {
     this.id = generateId('channel');
@@ -17,7 +18,7 @@ class Channel {
     this.name = name;
     this.names = [];
     this.current = current;
-    this.topic = '';
+    this.topic = null;
   }
 
   send(nick: string, text: string) {
@@ -69,8 +70,17 @@ class Channel {
   }
 
   setTopic(topic: string, by: string) {
-    this.topic = topic;
-    this.logs = Log.append(this.logs, Log.topic(this.name, topic, by));
+    this.topic = new Topic(topic, by);
+    this.showTopic();
+  }
+
+  showTopic() {
+    if (this.topic) {
+      this.logs = Log.append(this.logs, Log.topic(this.name, this.topic));
+    } else {
+      let noTopic = new Topic('no topic', 'nobody');
+      this.logs = Log.append(this.logs, Log.topic(this.name, noTopic));
+    }
   }
 
   static current(channels: Channel[]): Channel {

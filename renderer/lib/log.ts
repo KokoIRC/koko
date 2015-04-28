@@ -3,6 +3,7 @@ import configuration = require('./configuration');
 import escapeHTML = require('escape-html');
 import generateId = require('./id-generator');
 import IrcColorParser = require('./irc-color-parser');
+import Topic = require('./topic');
 
 const scrollbackLimit = configuration.get('scrollback-limit');
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
@@ -136,8 +137,8 @@ class Log {
     return new Log(nick, text);
   }
 
-  static topic(channel: string, topic: string, by: string): Log {
-    let text = `Topic: "${topic}" set by ${by}.`;
+  static topic(channel: string, topic: Topic): Log {
+    let text = `Topic: "${topic.text}" set by ${topic.by}.`;
     return new Log(channel, text);
   }
 }
