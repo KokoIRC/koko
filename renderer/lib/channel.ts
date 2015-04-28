@@ -78,7 +78,7 @@ class Channel {
     if (this.topic) {
       this.logs = Log.append(this.logs, Log.topic(this.name, this.topic));
     } else {
-      let noTopic = new Topic('no topic', 'nobody');
+      let noTopic = new Topic('no topic');
       this.logs = Log.append(this.logs, Log.topic(this.name, noTopic));
     }
   }

@@ -138,7 +138,7 @@ class Log {
   }
 
   static topic(channel: string, topic: Topic): Log {
-    let text = `Topic: "${topic.text}" set by ${topic.by}.`;
+    let text = `Topic: ${topic.fullText}`;
     return new Log(channel, text);
   }
 }
