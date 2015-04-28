@@ -1,11 +1,11 @@
 import _ = require('underscore');
 import AppErrorHandler = require('./lib/app-error-handler');
-import buf = require('./lib/buffers');
 import BufferView = require('./buffer-view');
+import Channel = require('./lib/channel');
 import configuration = require('./lib/configuration');
 import InputBox = require('./input-box');
 import ipc = require('./lib/ipc');
-import namelib = require('./lib/names');
+import Name = require('./lib/name');
 import NameView = require('./name-view');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
@@ -14,7 +14,7 @@ import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
-const rootBufferName = configuration.get('root-buffer-name');
+const rootChannelName = configuration.get('root-channel-name');
 const commandSymbol = configuration.get('command-symbol');
 
 interface IrcViewProps {
@@ -24,16 +24,14 @@ interface IrcViewProps {
 
 interface IrcViewState {
   nick: string;
-  buffers: buf.Buffers;
-  names: namelib.Names;
+  channels: Channel[];
 }
 
 class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   getInitialState(): IrcViewState {
     return {
       nick: '',
-      buffers: new buf.Buffers(rootBufferName),
-      names: new namelib.Names(),
+      channels: [new Channel(rootChannelName, true)],
     };
   }
 
@@ -57,11 +55,13 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
     // shortcuts
     shortcut.Manager.on('next-tab', () => {
-      this.state.buffers.setCurrent(this.state.buffers.next().name);
+      let next = Channel.next(this.state.channels);
+      this.state.channels = Channel.setCurrent(this.state.channels, next.name);
       this.forceUpdate();
     });
     shortcut.Manager.on('previous-tab', () => {
-      this.state.buffers.setCurrent(this.state.buffers.previous().name);
+      let prev = Channel.previous(this.state.channels);
+      this.state.channels = Channel.setCurrent(this.state.channels, prev.name);
       this.forceUpdate();
     });
 
@@ -76,15 +76,14 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   render() {
     this.setWindowTitle(this.props.server);
 
-    let currentBufferName = this.state.buffers.current().name;
-    let currentNames = this.state.names.get(currentBufferName);
+    let currentNames = Channel.current(this.state.channels).names;
 
     return (
       D.div({id: 'irc-window'},
-        TabNav({buffers: this.state.buffers}),
+        TabNav({channels: this.state.channels}),
         NameView({names: currentNames}),
-        BufferView({buffers: this.state.buffers}),
-        InputBox({channel: this.state.buffers.current().name,
+        BufferView({channels: this.state.channels}),
+        InputBox({channel: Channel.current(this.state.channels).name,
                   names: currentNames,
                   submit: this.submitInput})
       )
@@ -92,19 +91,19 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   submitInput(raw: string) {
-    let target = this.state.buffers.current().name;
+    let current = Channel.current(this.state.channels);
     if (raw.startsWith(commandSymbol)) {
       raw = raw.substring(1);
       let methodName = this.tryGetLocalHandler(raw);
       if (methodName) {
         this[methodName](raw);
       } else {
-        ipc.send('command', {raw, context: {target}});
+        ipc.send('command', {raw, context: {target: current.name}});
       }
     } else {
-      if (target !== rootBufferName) {
-        ipc.send('message', {raw, context: {target}});
-        this.state.buffers.send(target, this.state.nick, raw);
+      if (current.name !== rootChannelName) {
+        ipc.send('message', {raw, context: {target: current.name}});
+        current.send(this.state.nick, raw);
         this.forceUpdate();
       }
     }
@@ -113,7 +112,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   tryGetLocalHandler(raw: string): string {
     let tokens = raw.split(' ');
     if (tokens.length === 1 && tokens[0] === 'part' &&
-        this.state.buffers.current().name[0] !== '#') {
+        !Channel.current(this.state.channels).name.startsWith('#')) {
       return 'partPersonalChat';
     } else if (tokens[0] === 'pm') {
       return 'startPersonalChat';
@@ -121,31 +120,34 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   onMessage(data) {
-    let to = data.to[0] === '#' || data.to === rootBufferName ? data.to : data.nick;
-    this.state.buffers.send(to, data.nick, data.text);
+    let to = data.to[0] === '#' || data.to === rootChannelName ? data.to : data.nick;
+    Channel.get(this.state.channels, to).send(data.nick, data.text);
     this.forceUpdate();
   }
 
   onJoin(data) {
     let isMe = data.nick === this.state.nick;
+    let channel;
     if (isMe) {
-      this.state.buffers.add(data.channel);
-      this.state.buffers.setCurrent(data.channel);
+      this.state.channels.push(new Channel(data.channel));
+      this.state.channels = Channel.setCurrent(this.state.channels, data.channel);
+      channel = Channel.get(this.state.channels, data.channel);
     } else {
-      this.state.names.add(data.channel, data.nick);
+      channel = Channel.get(this.state.channels, data.channel);
+      channel.addName(data.nick);
     }
-    this.state.buffers.joinMessage(data.channel, data.nick, data.message);
+    channel.join(data.nick, data.message);
     this.forceUpdate();
   }
 
   onPart(data) {
     let isMe = data.nick === this.state.nick;
-    if (isMe && data.channel !== rootBufferName) {
-      this.state.buffers.remove(data.channel);
-      this.state.names.delete(data.channel);
+    if (isMe && data.channel !== rootChannelName) {
+      this.state.channels = Channel.remove(this.state.channels, data.channel);
     } else {
-      this.state.buffers.partMessage(data.channel, data.nick, data.reason, data.message);
-      this.state.names.remove(data.channel, data.nick);
+      let channel = Channel.get(this.state.channels, data.channel);
+      channel.part(data.nick, data.reason, data.message);
+      channel.removeName(data.nick);
     }
     this.forceUpdate();
   }
@@ -161,61 +163,47 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       let target = tokens[1];
       let raw = tokens.splice(2).join(' ');
       ipc.send('message', {raw, context: {target}});
-      this.state.buffers.send(target, this.state.nick, raw);
-      this.state.buffers.setCurrent(target);
+      let channel = Channel.get(this.state.channels, target);
+      channel.send(this.state.nick, raw);
+      this.state.channels = Channel.setCurrent(this.state.channels, target);
       this.forceUpdate();
     }
   }
 
   partPersonalChat() {
-    let target = this.state.buffers.current().name;
-    this.state.buffers.remove(target);
+    let current = Channel.current(this.state.channels);
+    this.state.channels = Channel.remove(this.state.channels, current.name);
     this.forceUpdate();
   }
 
   onChangeNick(data) {
+    let channel = Channel.get(this.state.channels, data.channel);
     if (data.oldnick === this.state.nick) {
       this.setState(<IrcViewState>{nick: data.newnick});
-      data.channels.push(rootBufferName);
+      data.channels.push(rootChannelName);
     }
     data.channels.forEach((channel) => {
-      this.state.buffers.changeNick(channel, data.oldnick, data.newnick);
-      this.state.names.update(channel, data.oldnick, data.newnick);
+      channel.updateName(data.oldnick, data.newnick);
     });
     this.forceUpdate();
   }
 
   onNames(data) {
-    let names = Object.keys(data.names).map<namelib.Name>((nick: string) => {
-      return new namelib.Name(nick, data.names[nick], nick === this.state.nick);
+    let channel = Channel.get(this.state.channels, data.channel);
+    let names = Object.keys(data.names).map<Name>((nick: string) => {
+      return new Name(nick, data.names[nick], nick === this.state.nick);
     });
-    this.state.names.set(data.channel, names);
+    channel.setNames(names);
     this.forceUpdate();
   }
 
   onMode(isGiving: boolean, data) {
-    let names = this.state.names.get(data.channel);
-    // FIXME: handles only 'o' and 'v' here.
+    let channel = Channel.get(this.state.channels, data.channel);
     if (isGiving) {
-      this.state.buffers.giveMode(data.channel, data.mode, data.by, data.target);
-      names = names.map(function (name) {
-        if (name.nick === data.target) {
-          name.mode = data.mode === 'o' ? '@' : (data.mode === 'v' ? '+' : name.mode);
-        }
-        return name;
-      });
+      channel.giveMode(data.mode, data.by, data.target);
     } else {
-      this.state.buffers.takeMode(data.channel, data.mode, data.by, data.target);
-      if (data.mode === 'o' || data.mode === 'v') {
-        names = names.map(function (name) {
-          if (name.nick === data.target) {
-            name.mode = '';
-          }
-          return name;
-        });
-      }
+      channel.takeMode(data.mode, data.by, data.target);
     }
-    this.state.names.set(data.channel, names);
     this.forceUpdate();
   }
 
@@ -228,22 +216,24 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   onWhois(data) {
     let info = data.info;
-    let currentBufferName = this.state.buffers.current().name;
-    this.state.buffers.whois(rootBufferName, info);
-    this.state.buffers.whois(currentBufferName, info);
+    let root = Channel.get(this.state.channels, rootChannelName);
+    let current = Channel.current(this.state.channels);
+    root.whois(info);
+    current.whois(info);
     this.forceUpdate();
   }
 
   onKick(data) {
     let isMe = data.nick === this.state.nick;
+    let channel = Channel.get(this.state.channels, data.channel);
     if (isMe) {
-      this.state.buffers.kick(rootBufferName, data.channel, data.nick, data.by, data.reason);
-      this.state.buffers.remove(data.channel);
-      this.state.names.delete(data.channel);
-      this.state.buffers.setCurrent(rootBufferName);
+      let root = Channel.get(this.state.channels, rootChannelName);
+      root.kick(data.channel, data.nick, data.by, data.reason);
+      this.state.channels = Channel.remove(this.state.channels, channel.name);
+      this.state.channels = Channel.setCurrent(this.state.channels, root.name);
     } else {
-      this.state.buffers.kick(data.channel, data.channel, data.nick, data.by, data.reason);
-      this.state.names.remove(data.channel, data.nick);
+      channel.kick(data.channel, data.nick, data.by, data.reason);
+      channel.removeName(data.nick);
     }
     this.forceUpdate();
   }
@@ -251,7 +241,8 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   onError(error) {
     switch (error.command) {
     case "err_nosuchnick":
-      this.state.buffers.send(error.args[1], error.args[1], error.args[2]);
+      let channel = Channel.get(this.state.channels, error.args[1]);
+      channel.send(error.args[1], error.args[2]);
       this.forceUpdate();
       break;
     }

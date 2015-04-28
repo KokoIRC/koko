@@ -1,11 +1,11 @@
-import namelib = require('./lib/names');
+import Name = require('./lib/name');
 import React = require('react');
 import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
 interface NameViewProps {
-  names: namelib.Name[];
+  names: Name[];
 }
 
 class NameView extends TypedReact.Component<NameViewProps, {}> {

@@ -1,17 +1,17 @@
-import buf = require('./lib/buffers');
+import Channel = require('./lib/channel');
 import React = require('react');
 import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
 interface TabNavProps {
-  buffers: buf.Buffers;
+  channels: Channel[];
 }
 
 class TabNav extends TypedReact.Component<TabNavProps, {}> {
   render() {
-    let tabs = this.props.buffers.map(buffer =>
-      D.li({key: buffer.id, className: buffer.current() ? 'current': ''}, buffer.name));
+    let tabs = this.props.channels.map(channel =>
+      D.li({key: channel.id, className: channel.current ? 'current': ''}, channel.name));
 
     return (
       D.div({id: 'tab-nav'},

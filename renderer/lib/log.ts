@@ -8,7 +8,7 @@ const scrollbackLimit = configuration.get('scrollback-limit');
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
 const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g;
 
-export class Log {
+class Log {
   id: number;
   nick: string;
   text: string;
@@ -68,83 +68,73 @@ export class Log {
       return lowerCasedURL.substring(lowerCasedURL.length - ext.length) === ext;
     });
   }
-}
 
-export class Logs {
-  private _logs: Log[];
-
-  constructor() {
-    this._logs = [];
-  }
-
-  _push(newEl: Log) {
-    if (this._logs.length === scrollbackLimit) {
-      // pop the oldest log
-      this._logs.shift();
+  static append(logs: Log[], newLog: Log): Log[] {
+    if (logs.length === scrollbackLimit) {
+      // remove the oldest log
+      logs = _.tail(logs);
     }
-    if (this.last() &&
-        newEl.nick === this.last().nick &&
-        newEl.datetime.getTime() - this.last().datetime.getTime() < 20000) {
-      newEl.adjecent = true;
+    let lastLog = _.last(logs);
+    if (lastLog &&
+        lastLog.nick === newLog.nick &&
+        newLog.datetime.getTime() - lastLog.datetime.getTime() < 20000) {
+      newLog.adjecent = true;
     }
-    this._logs.push(newEl);
+    return logs.concat(newLog);
   }
 
-  last(): Log {
-    return this._logs[this._logs.length - 1];
+  static appendList(logs: Log[], newLogs: Log[]): Log[] {
+    return newLogs.reduce(Log.append, logs);
   }
 
-  say(nick: string, text: string) {
-    this._push(new Log(nick, text));
+  static say(nick: string, text: string): Log {
+    return new Log(nick, text);
   }
 
-  join(nick: string, message: IrcRawMessage) {
+  static join(nick: string, message: IrcRawMessage): Log {
     // FIXME
     let text = `The user has joined. (${message.user}@${message.host})`;
-    this._push(new Log(nick, text));
+    return new Log(nick, text);
   }
 
-  part(nick: string, reason: string, message: IrcRawMessage) {
+  static part(nick: string, reason: string, message: IrcRawMessage): Log {
     // FIXME
     reason = reason ? reason : 'no reason';
     let text = `The user has left. (${reason})`;
-    this._push(new Log(nick, text));
+    return new Log(nick, text);
   }
 
-  changeNick(oldNick: string, newNick: string) {
+  static updateName(oldNick: string, newNick: string): Log {
     // FIXME
     let text = `${oldNick} has changed the nickname.`;
-    this._push(new Log(newNick, text));
+    return new Log(newNick, text);
   }
 
-  giveMode(mode: string, by: string, to: string) {
+  static giveMode(mode: string, by: string, to: string): Log {
     // FIXME
     let m = mode === 'o' ? 'op' : (mode === 'v' ? 'voice' : mode);
     let text = `${by} gives ${m} to ${to}.`;
-    this._push(new Log(to, text));
+    return new Log(to, text);
   }
 
-  takeMode(mode: string, by: string, to: string) {
+  static takeMode(mode: string, by: string, to: string): Log {
     // FIXME
     let m = mode === 'o' ? 'op' : (mode === 'v' ? 'voice' : mode);
     let text = `${by} removes ${m} from ${to}.`;
-    this._push(new Log(to, text));
+    return new Log(to, text);
   }
 
-  whois(info: Dict<string>) {
-    // FIXME
-    for (let key in info) {
-      this._push(new Log(info['nick'], `${key}: ${info[key]}\n`));
-    }
+  static whois(info: Dict<string>): Log[] {
+    return _.keys(info).map(key => {
+      return new Log(info['nick'], `${key}: ${info[key]}\n`);
+    });
   }
 
-  kick(channel: string, nick: string, by: string, reason: string) {
+  static kick(channel: string, nick: string, by: string, reason: string): Log {
     // FIXME
     let text = `${nick} has been kicked from ${channel} by ${by}. (${reason})`;
-    this._push(new Log(nick, text));
-  }
-
-  map<T>(func: (log: Log) => T) {
-    return this._logs.map<T>(func);
+    return new Log(nick, text);
   }
 }
+
+export = Log;

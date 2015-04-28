@@ -1,7 +1,7 @@
 import _ = require('underscore');
-import buf = require('./lib/buffers');
+import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
-import log = require('./lib/logs');
+import Log = require('./lib/log');
 import moment = require('moment');
 import Ps = require('perfect-scrollbar');
 import React = require('react');
@@ -14,7 +14,7 @@ const followLogBuffer = 20;
 const minimumScrollHeight = 10;
 
 interface BufferViewProps {
-  buffers: buf.Buffers;
+  channels: Channel[];
 }
 
 class BufferView extends TypedReact.Component<BufferViewProps, {}> {
@@ -41,11 +41,11 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
     shortcut.Manager.on('page-up', this.pageUp);
   }
 
-  current(): buf.Buf {
-    return this.props.buffers.current();
+  current(): Channel {
+    return Channel.current(this.props.channels);
   }
 
-  logElement(log: log.Log): React.ReactElement<any> {
+  logElement(log: Log): React.ReactElement<any> {
     let datetime = moment(log.datetime).calendar();
     let className = 'log';
     if (log.adjecent) {
@@ -81,7 +81,7 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
   componentWillUpdate(nextProps: BufferViewProps) {
     let view = this.view();
     let isAtBottom = view.scrollHeight - view.clientHeight - view.scrollTop < followLogBuffer;
-    let isChanged = this.currentBuffer !== nextProps.buffers.current().name;
+    let isChanged = this.currentBuffer !== Channel.current(nextProps.channels).name;
     this.isFollowingLog = isAtBottom || isChanged;
   }
 

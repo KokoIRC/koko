@@ -3,5 +3,5 @@
   "input-history-limit": 100,
   "shortcut-serial-input-timeout": 800,
   "command-symbol": "/",
-  "root-buffer-name": "~"
+  "root-channel-name": "~"
 }

@@ -3,7 +3,7 @@ import Autocompleter = require('./lib/autocompleter');
 import configuration = require('./lib/configuration');
 import InputHistory = require('./lib/input-history');
 import ipc = require('./lib/ipc');
-import namelib = require('./lib/names');
+import Name = require('./lib/name');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
 import TypedReact = require('typed-react');
@@ -14,7 +14,7 @@ const rootBufferName = configuration.get('root-buffer-name');
 const commandSymbol = configuration.get('command-symbol');
 
 interface InputBoxProps {
-  names: namelib.Name[];
+  names: Name[];
   channel: string;
   submit: (text: string) => void;
 }
