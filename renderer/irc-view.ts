@@ -174,6 +174,10 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       let raw = tokens.splice(2).join(' ');
       ipc.send('message', {raw, context: {target}});
       let channel = Channel.get(this.state.channels, target);
+      if (!channel) {
+        channel = new Channel(target);
+        this.state.channels.push(channel);
+      }
       channel.send(this.state.nick, raw);
       this.state.channels = Channel.setCurrent(this.state.channels, target);
       this.forceUpdate();
