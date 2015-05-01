@@ -115,6 +115,20 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
     let urlMatch = urlRegex.exec(text);
     if (urlMatch) {
       let url = urlMatch[0];
+      let lowercasedURL = url.toLowerCase();
+      let youtubeMatch;
+      if (youtubeMatch = youtubeRegex.exec(url)) {
+        this.media = {
+          type: 'youtube',
+          uuid: youtubeMatch[1],
+        };
+      } else if (lowercasedURL.endsWith('.jpg') || lowercasedURL.endsWith('.jpeg')
+              || lowercasedURL.endsWith('.png') || lowercasedURL.endsWith('.gif')) {
+        this.media = {
+          type: 'image',
+          url: url,
+        };
+      }
       return (
         D.span(null,
           text.substring(0, urlMatch.index),
@@ -128,8 +142,20 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
   }
 
   mediaNode(): React.ReactElement<any> {
-    // FIXME
-    return null;
+    let mediaElement = null;
+    if (this.media) {
+      switch (this.media.type) {
+      case 'image':
+        mediaElement = D.a({href: this.media.url, target: '_blank'},
+                         D.img({src: this.media.url}));
+        break;
+      case 'youtube':
+        let embedSrc = `https://www.youtube.com/embed/${this.media.uuid}?rel=0`;
+        mediaElement = D.iframe({src: embedSrc, frameBorder: 0});
+        break;
+      }
+    }
+    return mediaElement;
   }
 }
 
