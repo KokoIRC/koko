@@ -24,7 +24,6 @@
   "license": "MIT",
   "dependencies": {
     "browserify": "^9.0.3",
-    "escape-html": "^1.0.1",
     "irc": "git://github.com/hachibasu/irc",
     "less": "^2.4.0",
     "moment": "^2.9.0",

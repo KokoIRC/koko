@@ -1,6 +1,5 @@
 import _ = require('underscore');
-import escapeHTML = require('escape-html');
-import IrcColorParser = require('./lib/irc-color-parser');
+import Color = require('./lib/irc-color');
 import React = require('react');
 import TypedReact = require('typed-react');
 
@@ -13,78 +12,113 @@ interface LogContentProps {
   text: string;
 }
 
-interface MediaLog {
+interface Media {
   type: string;
   uuid?: string;
   url?: string;
 }
 
 class LogContent extends TypedReact.Component<LogContentProps, {}> {
-  media: MediaLog
+  media: Media
   render() {
-    let text = this.processText(this.props.text);
-    let media = null;
-    if (this.media) {
-      switch (this.media.type) {
-      case 'image':
-        media = D.a({href: this.media.url, target: '_blank'},
-                  D.img({src: this.media.url}));
-        break;
-      case 'youtube':
-        let embedSrc = `https://www.youtube.com/embed/${this.media.uuid}?rel=0`;
-        media = D.iframe({src: embedSrc, frameBorder: 0});
-        break;
-      }
-    }
-
     return (
       D.div(null,
-        D.div({className: 'text', dangerouslySetInnerHTML: {__html: text}}),
-        D.div({className: 'media'}, media)
+        D.div({className: 'text'}, this.textNode()),
+        D.div({className: 'media'}, this.mediaNode())
       )
     );
   }
 
-  processText(text: string): string {
-    text = escapeHTML(text);
-    text = this.processNewline(text);
-    text = this.processColor(text);
-    text = this.processURL(text);
+  textNode(): React.ReactElement<any>[] {
+    let lines = this.props.text.split("\n").map(line => {
+      let colors = Color.parse(line);
+      if (colors.length === 0) {
+        return this.parseURL(line);
+      } else {
+        return this.coloredText(line, colors);
+      }
+    });
+
+    return lines.reduce((result, line, idx) => {
+      if (idx === lines.length - 1) {
+        return result.concat(line);
+      } else {
+        return result.concat([line, D.br()]);
+      }
+    }, []);
+  }
+
+  subtractIdx(idx: number) {
+    return color => {
+      color.index -= idx;
+      return color;
+    }
+  }
+
+  coloredText(text: string, colors: Color[]): React.ReactElement<any> | string {
+    let head = _.head(colors);
+    let tail = _.tail(colors);
+    if (!head) {
+      return parseURL(text);
+    } else {
+      if (head.type === 'close') {
+        return this.coloredText(text, tail);
+      }
+
+      let className;
+      if (head.type === 'color') {
+        className = head.color;
+        if (head.bgColor) {
+          className += ` bg-${head.bgColor}`;
+        }
+      } else {
+        className = head.type;
+      }
+
+      let close;
+      if (head.type === 'reverse') {
+        close = _.find(tail, c => (c.type === 'close' || c.type === 'reverse'));
+      } else {
+        close = _.find(tail, c => c.type === 'close');
+      }
+
+      if (close) {
+        let colorIdx = head.index + head.length;
+        let closeIdx = close.index + close.length;
+        return (
+          D.span(null,
+            this.parseURL(text.substring(0, head.index)),
+            D.span({className},
+              this.coloredText(text.substring(colorIdx, close.index),
+                               _.first(tail, tail.indexOf(close)).map(this.subtractIdx(colorIdx)))
+            ),
+            this.coloredText(text.substring(closeIdx),
+                             _.rest(tail, tail.indexOf(close) + 1).map(this.subtractIdx(closeIdx)))
+          )
+        );
+      } else {
+        let colorIdx = head.index + head.length;
+        return (
+          D.span(null,
+            this.parseURL(text.substring(0, head.index)),
+            D.span({className},
+              this.coloredText(text.substring(head.index + head.length),
+                               tail.map(this.subtractIdx(colorIdx)))
+            )
+          )
+        );
+      }
+    }
+  }
+
+  parseURL(text: string): React.ReactElement<any> | string {
+    // FIXME
     return text;
   }
 
-  processNewline(text: string): string {
-    return text.replace(/\n/g, '<br />');
-  }
-
-  processColor(text: string): string {
-    let parser = new IrcColorParser(text);
-    return parser.process();
-  }
-
-  processURL(text: string): string {
-    let match;
-    let result = text;
-    while (match = urlRegex.exec(text)) {
-      let url = match[0];
-      let newContent = `<a href='${url}' target='_blank'>${url}</a>`;
-      if (this.isImageURL(url)) {
-        this.media = { type: 'image', url };
-      } else if (match = youtubeRegex.exec(url)) {
-        let uuid = match[1];
-        this.media = { type: 'youtube', uuid };
-      }
-      result = result.replace(url, newContent);
-    }
-    return result;
-  }
-
-  isImageURL(url: string): boolean {
-    const imageExts = ['.jpg', '.jpeg', '.png'];
-    let lowerCasedURL = url;
-    return _.some(imageExts, function (ext) {
-      return lowerCasedURL.substring(lowerCasedURL.length - ext.length) === ext;
-    });
+  mediaNode(): React.ReactElement<any> {
+    // FIXME
+    return null;
   }
 }
 

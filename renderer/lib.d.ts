@@ -1,6 +1,5 @@
 /// <reference path="../lib.d/electron/electron.d.ts" />
 /// <reference path="../lib.d/default/default.d.ts" />
-/// <reference path="../lib.d/escape-html/escape-html.d.ts" />
 /// <reference path="../lib.d/irc/irc.d.ts" />
 /// <reference path="../lib.d/koko/koko.d.ts" />
 /// <reference path="../lib.d/moment/moment.d.ts" />
