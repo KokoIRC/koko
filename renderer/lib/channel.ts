@@ -34,7 +34,7 @@ class Channel {
   }
 
   whois(info: Dict<string>) {
-    this.logs = Log.appendList(this.logs, Log.whois(info));
+    this.logs = Log.append(this.logs, Log.whois(info));
   }
 
   kick(channel: string, nick: string, by: string, reason: string) {

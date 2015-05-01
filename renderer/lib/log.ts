@@ -38,10 +38,6 @@ class Log {
     return logs.concat(newLog);
   }
 
-  static appendList(logs: Log[], newLogs: Log[]): Log[] {
-    return newLogs.reduce(Log.append, logs);
-  }
-
   static say(nick: string, text: string): Log {
     return new Log(nick, text);
   }
@@ -79,10 +75,10 @@ class Log {
     return new Log(to, text);
   }
 
-  static whois(info: Dict<string>): Log[] {
-    return _.keys(info).map(key => {
-      return new Log(info['nick'], `${key}: ${info[key]}\n`);
-    });
+  static whois(info: Dict<string>): Log {
+    return new Log(info['nick'], _.keys(info).reduce((result, key) => {
+      return result + `${key}: ${info[key]}\n`;
+    }, ''));
   }
 
   static kick(channel: string, nick: string, by: string, reason: string): Log {
