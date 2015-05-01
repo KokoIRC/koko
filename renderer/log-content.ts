@@ -5,8 +5,8 @@ import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
-const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/g;
-const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/g;
+const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/;
+const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/;
 
 interface LogContentProps {
   text: string;
@@ -59,7 +59,7 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
     let head = _.head(colors);
     let tail = _.tail(colors);
     if (!head) {
-      return parseURL(text);
+      return this.parseURL(text);
     } else {
       if (head.type === 'close') {
         return this.coloredText(text, tail);
@@ -112,8 +112,19 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
   }
 
   parseURL(text: string): React.ReactElement<any> | string {
-    // FIXME
-    return text;
+    let urlMatch = urlRegex.exec(text);
+    if (urlMatch) {
+      let url = urlMatch[0];
+      return (
+        D.span(null,
+          text.substring(0, urlMatch.index),
+          D.a({href: url, target: '_blank'}, url),
+          this.parseURL(text.substring(urlMatch.index + url.length))
+        )
+      );
+    } else {
+      return text;
+    }
   }
 
   mediaNode(): React.ReactElement<any> {
