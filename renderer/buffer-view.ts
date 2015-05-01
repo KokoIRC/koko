@@ -2,7 +2,6 @@ import _ = require('underscore');
 import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
 import Log = require('./lib/log');
-import LogContent = require('./log-content');
 import moment = require('moment');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
@@ -57,7 +56,7 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
           D.span({className: 'nick'}, log.nick),
           D.span({className: 'datetime'}, datetime)
         ),
-        LogContent({text: log.text})
+        log.content
       )
     );
   }

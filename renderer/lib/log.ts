@@ -1,6 +1,8 @@
 import _ = require('underscore');
 import configuration = require('./configuration');
 import generateId = require('./id-generator');
+import LogContent = require('../log-content');
+import React = require('react');
 import Topic = require('./topic');
 
 const scrollbackLimit = configuration.get('scrollback-limit');
@@ -11,6 +13,7 @@ class Log {
   text: string;
   datetime: Date;
   adjecent: boolean;
+  content: React.ReactElement<any>;
 
   constructor(nick: string, text: string) {
     this.id = generateId('log');
@@ -18,6 +21,7 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
+    this.content = LogContent({text});
   }
 
   static append(logs: Log[], newLog: Log): Log[] {
