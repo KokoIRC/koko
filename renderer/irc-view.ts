@@ -5,6 +5,7 @@ import Channel = require('./lib/channel');
 import configuration = require('./lib/configuration');
 import InputBox = require('./input-box');
 import ipc = require('./lib/ipc');
+import Log = require('./lib/log');
 import Name = require('./lib/name');
 import NameView = require('./name-view');
 import React = require('react');
@@ -38,6 +39,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   setNick(nick: string) {
     this.setState(<IrcViewState>{nick});
+    Log.setCurrentNick(nick);
   }
 
   componentDidMount() {
@@ -201,9 +203,11 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let channel = Channel.get(this.state.channels, data.channel);
     if (data.oldnick === this.state.nick) {
       this.setState(<IrcViewState>{nick: data.newnick});
+      Log.setCurrentNick(data.newnick);
       data.channels.push(rootChannelName);
     }
-    data.channels.forEach((channel) => {
+    data.channels.forEach((channelName) => {
+      let channel = Channel.get(this.state.channels, channelName);
       channel.updateName(data.oldnick, data.newnick);
     });
     this.forceUpdate();

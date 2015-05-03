@@ -21,7 +21,13 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
-    this.content = LogContent({text});
+    this.content = LogContent({text, userNick: Log.userNick, from: nick});
+  }
+
+  static userNick: string;
+
+  static setCurrentNick(nick: string) {
+    Log.userNick = nick;
   }
 
   static append(logs: Log[], newLog: Log): Log[] {

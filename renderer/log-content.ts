@@ -10,6 +10,8 @@ const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?
 
 interface LogContentProps {
   text: string;
+  userNick: string;
+  from: string;
 }
 
 interface Media {
@@ -131,9 +133,34 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
       }
       return (
         D.span(null,
-          text.substring(0, urlMatch.index),
+          this.highlightNickname(text.substring(0, urlMatch.index)),
           D.a({href: url, target: '_blank'}, url),
           this.parseURL(text.substring(urlMatch.index + url.length))
+        )
+      );
+    } else {
+      return this.highlightNickname(text);
+    }
+  }
+
+  highlightNickname(text: string): React.ReactElement<any> | string {
+    let userNick = this.props.userNick;
+    if (!userNick) {
+      return text;
+    }
+
+    if (this.props.from === this.props.userNick) {
+      // don't highlight channel messages
+      return text;
+    }
+
+    let nickIndex = text.indexOf(userNick);
+    if (nickIndex >= 0) {
+      return (
+        D.span(null,
+          text.substring(0, nickIndex),
+          D.span({className: 'highlight'}, userNick),
+          this.highlightNickname(text.substring(nickIndex + userNick.length))
         )
       );
     } else {
