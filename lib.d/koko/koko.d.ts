@@ -12,7 +12,7 @@ interface IrcCommand {
 }
 
 interface ConnectionData {
-  server: string;
+  host: string;
   nick: string;
   username: string;
   realname: string;

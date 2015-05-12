@@ -31,8 +31,8 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
     return (
       D.form({onSubmit: this.connect},
         D.p(null,
-          'server: ',
-          TInput({name: 'server', defaultValue: 'irc.hanirc.org'})),
+          'host: ',
+          TInput({name: 'host', defaultValue: 'irc.hanirc.org'})),
         D.p(null,
           'port: ',
           TInput({name: 'port', defaultValue: '6667'})),

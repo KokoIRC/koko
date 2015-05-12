@@ -14,7 +14,7 @@ export function connect(data: ConnectionData, ipc: Ipc) {
     });
   }
 
-  let client = new Client(data.server, data.nick, {
+  let client = new Client(data.host, data.nick, {
     userName: data.username,
     realName: data.realname,
     port: data.port,
