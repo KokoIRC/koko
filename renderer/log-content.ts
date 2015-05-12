@@ -146,26 +146,30 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
   highlightNickname(text: string): React.ReactElement<any> | string {
     let userNick = this.props.userNick;
     if (!userNick) {
-      return text;
+      return this.processSpace(text);
     }
 
     if (this.props.from === this.props.userNick) {
       // don't highlight channel messages
-      return text;
+      return this.processSpace(text);
     }
 
     let nickIndex = text.indexOf(userNick);
     if (nickIndex >= 0) {
       return (
         D.span(null,
-          text.substring(0, nickIndex),
+          this.processSpace(text.substring(0, nickIndex)),
           D.span({className: 'highlight'}, userNick),
           this.highlightNickname(text.substring(nickIndex + userNick.length))
         )
       );
     } else {
-      return text;
+      return this.processSpace(text);
     }
+  }
+
+  processSpace(text: string): string {
+    return text.replace(/ /g, '\u00A0');
   }
 
   mediaNode(): React.ReactElement<any> {
