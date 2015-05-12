@@ -65,6 +65,28 @@ export function connect(data: ConnectionData, ipc: Ipc) {
     ipc.send('error', {type: 'irc', error});
   });
 
+  client.on('raw', function (message) {
+    console.log(message);
+  });
+
+  sendRootMessage('Looking up host...', 'Connection');
+  client.conn.on('lookup', function (err: Error) {
+    if (err) {
+      sendRootMessage('Error in looking up: ' + err, 'Connection');
+    } else {
+      sendRootMessage('Connecting to server...', 'Connection');
+    }
+  });
+  client.conn.on('connect', function () {
+    sendRootMessage('Connected.', 'Connection');
+  });
+  client.conn.on('error', function (err: Error) {
+    sendRootMessage('Error: ' + err, 'Connection');
+  });
+  client.conn.on('close', function () {
+    sendRootMessage('Connection closed.', 'Connection');
+  });
+
   ipc.on('message', function (data) {
     client.say(data.context.target, data.raw);
   });
