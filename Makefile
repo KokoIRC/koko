@@ -3,6 +3,7 @@ ELECTRON=$(NODE_BIN)/electron
 BROWSERIFY=$(NODE_BIN)/browserify
 TSC=$(NODE_BIN)/tsc
 LESS=$(NODE_BIN)/lessc
+ASAR=$(NODE_BIN)/asar
 
 all: dep build
 
@@ -28,5 +29,24 @@ build: clean
 
 clean:
 	@rm -rf ./build
+
+asar: build clean-asar
+	@mkdir asar
+	@cp ./main.js asar/
+	@cp ./index.html asar/
+	@cp ./package.json asar/
+	@cp -r ./build asar/
+	@cp -r ./config asar/
+	@cp -r ./resource asar/
+	@cd asar; npm install --production; cd ..
+	$(ASAR) pack asar build/app.asar
+
+clean-asar:
+	@rm -rf ./asar
+
+package: clean asar
+	@git clone git@github.com:hachibasu/koko-shell.git build/koko-shell
+	@mv build/koko-shell/koko.app build/
+	@mv build/app.asar build/koko.app/Contents/Resources/
 
 .PHONY: run dep build clean
