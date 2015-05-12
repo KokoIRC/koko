@@ -27,10 +27,10 @@ build: clean
 	# build styles
 	$(LESS) ./style/main.less > build/built.css
 
-clean:
+clean: clean-asar
 	@rm -rf ./build
 
-asar: build clean-asar
+asar: clean-asar build
 	@mkdir asar
 	@cp ./main.js asar/
 	@cp ./index.html asar/
