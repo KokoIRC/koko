@@ -56,17 +56,12 @@ export function connect(data: ConnectionData, ipc: Ipc) {
 
   client.on('ctcp', function (from, to, text, type) {
     // FIXME
-    console.log(from, to, text, type);
   });
 
   client.on('motd', sendRootMessage);
 
   client.on('error', function (error) {
     ipc.send('error', {type: 'irc', error});
-  });
-
-  client.on('raw', function (message) {
-    console.log(message);
   });
 
   sendRootMessage('Looking up host...', 'Connection');

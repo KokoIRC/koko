@@ -20,7 +20,6 @@ class App extends TypedReact.Component<{}, AppState> {
     super();
     this.errorHandler = new AppErrorHandler();
     shortcut.Manager.initialize();
-    this.state = this.getInitialState();
   }
 
   getInitialState(): AppState {
