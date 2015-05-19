@@ -1,25 +1,13 @@
-const app = require('../../config/app');
-const key = require('../../config/keys');
-
-import _ = require('underscore');
-
-const configs = {app, key};
-const defaultConfigType = 'app';
+let configs: any = _require('remote').getGlobal('configuration');
 
 export = {
+  setConfigs(loadedConfigs: any) {
+    configs = loadedConfigs;
+  },
   getConfig(configName: string): any {
     return configs[configName];
   },
-  get(typeOrName: string, name?: string): any {
-    let type;
-    if (_.isUndefined(name)) {
-      type = defaultConfigType;
-      name = typeOrName;
-    } else {
-      type = typeOrName;
-      name = name;
-    }
-
-    return this.getConfig(type)[name];
+  get(configName: string, fieldName: string): any {
+    return configs[configName][fieldName];
   }
-}
+};

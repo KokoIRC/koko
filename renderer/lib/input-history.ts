@@ -2,7 +2,7 @@ import _ = require('underscore');
 import configuration = require('./configuration');
 import React = require('react');
 
-const inputHistoryLimit = configuration.get('input-history-limit');
+const inputHistoryLimit = configuration.get('app', 'input-history-limit');
 
 class InputHistory {
   private _history: string[];

@@ -16,8 +16,8 @@ import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
-const rootChannelName = configuration.get('root-channel-name');
-const commandSymbol = configuration.get('command-symbol');
+const rootChannelName = configuration.get('app', 'root-channel-name');
+const commandSymbol = configuration.get('app', 'command-symbol');
 
 interface IrcViewProps {
   errorHandler: AppErrorHandler;

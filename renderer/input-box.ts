@@ -10,8 +10,8 @@ import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
-const rootBufferName = configuration.get('root-buffer-name');
-const commandSymbol = configuration.get('command-symbol');
+const rootBufferName = configuration.get('app', 'root-buffer-name');
+const commandSymbol = configuration.get('app', 'command-symbol');
 
 interface InputBoxProps {
   names: Name[];

@@ -15,7 +15,7 @@ const keyAlias: Dict<string> = {
   'cmd': 'meta',
 };
 
-const waiterClearTimeout = configuration.get('shortcut-serial-input-timeout');
+const waiterClearTimeout = configuration.get('app', 'shortcut-serial-input-timeout');
 
 class KeyWaiter {
   eventName: string;
@@ -172,4 +172,4 @@ class ShortcutManager {
   }
 }
 
-export let Manager = new ShortcutManager(configuration.getConfig('key'));
+export let Manager = new ShortcutManager(configuration.getConfig('keys'));

@@ -5,7 +5,7 @@ import LogContent = require('../log-content');
 import React = require('react');
 import Topic = require('./topic');
 
-const scrollbackLimit = configuration.get('scrollback-limit');
+const scrollbackLimit = configuration.get('app', 'scrollback-limit');
 
 class Log {
   id: number;
