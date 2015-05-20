@@ -34,6 +34,12 @@ export function load(): any {
       result[path.basename(c, path.extname(c))] = yaml.load(ymlContent);
       return result;
     }, {});
-  let userConfigs = yaml.load(fs.readFileSync(userConfigPath).toString());
-  return customize(configs, userConfigs);
+
+  try {
+    let userConfigs = yaml.load(fs.readFileSync(userConfigPath).toString());
+    return customize(configs, userConfigs);
+  } catch (_) {
+    // no or invalid user config
+    return configs;
+  }
 }

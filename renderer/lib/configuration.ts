@@ -8,6 +8,11 @@ export = {
     return configs[configName];
   },
   get(configName: string, fieldName: string): any {
-    return configs[configName][fieldName];
+    let config = this.getConfig(configName);
+    if (config) {
+      return config[fieldName];
+    } else {
+      return undefined;
+    }
   }
 };

@@ -1,53 +1,75 @@
 import ipc = require('./lib/ipc');
+import configuration = require('./lib/configuration');
 import React = require('react');
 import TypedReact = require('typed-react');
 
 const D = React.DOM;
 
-interface TextInputProps {
-  name: string;
-  defaultValue: string;
-}
-
-class TextInput extends TypedReact.Component<TextInputProps, {}> {
-  render() {
-    return D.input({type: 'text', name: this.props.name,
-                    defaultValue: this.props.defaultValue,
-                    onKeyDown: this.keydown});
-  }
-  keydown(e: React.KeyboardEvent) {
-    e.stopPropagation();
-  }
-}
-
-const TInput = React.createFactory(TextInput);
+const user = configuration.getConfig('user') || {};
+const servers = configuration.getConfig('servers') || [];
+const serverDefaults = configuration.get('defaults', 'server');
 
 interface ServerFormProps {
   connect: (any) => void;
 }
 
 class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
+  private server: ServerInterface;
+
+  constructor() {
+    super();
+    this.server = servers[0] || {};
+  }
+
+  onChange(e) {
+    let serverName = e.target.value;
+    this.server = servers.filter(s => s.name === serverName)[0];
+
+    this.applyValues();
+  }
+
+  val(field: string): string {
+    return this.server[field] || user[field] || serverDefaults[field] || '';
+  }
+
+  applyValues() {
+    let fields = ['host', 'port', 'encoding', 'nick', 'username', 'realname'];
+    fields.forEach(fieldName => {
+      React.findDOMNode<HTMLInputElement>(this.refs[fieldName]).value = this.val(fieldName);
+    });
+  }
+
+  componentDidMount() {
+    this.applyValues();
+  }
+
+  componentDidUpdate() {
+    this.applyValues();
+  }
+
   render() {
     return (
       D.form({onSubmit: this.connect},
+        D.select({onChange: this.onChange},
+          servers.map(s => D.option({value: s.name}, s.name))),
         D.p(null,
           'host: ',
-          TInput({name: 'host', defaultValue: 'irc.hanirc.org'})),
+          D.input({type: 'text', name: 'host', ref: 'host'})),
         D.p(null,
           'port: ',
-          TInput({name: 'port', defaultValue: '6667'})),
+          D.input({type: 'text', name: 'port', ref: 'port'})),
         D.p(null,
           'encoding: ',
-          TInput({name: 'encoding', defaultValue: 'CP949'})),
+          D.input({type: 'text', name: 'encoding', ref: 'encoding'})),
         D.p(null,
           'nick: ',
-          TInput({name: 'nick', defaultValue: 'noraesae'})),
+          D.input({type: 'text', name: 'nick', ref: 'nick'})),
         D.p(null,
           'username: ',
-          TInput({name: 'username', defaultValue: 'noraesae'})),
+          D.input({type: 'text', name: 'username', ref: 'username'})),
         D.p(null,
           'realname: ',
-          TInput({name: 'realname', defaultValue: 'noraesae'})),
+          D.input({type: 'text', name: 'realname', ref: 'realname'})),
         D.button(null, 'connect')
       )
     );

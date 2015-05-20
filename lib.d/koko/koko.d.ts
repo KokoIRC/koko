@@ -48,3 +48,13 @@ interface ShortcutKeyConfig {
 interface ModifierState {
   [mod: string]: boolean;
 }
+
+interface ServerInterface {
+  nick?: string;
+  username?: string;
+  realname?: string;
+  name: string;
+  host: string;
+  port?: string;
+  encoding?: string;
+}
