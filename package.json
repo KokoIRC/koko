@@ -37,5 +37,8 @@
     "electron-prebuilt": "^0.24.0",
     "less": "^2.4.0",
     "typescript": "^1.5.0-alpha"
+  },
+  "scripts": {
+    "test": "make"
   }
 }
