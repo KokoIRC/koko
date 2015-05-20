@@ -1,3 +1,18 @@
 language: node_js
 node_js:
   - '0.10'
+deploy:
+  provider: releases
+  api_key:
+    secure: Atjr6Sq1SUKeWxIDtn+5wCfRojIJfuNIVYqO/WgU5Jnv3gHeY0pBAVsLoNQCXQC/MA5+NSXT8kXKVaAVsfONfarhak9A9zZSuYuhDEeKNErlwvSelHQF4MKr14XdcbqFLZaIPbY6+vp/aZrSGXFq0jRvdR1/JU2q9b9Xzk/DTuc=
+  file: "./build/koko-mac.zip"
+  on:
+    repo: hachibasu/koko
+    branch: master
+    tags: true
+before_deploy:
+  - make
+  - make package
+  - cd build
+  - zip -r --symlinks koko-mac koko.app
+  - cd ..
