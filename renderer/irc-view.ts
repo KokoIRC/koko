@@ -125,7 +125,12 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   onMessage(data) {
     let to = data.to[0] === '#' || data.to === rootChannelName ? data.to : data.nick;
-    Channel.get(this.state.channels, to).send(data.nick, data.text);
+    let channel = Channel.get(this.state.channels, to);
+    if (!channel) {
+      channel = new Channel(to);
+      this.state.channels.push(channel);
+    }
+    channel.send(data.nick, data.text);
     this.forceUpdate();
   }
 
