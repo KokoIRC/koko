@@ -1,18 +1,22 @@
+[![travis-ci](https://travis-ci.org/hachibasu/koko.svg)](https://travis-ci.org/hachibasu/koko)
+***
+
 ![koko](./resource/logo.png)
 
-Yet another IRC client for me and you :koko:
+###### Yet another IRC client for me and you :koko:
 
-`ココ` is pronounced `koko`, which means `here` in Japanese.
+##### [Screenshots](doc/SCREENSHOTS.md) | [Download](https://github.com/hachibasu/koko/releases) | [User Guide](doc/USERGUIDE.md) | [Contribution](doc/CONTRIBUTION.md) | [Issues](https://github.com/hachibasu/koko/issues)
 
-[![travis-ci](https://travis-ci.org/hachibasu/koko.svg)](https://travis-ci.org/hachibasu/koko)
+***
 
 # About `ココ`
 
+`ココ` is pronounced `koko`, which means `here` in Japanese.
+
 `ココ` is an open source and free IRC client mainly for me and hopefully for others.
 
-It provides simple UI and VIM-like shortcuts. It depends on the power of
-HTML5, CSS and JavaScript through [Electron](http://electron.atom.io),
-so you can customise it as you want.
+It provides minimalistic UI and some VIM-like shortcuts. It depends on the power of
+HTML5, CSS and JavaScript through [Electron](http://electron.atom.io).
 
 The logo is strongly inspired by
 [Campfire](https://color.adobe.com/Campfire-color-theme-2528696/) color theme.
@@ -21,31 +25,16 @@ The logo is strongly inspired by
 # Features
 
 * Built on Electron
-* Cross platform
+* Cross platform (currently only for OS X :apple:)
 * VIM-like shortcuts
-* Minimalistic design and function
+* Minimalistic design
 * Several encoding support
-* Free
+* Completely free
 
-# Development
+# Documentation
 
-If interested in the development, please refer to the [Issues](https://github.com/hachibasu/koko/issues) page.
-There are still many things left to be done and every contribution will be welcomed.
-Issues labelled `help wanted` are good ones to start from.
-
-To install deps, build and run `koko` in Electron:
-
-```bash
-$ make dep # only for the first time to install deps
-$ make run
-```
-
-To pack the app and create an executable: (currently only for OS X)
-
-```bash
-$ make dep # only for the first time to install deps
-$ make package
-```
+For more details, please refer to documentations. You can find them in the
+[`doc`](doc) directory.
 
 # License
 MIT
