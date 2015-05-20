@@ -10,7 +10,7 @@ const D = React.DOM;
 
 interface AppState {
   connected: boolean;
-  server: string;
+  title: string;
 }
 
 class App extends TypedReact.Component<{}, AppState> {
@@ -25,7 +25,7 @@ class App extends TypedReact.Component<{}, AppState> {
   getInitialState(): AppState {
     return {
       connected: false,
-      server: 'koko'
+      title: 'koko'
     };
   }
 
@@ -34,12 +34,21 @@ class App extends TypedReact.Component<{}, AppState> {
   }
 
   connect(data) {
-    this.setState({connected: true, server: data.server});
+    this.setState({
+      connected: true,
+      title: data.name || data.host
+    });
+  }
+
+  setWindowTitle() {
+    let titleTag = document.querySelector('title');
+    titleTag.textContent = this.state.title;
   }
 
   render() {
+    this.setWindowTitle();
     return this.state.connected ?
-      IrcView({server: this.state.server, errorHandler: this.errorHandler}) :
+      IrcView({errorHandler: this.errorHandler}) :
       ServerForm({connect: this.connect});
   }
 };

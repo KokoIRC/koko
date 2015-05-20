@@ -9,6 +9,10 @@ const user = configuration.getConfig('user') || {};
 const servers = configuration.getConfig('servers') || [];
 const serverDefaults = configuration.get('defaults', 'server');
 
+function getServer(name: string): ServerInterface {
+  return servers.filter(s => s.name === name)[0];
+}
+
 interface ServerFormProps {
   connect: (any) => void;
 }
@@ -22,9 +26,7 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
   }
 
   onChange(e) {
-    let serverName = e.target.value;
-    this.server = servers.filter(s => s.name === serverName)[0];
-
+    this.server = getServer(e.target.value);
     this.applyValues();
   }
 
@@ -50,7 +52,7 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
   render() {
     return (
       D.form({onSubmit: this.connect},
-        D.select({onChange: this.onChange},
+        D.select({name: 'name', onChange: this.onChange},
           servers.map(s => D.option({value: s.name}, s.name))),
         D.p(null,
           'host: ',
@@ -77,11 +79,18 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
 
   formToJSON(): any {
     let form = React.findDOMNode(this);
-    let inputs = form.querySelectorAll('input[type="text"]');
-    return Array.prototype.reduce.call(inputs, function (obj, input) {
+    let inputs = form.querySelectorAll('input[type="text"],select');
+    let result = Array.prototype.reduce.call(inputs, function (obj, input) {
       obj[input.name] = input.value;
       return obj;
     }, {});
+
+    if (result.name && getServer(result.name).host !== result.host) {
+      // user may re-input the host, so the name may be wrong
+      delete result.name;
+    }
+
+    return result;
   }
 
   connect(e) {

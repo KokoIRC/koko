@@ -21,7 +21,6 @@ const commandSymbol = configuration.get('app', 'command-symbol');
 
 interface IrcViewProps {
   errorHandler: AppErrorHandler;
-  server: string;
 }
 
 interface IrcViewState {
@@ -72,14 +71,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     this.props.errorHandler.on('irc', this.onError);
   }
 
-  setWindowTitle(title: string) {
-    let titleTag = document.getElementsByTagName('title')[0];
-    titleTag.innerText = title;
-  }
-
   render() {
-    this.setWindowTitle(this.props.server);
-
     let channel = Channel.current(this.state.channels);
     let names = channel.names;
     let topic = channel.topic;
