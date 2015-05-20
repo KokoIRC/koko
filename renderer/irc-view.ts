@@ -95,10 +95,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let current = Channel.current(this.state.channels);
     if (raw.startsWith(commandSymbol)) {
       raw = raw.substring(1);
-      let methodName = this.tryGetLocalHandler(raw);
-      if (methodName) {
-        this[methodName](raw);
-      } else {
+      if (!this.tryHandleLocally(raw)) {
         ipc.send('command', {raw, context: {target: current.name}});
       }
     } else {
@@ -110,16 +107,20 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     }
   }
 
-  tryGetLocalHandler(raw: string): string {
+  tryHandleLocally(raw: string): boolean {
     let tokens = raw.split(' ');
     if (tokens.length === 1 && tokens[0] === 'part' &&
         !Channel.current(this.state.channels).name.startsWith('#')) {
-      return 'partPersonalChat';
-    } else if (tokens[0] === 'pm') {
-      return 'startPersonalChat';
+      this.partPersonalChat();
+      return true;
+    } else if (tokens[0] === 'msg') {
+      this.startPersonalChat(tokens[1], tokens.splice(2).join(' '));
+      return true;
     } else if (tokens.length === 1 && tokens[0] === 'topic') {
-      return 'showTopic';
+      this.showTopic();
+      return true;
     }
+    return false;
   }
 
   onMessage(data) {
@@ -156,16 +157,13 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  startPersonalChat(raw: string) {
-    let tokens = raw.split(' ');
-    if (tokens.length < 3) {
+  startPersonalChat(target: string, raw: string) {
+    if (!target || !raw) {
       this.props.errorHandler.handle({
         type: 'normal',
         error: new Error('Invalid command arguments: [nick,message]'),
       });
     } else {
-      let target = tokens[1];
-      let raw = tokens.splice(2).join(' ');
       ipc.send('message', {raw, context: {target}});
       let channel = Channel.get(this.state.channels, target);
       if (!channel) {
