@@ -4,6 +4,8 @@ Yet another IRC client for me and you :koko:
 
 `ココ` is pronounced `koko`, which means `here` in Japanese.
 
+[![travis-ci](https://travis-ci.org/hachibasu/koko.svg)](https://travis-ci.org/hachibasu/koko)
+
 # About `ココ`
 
 `ココ` is an open source and free IRC client mainly for me and hopefully for others.
