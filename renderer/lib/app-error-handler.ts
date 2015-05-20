@@ -26,7 +26,7 @@ class AppErrorHandler {
 
   handle(data: {type: string, error: Error}) {
     // FIXME
-    console.error(JSON.stringify(data.error));
+    console.error(data.error);
     this.emit(data.type, data.error);
   }
 }
