@@ -44,9 +44,18 @@ asar: clean-asar build
 clean-asar:
 	@rm -rf ./asar
 
+download-shell: clean-shell
+	@mkdir shell
+	@curl -o shell/osx.zip https://raw.githubusercontent.com/hachibasu/koko-shell/master/zip/osx.zip
+	@unzip shell/osx.zip -d shell
+
+clean-shell:
+	@rm -rf ./shell
+
 package: clean asar
-	@git clone git@github.com:hachibasu/koko-shell.git build/koko-shell
-	@mv build/koko-shell/koko.app build/
+	@if [ ! -d ./shell ]; then make download-shell; fi
+	@cp -av shell/koko.app build/
 	@mv build/app.asar build/koko.app/Contents/Resources/
+	@echo "done"
 
 .PHONY: run dep build clean

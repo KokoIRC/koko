@@ -30,3 +30,6 @@ node_modules
 # Built files
 /build
 /asar
+
+# Downloaded shell
+/shell
