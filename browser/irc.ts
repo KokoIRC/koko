@@ -52,6 +52,9 @@ export function connect(data: ConnectionData, ipc: Ipc) {
 
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
+    if (nick && client._nick === to) {
+      ipc.send('message', {nick, to, text});
+    }
   });
 
   client.on('ctcp', function (from, to, text, type) {

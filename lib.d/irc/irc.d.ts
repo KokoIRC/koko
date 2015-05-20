@@ -2,6 +2,7 @@ declare module 'irc' {
   import net = require("net");
 
   export class Client {
+    _nick: string;
     constructor(server: string, nick: string, opt: any);
     connect();
     on(eventName: string, handler: (...args: any[]) => void);
