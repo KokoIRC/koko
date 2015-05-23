@@ -1,7 +1,7 @@
 [![travis-ci](https://travis-ci.org/hachibasu/koko.svg)](https://travis-ci.org/hachibasu/koko)
 ***
 
-![koko](./resource/logo.png)
+![koko](./resource/doc/logo.png)
 
 ###### Yet another IRC client for me and you :koko:
 
