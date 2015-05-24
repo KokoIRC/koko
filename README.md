@@ -21,6 +21,11 @@ HTML5, CSS and JavaScript through [Electron](http://electron.atom.io).
 The logo is strongly inspired by
 [Campfire](https://color.adobe.com/Campfire-color-theme-2528696/) color theme.
 
+# Screenshots
+
+![server form](doc/screenshots/screenshot1.png)
+![IRC window](doc/screenshots/screenshot2.png)
+![media](doc/screenshots/screenshot3.png)
 
 # Features
 
