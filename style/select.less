@@ -24,12 +24,13 @@
     background-color: @white;
     border: inherit;
     border-radius: inherit;
+    overflow: hidden;
 
     .option {
       padding: 3px 7px;
 
       &:hover {
-        background-color: @lightgray;
+        background-color: @background;
       }
       &.current {
         color: @cf-green;
@@ -42,9 +43,6 @@
     }
   }
   &:hover {
-    background-color: @lightgray;
-    .arrow {
-      color: @white;
-    }
+    background-color: @background;
   }
 }

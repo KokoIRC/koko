@@ -6,7 +6,9 @@
   left: 0;
   width: 100%;
   height: 20px;
-  background-color: @gray;
+  background-color: @white;
+  line-height: 18px;
+  box-shadow: 0 0 10px @lightshadow;
 
   ul {
     display: block;
@@ -18,9 +20,11 @@
       padding: 0 10px;
       margin: 0;
       height: 20px;
+      color: @lightgray;
 
       &.current {
-        background-color: @white;
+        background-color: @background;
+        color: @cf-green;
       }
     }
   }
