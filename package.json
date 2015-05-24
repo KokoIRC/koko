@@ -1,6 +1,6 @@
 {
   "name": "koko",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Yet another IRC client for me and you",
   "author": "Jun <me@noraesae.net>",
   "contributors": [
@@ -19,7 +19,7 @@
   },
   "keywords": [
     "irc",
-    "atom-shell"
+    "electron"
   ],
   "license": "MIT",
   "dependencies": {
