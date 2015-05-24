@@ -5,6 +5,7 @@ declare module 'irc' {
     _nick: string;
     constructor(server: string, nick: string, opt: any);
     connect();
+    disconnect(message?: string);
     on(eventName: string, handler: (...args: any[]) => void);
     say(target: string, text: string);
     conn: net.Socket;

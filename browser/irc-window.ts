@@ -1,12 +1,14 @@
 import BrowserWindow = require('browser-window');
 import Ipc = require('./ipc');
 import irc = require('./irc');
+import nodeIrc = require('irc');
 import shell = require('shell');
 
 class IrcWindow {
   private _window: BrowserWindow;
   ipc: Ipc;
   focused: boolean;
+  client: nodeIrc.Client;
 
   constructor(url: string) {
     this._window = new BrowserWindow({width: 800, height: 600});
@@ -17,6 +19,9 @@ class IrcWindow {
     this._window.on('closed', () => {
       this._window = null;
       IrcWindow.remove(this);
+      if (this.client) {
+        this.client.disconnect('bye');
+      }
     });
     this._window.on('focus', () => {
       this.ipc.send('focus', {});
@@ -28,7 +33,7 @@ class IrcWindow {
     });
 
     this.ipc.on('connect', (data) => {
-      irc.connect(data, this.ipc);
+      this.client = irc.connect(data, this.ipc);
     });
 
     this.focused = true;

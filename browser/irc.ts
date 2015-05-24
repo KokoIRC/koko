@@ -101,4 +101,6 @@ export function connect(data: ConnectionData, ipc: Ipc) {
       }
     }
   });
+
+  return client;
 }
