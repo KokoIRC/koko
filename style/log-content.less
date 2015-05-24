@@ -31,14 +31,22 @@
 }
 
 .media {
+  overflow: auto;
   a {
     display: block;
     margin: 0;
-    padding: 0;
+    padding: 4px;
+    border: 1px solid @lightgray;
+    float: left;
+    border-radius: 5px;
+
+    &:hover {
+      border: 1px solid @blue;
+    }
   }
   img {
     display: none;
-    max-height: 300px;
+    max-height: 150px;
     &.loaded {
       display: block;
     }

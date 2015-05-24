@@ -145,7 +145,8 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
     Array.prototype.forEach.call(images, (image) => {
       if (!image.classList.contains('loaded')) {
         imageLib.getMeta(image.src, (width, height) => {
-          let maxWidth = parseInt(image.parentElement.clientWidth, 10);
+          let mediaElement = image.parentElement.parentElement;
+          let maxWidth = parseInt(mediaElement.clientWidth, 10);
           let maxHeight = parseInt(getComputedStyle(image).maxHeight, 10);
           if (maxWidth < width) {
             height = height * maxWidth / width;
@@ -159,7 +160,7 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
           image.style.height = height + 'px';
           image.classList.add('loaded');
           if (this.isFollowingLog) {
-            view.scrollTop += height;
+            view.scrollTop += mediaElement.offsetHeight;
           }
         }, function () {
           image.remove();
