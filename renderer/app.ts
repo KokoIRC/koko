@@ -25,7 +25,7 @@ class App extends TypedReact.Component<{}, AppState> {
   getInitialState(): AppState {
     return {
       connected: false,
-      title: 'koko'
+      title: 'Koko'
     };
   }
 

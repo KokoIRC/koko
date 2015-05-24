@@ -14,5 +14,5 @@ before_deploy:
   - make
   - make package
   - cd build
-  - zip -r --symlinks koko-mac koko.app
+  - zip -r --symlinks koko-mac Koko.app
   - cd ..

@@ -4,15 +4,15 @@ import Menu = require('menu');
 export = {
   initialize(app, mainUrl: string) {
     let template = [
-      { label: 'koko',
+      { label: 'Koko',
         submenu: [
-          { label: 'About koko',
+          { label: 'About Koko',
             selector: 'orderFrontStandardAboutPanel:' },
           { type: 'separator' },
           { label: 'Services',
             submenu: [] },
           { type: 'separator' },
-          { label: 'Hide koko',
+          { label: 'Hide Koko',
             accelerator: 'Command+H',
             selector: 'hide:' },
           { label: 'Hide Others',

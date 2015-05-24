@@ -54,8 +54,8 @@ clean-shell:
 
 package: clean asar
 	@if [ ! -d ./shell ]; then make download-shell; fi
-	@cp -av shell/koko.app build/
-	@mv build/app.asar build/koko.app/Contents/Resources/
+	@cp -av shell/Koko.app build/
+	@mv build/app.asar build/Koko.app/Contents/Resources/
 	@echo "done"
 
 .PHONY: run dep build clean
