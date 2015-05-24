@@ -152,8 +152,9 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   onPart(data) {
     let isMe = data.nick === this.state.nick;
     if (isMe && data.channel !== rootChannelName) {
+      let prev = Channel.previous(this.state.channels);
       this.state.channels = Channel.remove(this.state.channels, data.channel);
-      this.state.channels = Channel.setCurrent(this.state.channels, rootChannelName);
+      this.state.channels = Channel.setCurrent(this.state.channels, prev.name);
     } else {
       let channel = Channel.get(this.state.channels, data.channel);
       channel.part(data.nick, data.reason, data.message);
@@ -189,8 +190,9 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   partPersonalChat() {
     let current = Channel.current(this.state.channels);
+    let prev = Channel.previous(this.state.channels);
     this.state.channels = Channel.remove(this.state.channels, current.name);
-    this.state.channels = Channel.setCurrent(this.state.channels, rootChannelName);
+    this.state.channels = Channel.setCurrent(this.state.channels, prev.name);
     this.forceUpdate();
   }
 
