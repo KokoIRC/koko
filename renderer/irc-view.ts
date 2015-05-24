@@ -136,13 +136,14 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   onJoin(data) {
     let isMe = data.nick === this.state.nick;
-    let channel;
+    let channel = Channel.get(this.state.channels, data.channel);
+    if (!channel) {
+      channel = new Channel(data.channel);
+      this.state.channels.push(channel);
+    }
     if (isMe) {
-      this.state.channels.push(new Channel(data.channel));
       this.state.channels = Channel.setCurrent(this.state.channels, data.channel);
-      channel = Channel.get(this.state.channels, data.channel);
     } else {
-      channel = Channel.get(this.state.channels, data.channel);
       channel.addName(data.nick);
     }
     channel.join(data.nick, data.message);
