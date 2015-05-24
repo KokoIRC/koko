@@ -88,7 +88,7 @@ class Channel {
   }
 
   static get(channels: Channel[], name: string): Channel {
-    return _.find(channels, c => (c.name === name));
+    return _.find(channels, c => (c.name.toLowerCase() === name.toLowerCase()));
   }
 
   static setCurrent(channels: Channel[], name: string): Channel[] {
