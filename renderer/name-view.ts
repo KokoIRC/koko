@@ -25,7 +25,7 @@ class NameView extends TypedReact.Component<NameViewProps, {}> {
     return this.props.names.map(function (name) {
       let cls = name.isMe ? 'me' : '';
       return (
-        D.li({key: name.nick, className: cls},
+        D.li({key: name.nick, className: cls, title: name.nick},
           D.span({className: 'mode'}, name.mode),
           D.span({className: 'nick'}, name.nick)
         )

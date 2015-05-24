@@ -5,7 +5,6 @@
   width: 120px;
   text-align: left;
   height: 100%;
-  padding-left: 5px;
   overflow-y: auto;
   overflow-x: hidden;
   background-color: @white;
@@ -16,9 +15,23 @@
 
     li {
       list-style-type: none;
-      font-size: 14px;
+      font-size: 13px;
       height: 17px;
       line-height: 17px;
+      padding: 1px 0 1px 5px;
+      cursor: default;
+
+      .mode {
+        color: @cf-green;
+      }
+
+      &.me .nick {
+        color: @cf-orange;
+      }
+
+      &:hover {
+        background-color: @background;
+      }
     }
   }
 }
