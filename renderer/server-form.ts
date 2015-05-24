@@ -1,6 +1,7 @@
 import ipc = require('./lib/ipc');
 import configuration = require('./lib/configuration');
 import React = require('react');
+import Select = require('./select');
 import TypedReact = require('typed-react');
 
 const D = React.DOM;
@@ -25,8 +26,8 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
     this.server = servers[0] || {};
   }
 
-  onChange(e) {
-    this.server = getServer(e.target.value);
+  onChange(newValue: string) {
+    this.server = getServer(newValue);
     this.applyValues();
   }
 
@@ -50,36 +51,46 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
   }
 
   render() {
+    let select = servers.length > 0 ?
+                 Select({name: 'name', onChange: this.onChange,
+                         options: servers.map(s => s.name)}) :
+                 null;
     return (
-      D.form({onSubmit: this.connect},
-        D.select({name: 'name', onChange: this.onChange},
-          servers.map(s => D.option({value: s.name}, s.name))),
-        D.p(null,
-          'host: ',
-          D.input({type: 'text', name: 'host', ref: 'host'})),
-        D.p(null,
-          'port: ',
-          D.input({type: 'text', name: 'port', ref: 'port'})),
-        D.p(null,
-          'encoding: ',
-          D.input({type: 'text', name: 'encoding', ref: 'encoding'})),
-        D.p(null,
-          'nick: ',
-          D.input({type: 'text', name: 'nick', ref: 'nick'})),
-        D.p(null,
-          'username: ',
-          D.input({type: 'text', name: 'username', ref: 'username'})),
-        D.p(null,
-          'realname: ',
-          D.input({type: 'text', name: 'realname', ref: 'realname'})),
-        D.button(null, 'connect')
+      D.div({id: 'server-form'},
+        D.div({className: 'logo'},
+          D.div({className: 'logo-wrapper'},
+            D.img({src: 'resource/image/logo.png'}),
+            D.div(null, 'ココ'))),
+        D.div({className: 'form-wrapper'},
+          D.form({onSubmit: this.connect},
+            select,
+            D.div(null,
+              D.div({className: 'field-name'}, 'Host'),
+              D.input({type: 'text', name: 'host', ref: 'host'})),
+            D.div(null,
+              D.div({className: 'field-name'}, 'Port'),
+              D.input({type: 'text', name: 'port', ref: 'port'})),
+            D.div(null,
+              D.div({className: 'field-name'}, 'Encoding'),
+              D.input({type: 'text', name: 'encoding', ref: 'encoding'})),
+            D.div(null,
+              D.div({className: 'field-name'}, 'Nick'),
+              D.input({type: 'text', name: 'nick', ref: 'nick'})),
+            D.div(null,
+              D.div({className: 'field-name'}, 'Username'),
+              D.input({type: 'text', name: 'username', ref: 'username'})),
+            D.div(null,
+              D.div({className: 'field-name'}, 'Real Name'),
+              D.input({type: 'text', name: 'realname', ref: 'realname'})),
+            D.button(null, 'Connect')
+          ))
       )
     );
   }
 
   formToJSON(): any {
     let form = React.findDOMNode(this);
-    let inputs = form.querySelectorAll('input[type="text"],select');
+    let inputs = form.querySelectorAll('input');
     let result = Array.prototype.reduce.call(inputs, function (obj, input) {
       obj[input.name] = input.value;
       return obj;

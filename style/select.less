@@ -1,0 +1,50 @@
+@import (reference) "common";
+
+.select {
+  border: 1px solid @lightgray;
+  background-color: @white;
+  position: relative;
+  font-size: 18px;
+  border-radius: 5px;
+  padding: 3px 7px;
+  cursor: pointer;
+
+  .arrow {
+    float: right;
+    color: @lightgray;
+    line-height: 20px;
+  }
+
+  .option-wrapper {
+    display: none;
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 100%;
+    background-color: @white;
+    border: inherit;
+    border-radius: inherit;
+
+    .option {
+      padding: 3px 7px;
+
+      &:hover {
+        background-color: @lightgray;
+      }
+      &.current {
+        color: @cf-green;
+      }
+    }
+  }
+  &.selecting {
+    .option-wrapper {
+      display: block;
+    }
+  }
+  &:hover {
+    background-color: @lightgray;
+    .arrow {
+      color: @white;
+    }
+  }
+}
