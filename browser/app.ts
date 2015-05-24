@@ -8,12 +8,13 @@ export function run(mainUrl: string) {
   crashReporter.start();
   global['configuration'] = configuration.load();
 
-  app.on('window-all-closed', function() {
-    app.quit();
-  });
-
-  app.on('ready', function() {
+  function openNewWindow() {
     menu.initialize(app, mainUrl);
     IrcWindow.create(mainUrl);
+  }
+
+  app.on('ready', openNewWindow);
+  app.on('window-all-closed', function () {
+    // do nothing
   });
 }
