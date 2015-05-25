@@ -198,7 +198,6 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   onChangeNick(data) {
-    let channel = Channel.get(this.state.channels, data.channel);
     if (data.oldnick === this.state.nick) {
       this.setState(<IrcViewState>{nick: data.newnick});
       Log.setCurrentNick(data.newnick);
