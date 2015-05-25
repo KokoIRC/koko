@@ -14,6 +14,8 @@ class Log {
   datetime: Date;
   adjecent: boolean;
   content: React.ReactElement<any>;
+  shouldNotify: boolean;
+  private _textContent: string;
 
   constructor(nick: string, text: string) {
     this.id = generateId('log');
@@ -22,6 +24,19 @@ class Log {
     this.datetime = new Date();
     this.adjecent = false;
     this.content = LogContent({text, userNick: Log.userNick, from: nick});
+  }
+
+  get textContent(): string {
+    if (_.isUndefined(this._textContent)) {
+      let tag = document.createElement('div');
+      tag.innerHTML = React.renderToStaticMarkup(this.content);
+      this._textContent = tag.textContent;
+    }
+    return this._textContent;
+  }
+
+  get includesUserNick(): boolean {
+    return this.textContent.includes(Log.userNick);
   }
 
   static userNick: string;

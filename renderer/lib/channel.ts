@@ -1,8 +1,12 @@
 import _ = require('underscore');
+import configuration = require('./configuration');
 import generateId = require('./id-generator');
 import Log = require('./log');
 import Name = require('./name');
+import Notification = require('./notification');
 import Topic = require('./topic');
+
+const rootChannelName = configuration.get('app', 'root-channel-name');
 
 class Channel {
   id: number;
@@ -11,6 +15,7 @@ class Channel {
   name: string;
   names: Name[];
   topic: Topic;
+  unread: boolean;
 
   constructor(name: string, current: boolean = false) {
     this.id = generateId('channel');
@@ -19,10 +24,21 @@ class Channel {
     this.names = [];
     this.current = current;
     this.topic = null;
+    this.unread = false;
+  }
+
+  get personal(): boolean {
+    return this.name !== rootChannelName && !this.name.startsWith('#');
   }
 
   send(nick: string, text: string) {
-    this.logs = Log.append(this.logs, Log.say(nick, text));
+    let log = Log.say(nick, text);
+    this.logs = Log.append(this.logs, log);
+
+    if (!this.current && (this.personal || log.includesUserNick)) {
+      this.unread = true;
+      Notification.show(this.name, nick, log.textContent);
+    }
   }
 
   join(nick: string, message: IrcRawMessage) {
@@ -95,6 +111,7 @@ class Channel {
     return channels.map(function (channel) {
       if (channel.name === name) {
         channel.current = true;
+        channel.unread = false;
       } else {
         channel.current = false;
       }
