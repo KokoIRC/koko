@@ -49,6 +49,9 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
     if (log.adjecent) {
       className += ' adjecent';
     }
+    if (log.sentByMe) {
+      className += ' sent-by-me';
+    }
 
     return (
       D.li({key: log.id, className: className},
