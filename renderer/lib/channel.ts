@@ -35,7 +35,7 @@ class Channel {
     let log = Log.say(nick, text);
     this.logs = Log.append(this.logs, log);
 
-    if (this.shouldNotify(!!isNotice, log.includesUserNick)) {
+    if (this.shouldNotify(log, isNotice)) {
       if (!this.current) {
         this.unread = true;
       }
@@ -43,13 +43,17 @@ class Channel {
     }
   }
 
-  shouldNotify(isNotice: boolean, includesUserNick: boolean): boolean {
+  shouldNotify(log: Log, isNotice: boolean): boolean {
+    if (log.sentByMe) {
+      return false;
+    }
+
     let hasFocus = document.hasFocus();
     if (isNotice) {
-      return !hasFocus && (this.personal || includesUserNick);
+      return !hasFocus && (this.personal || log.includesUserNick);
     } else {
       let current = this.current && hasFocus;
-      return !current && (this.personal || includesUserNick);
+      return !current && (this.personal || log.includesUserNick);
     }
   }
 
