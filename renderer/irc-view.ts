@@ -110,7 +110,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   tryHandleLocally(raw: string): boolean {
     let tokens = raw.split(' ');
     if (tokens.length === 1 && tokens[0] === 'part' &&
-        !Channel.current(this.state.channels).name.startsWith('#')) {
+        Channel.current(this.state.channels).personal) {
       this.partPersonalChat();
       return true;
     } else if (tokens[0] === 'msg') {
