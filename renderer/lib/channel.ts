@@ -31,13 +31,23 @@ class Channel {
     return this.name !== rootChannelName && !this.name.startsWith('#');
   }
 
-  send(nick: string, text: string) {
+  send(nick: string, text: string, isNotice?: boolean) {
     let log = Log.say(nick, text);
     this.logs = Log.append(this.logs, log);
 
-    if (!this.current && (this.personal || log.includesUserNick)) {
+    if (this.shouldNotify(!!isNotice, log.includesUserNick)) {
       this.unread = true;
       Notification.show(this.name, nick, log.textContent);
+    }
+  }
+
+  shouldNotify(isNotice: boolean, includesUserNick: boolean): boolean {
+    let hasFocus = document.hasFocus();
+    if (isNotice) {
+      return !hasFocus && (this.personal || includesUserNick);
+    } else {
+      let current = this.current && hasFocus;
+      return !current && (this.personal || includesUserNick);
     }
   }
 

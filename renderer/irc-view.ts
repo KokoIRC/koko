@@ -130,7 +130,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
       channel = new Channel(to);
       this.state.channels.push(channel);
     }
-    channel.send(data.nick, data.text);
+    channel.send(data.nick, data.text, data.isNotice);
     this.forceUpdate();
   }
 
