@@ -10,8 +10,16 @@ interface TabNavProps {
 
 class TabNav extends TypedReact.Component<TabNavProps, {}> {
   render() {
-    let tabs = this.props.channels.map(channel =>
-      D.li({key: channel.id, className: channel.current ? 'current': ''}, channel.name));
+    let tabs = this.props.channels.map(channel => {
+      let className = '';
+      if (channel.current) {
+        className += ' current';
+      }
+      if (channel.unread) {
+        className += ' unread';
+      }
+      return D.li({key: channel.id, className}, channel.name)
+    });
 
     return (
       D.div({id: 'tab-nav'},

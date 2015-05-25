@@ -36,7 +36,9 @@ class Channel {
     this.logs = Log.append(this.logs, log);
 
     if (this.shouldNotify(!!isNotice, log.includesUserNick)) {
-      this.unread = true;
+      if (!this.current) {
+        this.unread = true;
+      }
       Notification.show(this.name, nick, log.textContent);
     }
   }
