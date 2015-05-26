@@ -25,7 +25,6 @@
   "dependencies": {
     "irc": "git://github.com/hachibasu/irc",
     "js-yaml": "^3.3.1",
-    "moment": "^2.9.0",
     "normalize.css": "^3.0.2",
     "react": "^0.13.1",
     "typed-react": "^3.4.1",

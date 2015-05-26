@@ -2,7 +2,6 @@ import _ = require('underscore');
 import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
 import Log = require('./lib/log');
-import moment = require('moment');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
 import TypedReact = require('typed-react');
@@ -44,7 +43,6 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
   }
 
   logElement(log: Log): React.ReactElement<any> {
-    let datetime = moment(log.datetime).calendar();
     let className = 'log';
     if (log.adjecent) {
       className += ' adjecent';
@@ -53,15 +51,8 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
       className += ' sent-by-me';
     }
 
-    return (
-      D.li({key: log.id, className: className},
-        D.div({className: 'info'},
-          D.span({className: 'nick'}, log.nick),
-          D.span({className: 'datetime'}, datetime)
-        ),
-        log.content
-      )
-    );
+    return D.li({key: log.id, className,
+                 dangerouslySetInnerHTML: {__html: log.htmlContent}});
   }
 
   componentWillUpdate(nextProps: BufferViewProps) {

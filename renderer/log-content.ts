@@ -1,5 +1,6 @@
 import _ = require('underscore');
 import Color = require('./lib/irc-color');
+import Log = require('./lib/log');
 import React = require('react');
 import TypedReact = require('typed-react');
 
@@ -9,9 +10,8 @@ const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b
 const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/;
 
 interface LogContentProps {
-  text: string;
   userNick: string;
-  from: string;
+  log: Log;
 }
 
 interface Media {
@@ -25,14 +25,20 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
   render() {
     return (
       D.div(null,
-        D.div({className: 'text'}, this.textNode()),
-        D.div({className: 'media'}, this.mediaNode())
+        D.div({className: 'info'},
+          D.span({className: 'nick'}, this.props.log.nick),
+          D.span({className: 'datetime'}, this.props.log.datetime.toString())
+        ),
+        D.div(null,
+          D.div({className: 'text'}, this.textNode()),
+          D.div({className: 'media'}, this.mediaNode())
+        )
       )
     );
   }
 
   textNode(): React.ReactElement<any>[] {
-    let lines = this.props.text.split("\n").map(line => {
+    let lines = this.props.log.text.split("\n").map(line => {
       let colors = Color.parse(line);
       if (colors.length === 0) {
         return this.parseURL(line);
@@ -149,7 +155,7 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
       return this.processSpace(text);
     }
 
-    if (this.props.from === this.props.userNick) {
+    if (this.props.log.nick === this.props.userNick) {
       // don't highlight channel messages
       return this.processSpace(text);
     }

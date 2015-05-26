@@ -13,8 +13,8 @@ class Log {
   text: string;
   datetime: Date;
   adjecent: boolean;
-  content: React.ReactElement<any>;
   textContent: string;
+  htmlContent: string;
   sentByMe: boolean;
   includesUserNick: boolean;
 
@@ -24,16 +24,17 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjecent = false;
-    this.content = LogContent({text, userNick: Log.userNick, from: nick});
-    this.textContent = this.getText(this.content);
+    let content = this.render(LogContent({userNick: Log.userNick, log: this}));
+    this.htmlContent = content.innerHTML;
+    this.textContent = content.textContent;
     this.sentByMe = this.nick === Log.userNick;
     this.includesUserNick = this.textContent.includes(Log.userNick);
   }
 
-  getText(element: React.ReactElement<any>): string {
+  render(element: React.ReactElement<any>): HTMLDivElement {
     let tag = document.createElement('div');
     tag.innerHTML = React.renderToStaticMarkup(element);
-    return tag.textContent;
+    return <HTMLDivElement>tag.children[0];
   }
 
   static userNick: string;
