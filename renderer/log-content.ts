@@ -1,6 +1,7 @@
 import _ = require('underscore');
 import Color = require('./lib/irc-color');
 import Log = require('./lib/log');
+import moment = require('moment');
 import React = require('react');
 import TypedReact = require('typed-react');
 
@@ -23,11 +24,12 @@ interface Media {
 class LogContent extends TypedReact.Component<LogContentProps, {}> {
   media: Media
   render() {
+    let date = moment(this.props.log.datetime).format('ddd D MMM h:mma');
     return (
       D.div(null,
         D.div({className: 'info'},
           D.span({className: 'nick'}, this.props.log.nick),
-          D.span({className: 'datetime'}, this.props.log.datetime.toString())
+          D.span({className: 'datetime'}, date)
         ),
         D.div(null,
           D.div({className: 'text'}, this.textNode()),
