@@ -39,6 +39,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
     // window events
     ipc.on('focus', this.onFocusWindow);
+    ipc.on('blur', this.onBlurWindow);
   }
 
   onMessageKey() {
@@ -93,9 +94,12 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
   }
 
   onFocusWindow() {
-    if (this.props.channel !== rootBufferName) {
-      this.focus();
-    }
+    this.focus();
+  }
+
+  onBlurWindow() {
+    this.focus();
+    this.blur();
   }
 
   render() {

@@ -27,6 +27,10 @@ class IrcWindow {
       this.ipc.send('focus', {});
       IrcWindow.focus(this);
     });
+    this._window.on('blur', () => {
+      this.ipc.send('blur', {});
+      IrcWindow.blur();
+    });
     this._window.webContents.on('new-window', function (e, url) {
       shell.openExternal(url);
       e.preventDefault();
@@ -73,6 +77,12 @@ class IrcWindow {
       } else {
         w.blur();
       }
+    });
+  }
+
+  static blur() {
+    IrcWindow.windows.forEach(function (w) {
+      w.blur();
     });
   }
 
