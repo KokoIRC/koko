@@ -1,3 +1,9 @@
+# 0.1.3 (26 May 2015)
+
+* Highlight my nick in logs.
+* Blur input when blurring windows.
+* Fix slow log rendering.
+
 # 0.1.2 (25 May 2015)
 
 * Add notification.
