@@ -1,3 +1,9 @@
+# 0.1.4 (26 May 2015)
+
+* Format datetime again.
+* Bug fixes.
+  * Regression bug from 0.1.3: wrong text content.
+
 # 0.1.3 (26 May 2015)
 
 * Highlight my nick in logs.
