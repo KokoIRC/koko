@@ -26,7 +26,7 @@ class Log {
     this.adjecent = false;
     let content = this.render(LogContent({userNick: Log.userNick, log: this}));
     this.htmlContent = content.innerHTML;
-    this.textContent = content.textContent;
+    this.textContent = content.querySelector('.text').textContent;
     this.sentByMe = this.nick === Log.userNick;
     this.includesUserNick = this.textContent.includes(Log.userNick);
   }
