@@ -38,8 +38,9 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
     shortcut.Manager.on('autocomplete', this.onAutocompleteKey);
 
     // window events
-    ipc.on('focus', this.onFocusWindow);
-    ipc.on('blur', this.onBlurWindow);
+    window.addEventListener('click', this.focus);
+    ipc.on('focus', this.focus);
+    ipc.on('blur', this.blur);
   }
 
   onMessageKey() {
@@ -91,15 +92,6 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
         }
       }
     }
-  }
-
-  onFocusWindow() {
-    this.focus();
-  }
-
-  onBlurWindow() {
-    this.focus();
-    this.blur();
   }
 
   render() {
