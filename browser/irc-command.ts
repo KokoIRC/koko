@@ -14,6 +14,8 @@ const commands: Dict<string[]> = {
   'unban': ['?channel', 'nick'],
   'kickban': ['?channel', 'nick', '?message'],
   'topic': ['?channel', 'topic'],
+  'quote': ['command', '...args'],
+  'raw': ['command', '...args'],
 };
 
 export class CommandError implements Error {
@@ -45,18 +47,22 @@ function parseArgs(name: string, argList: string[], args: string[], context: Com
     if (_.isUndefined(argNeeded)) {
       break;
     }
-    if (argNeeded[0] !== '?') {
+    if (argNeeded.startsWith('?')) {
+      if (argList.length >= args.length) {
+        parsedArgs.push(undefined);
+      } else {
+        parsedArgs.push(args.shift());
+      }
+    } else if (argNeeded.startsWith('...')) {
+      parsedArgs.push(args);
+      parsedArgs = parsedArgs.concat(args);
+      break;
+    } else {
       let arg = args.shift();
       if (_.isUndefined(arg)) {
         throw new CommandError(`Command argument needed: [${argNeeded}]`);
       } else {
         parsedArgs.push(arg);
-      }
-    } else {
-      if (argList.length >= args.length) {
-        parsedArgs.push(undefined);
-      } else {
-        parsedArgs.push(args.shift());
       }
     }
   }
