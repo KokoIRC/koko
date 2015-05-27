@@ -84,6 +84,7 @@ The commands are described in the format like below:
 
 * Arguments are space-separated.
 * `(?arg)` means it's optional.
+* `(...arg)` means it's a space-separated array.
 * If a command has several optional parameters, `ココ` fills them from front
   parameters.
 * `#` can be omitted from any channel name parameter.
@@ -138,6 +139,9 @@ Set or show the topic of a channel.
 
 #### `/msg (nick) (message)`
 Send a personal message and start a personal chat.
+
+#### `/quote (command) (...args)`, `/raw (command) (...args)`
+Send a raw IRC message.
 
 ### For developers
 
