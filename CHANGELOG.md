@@ -1,3 +1,10 @@
+# 0.1.5 (1 June 2015)
+
+* Focus input onclick windows.
+* Add `quote` and `raw` commands.
+* Fix that messages containing spaces can't be fully parsed in commands.
+  * Don't autoinsert `#` for optional channel parameters.
+
 # 0.1.4 (26 May 2015)
 
 * Format datetime again.
