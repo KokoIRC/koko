@@ -85,23 +85,23 @@ The commands are described in the format like below:
 * Arguments are space-separated.
 * `(?arg)` means it's optional.
 * `(...arg)` means it's a space-separated array.
-* If a command has several optional parameters, `ココ` fills them from front
-  parameters.
-* `#` can be omitted from any channel name parameter.
+* `(!arg)` means it's a text that can contain spaces. It's always optional.
 
 #### `/join (channel)`
 Join a channel.
 
-#### `/part (?channel) (?message)`
+* `#` can be omitted from the channel name.
+
+#### `/part (?channel) (!message)`
 Part a channel.
 
 * If no channel name is provided, part the current channel or personal chat.
 * If no message is provided, use the default message used in `node-irc`.
 
-#### `/ctcp (target) (type) (text)`
+#### `/ctcp (target) (type) (!text)`
 Send a ctcp.
 
-#### `/action (target) (message)`
+#### `/action (target) (!message)`
 Do an action.
 
 #### `/whois (nick)`
@@ -119,7 +119,7 @@ Give a mode to a user in a channel
   If no `+` or `-` is provided, `+` is used by default.
   The mode character is like `v` or `o`.
 
-#### `/kick (?channel) (nick) (?message)`
+#### `/kick (?channel) (nick) (!message)`
 Kick a user from a channel.
 
 * If no channel name is provided, use the current channel.
@@ -128,16 +128,16 @@ Kick a user from a channel.
 #### `/ban (?channel) (nick)`, `/unban (?channel) (nick)`
 Just sugars for `/mode (channel) +/-b (nick)`. Ban or unban a user from a channel.
 
-#### `/kickban (?channel) (nick) (?message)`
+#### `/kickban (?channel) (nick) (!message)`
 Just a sugar to do `/kick` and `/ban` at the same time. Kick and ban a user from a channel.
 
-#### `/topic (?channel) (?topic)`
+#### `/topic (?channel) (!topic)`
 Set or show the topic of a channel.
 
 * If no channel name is provided, use the current channel.
 * If no parameter is provided at all, just show the topic of the current channel.
 
-#### `/msg (nick) (message)`
+#### `/msg (nick) (!message)`
 Send a personal message and start a personal chat.
 
 #### `/quote (command) (...args)`, `/raw (command) (...args)`
