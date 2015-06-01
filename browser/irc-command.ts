@@ -2,18 +2,18 @@ import _ = require('underscore');
 
 const commands: Dict<string[]> = {
   'join': ['channel'],
-  'part': ['?channel', '?message'],
-  'ctcp': ['target', 'type', 'text'],
-  'action': ['target', 'message'],
+  'part': ['?channel', '!message'],
+  'ctcp': ['target', 'type', '!text'],
+  'action': ['target', '!message'],
   'whois': ['nick'],
   'list': [],
   'nick': ['nick'],
   'mode': ['?channel', 'mode', 'nick'],
-  'kick': ['?channel', 'nick', '?message'],
+  'kick': ['?channel', 'nick', '!message'],
   'ban': ['?channel', 'nick'],
   'unban': ['?channel', 'nick'],
-  'kickban': ['?channel', 'nick', '?message'],
-  'topic': ['?channel', 'topic'],
+  'kickban': ['?channel', 'nick', '!message'],
+  'topic': ['?channel', '!topic'],
   'quote': ['command', '...args'],
   'raw': ['command', '...args'],
 };
@@ -54,6 +54,11 @@ function parseArgs(commandName: string, argList: string[], args: string[], conte
       } else {
         parsedArgs.push(args.shift());
       }
+    } else if (argNeeded.startsWith('!')) {
+      if (args.length > 0) {
+        parsedArgs.push(args.join(' '));
+      }
+      break;
     } else if (argNeeded.startsWith('...')) {
       parsedArgs.push(args);
       break;
