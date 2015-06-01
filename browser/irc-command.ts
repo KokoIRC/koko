@@ -28,34 +28,34 @@ export class CommandError implements Error {
 
 export function parse(raw: string, context: CommandContext): IrcCommand {
   let tokens = raw.split(' ');
-  let name = tokens[0];
+  let commandName = tokens[0];
   let args = tokens.splice(1);
-  let command = commands[name];
+  let command = commands[commandName];
 
   if (!command) {
-    throw new CommandError(`Invalid command name: ${name}`);
+    throw new CommandError(`Invalid command name: ${commandName}`);
   }
 
-  args = parseArgs(name, _.clone(command), args, context);
-  return {name, args};
+  args = parseArgs(commandName, _.clone(command), args, context);
+  return {name: commandName, args};
 }
 
-function parseArgs(name: string, argList: string[], args: string[], context: CommandContext): string[] {
+function parseArgs(commandName: string, argList: string[], args: string[], context: CommandContext): string[] {
   let parsedArgs = [];
   while (true) {
     let argNeeded = argList.shift();
     if (_.isUndefined(argNeeded)) {
       break;
     }
+
     if (argNeeded.startsWith('?')) {
-      if (argList.length >= args.length) {
-        parsedArgs.push(undefined);
+      if (argNeeded === '?channel' && !(args[0] && args[0].startsWith('#'))) {
+        parsedArgs.push(context.target);
       } else {
         parsedArgs.push(args.shift());
       }
     } else if (argNeeded.startsWith('...')) {
       parsedArgs.push(args);
-      parsedArgs = parsedArgs.concat(args);
       break;
     } else {
       let arg = args.shift();
@@ -66,13 +66,12 @@ function parseArgs(name: string, argList: string[], args: string[], context: Com
       }
     }
   }
-  return parsedArgs.map<string>((arg, idx) => {
-    return processArg(name, arg, idx, context);
-  });
+
+  return parsedArgs.map<string>(reprocess.bind(null, commandName));
 }
 
-function processArg(name: string, value: string, idx: number, context: CommandContext): string {
-  switch (name) {
+function reprocess(commandName: string, value: string, idx: number): string {
+  switch (commandName) {
   case 'join':
     if (idx === 0) {
       if (value[0] !== '#') {
@@ -81,29 +80,9 @@ function processArg(name: string, value: string, idx: number, context: CommandCo
     }
     break;
   case 'mode':
-    if (idx === 0) {
-      if (_.isUndefined(value)) {
-        value = context.target;
-      } else if (value[0] !== '#') {
-        value = '#' + value;
-      }
-    } else if (idx === 1) {
+    if (idx === 1) {
       if (!(value[0] === '+' || value[0] === '0')) {
         value = '+' + value;
-      }
-    }
-    break;
-  case 'part':
-  case 'kick':
-  case 'kickban':
-  case 'ban':
-  case 'unban':
-  case 'topic':
-    if (idx === 0) {
-      if (_.isUndefined(value)) {
-        value = context.target;
-      } else if (value[0] !== '#') {
-        value = '#' + value;
       }
     }
     break;
