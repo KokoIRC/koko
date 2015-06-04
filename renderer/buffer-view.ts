@@ -44,8 +44,8 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
 
   logElement(log: Log): React.ReactElement<any> {
     let className = 'log';
-    if (log.adjecent) {
-      className += ' adjecent';
+    if (log.adjacent) {
+      className += ' adjacent';
     }
     if (log.sentByMe) {
       className += ' sent-by-me';

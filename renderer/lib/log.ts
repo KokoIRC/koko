@@ -12,7 +12,7 @@ class Log {
   nick: string;
   text: string;
   datetime: Date;
-  adjecent: boolean;
+  adjacent: boolean;
   textContent: string;
   htmlContent: string;
   sentByMe: boolean;
@@ -23,7 +23,7 @@ class Log {
     this.nick = nick;
     this.text = text;
     this.datetime = new Date();
-    this.adjecent = false;
+    this.adjacent = false;
     let content = this.render(LogContent({userNick: Log.userNick, log: this}));
     this.htmlContent = content.innerHTML;
     this.textContent = content.querySelector('.text').textContent;
@@ -52,7 +52,7 @@ class Log {
     if (lastLog &&
         lastLog.nick === newLog.nick &&
         newLog.datetime.getTime() - lastLog.datetime.getTime() < 20000) {
-      newLog.adjecent = true;
+      newLog.adjacent = true;
     }
     return logs.concat(newLog);
   }
