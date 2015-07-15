@@ -46,7 +46,7 @@ clean-asar:
 
 download-shell: clean-shell
 	@mkdir shell
-	@curl -o shell/osx.zip https://raw.githubusercontent.com/hachibasu/koko-shell/master/zip/osx.zip
+	@curl -o shell/osx.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/osx.zip
 	@unzip shell/osx.zip -d shell
 
 clean-shell:

@@ -8,9 +8,6 @@ the pleasure with you guys. Please come and help us!
 
 We welcome every kind of contribution including reporting bugs, suggesting new
 features, or uploading pull requests(will love this the most!).
-Also, this project is maintained by an open group, [Hachimitsu
-Busters(はちみつバスターズ)](http://hachibasu.github.io). If the group
-interests you, please feel free to contact us.
 
 ## What and how to do
 
@@ -22,7 +19,7 @@ and try doing it first. This document is to help you, and we will also help as
 much as we can.
 
 If you don't have anything you'd like to add for the time being,
-[`help wanted` issues](https://github.com/hachibasu/koko/labels/help%20wanted)
+[`help wanted` issues](https://github.com/noraesae/koko/labels/help%20wanted)
 are the best point to start from. We will keep posting parts to implement. However,
 we will be happier if others do it. To participate in the process,
 just drop a reply and that may be it.
@@ -43,7 +40,7 @@ please check them out as they are awesome libraries and tools by themselves.
   * [TypedReact](https://github.com/Asana/typed-react): A binding layer between React and TypeScript
 * [Browserify](http://browserify.org): Frontend JavaScript packager letting us `require('modules')`
 * [Less](http://lesscss.org): A CSS preprocessor
-* [hachibasu/irc](https://github.com/hachibasu/irc): A clone of [martynsmith/node-irc](https://github.com/martynsmith/node-irc)
+* [noraesae/irc](https://github.com/noraesae/irc): A clone of [martynsmith/node-irc](https://github.com/martynsmith/node-irc)
 to add encoding support and some additional sugars.
   * [Documentation](https://node-irc.readthedocs.org/en/latest/) of the original `node-irc`.
 
@@ -52,7 +49,7 @@ to add encoding support and some additional sugars.
 ##### Currently only for OS X. Cross platform support is also a thing to be done. Please help!
 
 ```bash
-$ git clone git@github.com:hachibasu/koko.git
+$ git clone git@github.com:noraesae/koko.git
 ```
 
 To install deps, usually only for the first time unless there are additional modules.
@@ -105,5 +102,5 @@ around source codes. But if any, please feel free to ask us.
 
 Please...
 
-* Upload an issue in [Issues](https://github.com/hachibasu/koko/issues)
-* Drop an email to any member of [Hachimitsu Busters](http://hachibasu.github.io)
+* Upload an issue in [Issues](https://github.com/noraesae/koko/issues)
+* Drop an email to [contributors](https://github.com/noraesae/koko/graphs/contributors)

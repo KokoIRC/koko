@@ -3,7 +3,7 @@
 ## Install
 
 Currently, the application pacakge only for OS X is downloadable in the
-[releases](https://github.com/hachibasu/koko/releases) page. To install, move
+[releases](https://github.com/noraesae/koko/releases) page. To install, move
 the `koko.app` to `Applications` and that's it. Security setting may be needed
 to run `ココ` for recent versions of OS X.
 
@@ -166,5 +166,5 @@ We know it doesn't seem good, but we're afriad they'll remain for the time being
 
 Please...
 
-* Upload an issue in [Issues](https://github.com/hachibasu/koko/issues)
-* Drop an email to any member of [Hachimitsu Busters](http://hachibasu.github.io)
+* Upload an issue in [Issues](https://github.com/noraesae/koko/issues)
+* Drop an email to [contributors](https://github.com/noraesae/koko/graphs/contributors)

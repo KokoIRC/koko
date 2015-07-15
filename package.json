@@ -12,10 +12,10 @@
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hachibasu/koko.git"
+    "url": "https://github.com/noraesae/koko.git"
   },
   "bugs": {
-    "url": "https://github.com/hachibasu/koko/issues"
+    "url": "https://github.com/noraesae/koko/issues"
   },
   "keywords": [
     "irc",
@@ -23,7 +23,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "irc": "git://github.com/hachibasu/irc",
+    "irc": "git://github.com/noraesae/irc",
     "js-yaml": "^3.3.1",
     "moment": "^2.10.3",
     "normalize.css": "^3.0.2",

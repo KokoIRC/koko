@@ -15,6 +15,6 @@ Here are some screenshots selling `ココ`.
 
 Please...
 
-* Upload a [pull request](https://github.com/hachibasu/koko/pulls)
-* Report in [Issues](https://github.com/hachibasu/koko/issues)
-* Drop an email to any member of [Hachimitsu Busters](http://hachibasu.github.io)
+* Upload a [pull request](https://github.com/noraesae/koko/pulls)
+* Report in [Issues](https://github.com/noraesae/koko/issues)
+* Drop an email to [contributors](https://github.com/noraesae/koko/graphs/contributors)

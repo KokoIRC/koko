@@ -147,5 +147,5 @@ servers:
 
 Please...
 
-* Upload an issue in [Issues](https://github.com/hachibasu/koko/issues)
-* Drop an email to any member of [Hachimitsu Busters](http://hachibasu.github.io)
+* Upload an issue in [Issues](https://github.com/noraesae/koko/issues)
+* Drop an email to [contributors](https://github.com/noraesae/koko/graphs/contributors)

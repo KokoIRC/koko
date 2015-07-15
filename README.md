@@ -1,11 +1,11 @@
-[![travis-ci](https://travis-ci.org/hachibasu/koko.svg)](https://travis-ci.org/hachibasu/koko)
+[![travis-ci](https://travis-ci.org/noraesae/koko.svg)](https://travis-ci.org/noraesae/koko)
 ***
 
 ![koko](./resource/doc/logo.png)
 
 ###### Yet another IRC client for me and you :koko:
 
-##### [Screenshots](doc/SCREENSHOTS.md) | [Download](https://github.com/hachibasu/koko/releases) | [User Guide](doc/USERGUIDE.md) | [Configuration](doc/CONFIGURATION.md) | [Contribution](doc/CONTRIBUTION.md) | [Issues](https://github.com/hachibasu/koko/issues)
+##### [Screenshots](doc/SCREENSHOTS.md) | [Download](https://github.com/noraesae/koko/releases) | [User Guide](doc/USERGUIDE.md) | [Configuration](doc/CONFIGURATION.md) | [Contribution](doc/CONTRIBUTION.md) | [Issues](https://github.com/noraesae/koko/issues)
 
 ***
 
