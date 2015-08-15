@@ -1,6 +1,7 @@
 import ipc = require('./lib/ipc');
 import configuration = require('./lib/configuration');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import Select = require('./select');
 
 const user = configuration.getConfig('user') || {};
@@ -15,7 +16,7 @@ interface ServerFormProps {
   connect: (any) => void;
 }
 
-class ServerForm extends React.Component<ServerFormProps, {}> {
+class ServerForm extends ReactComponent<ServerFormProps, {}> {
   private server: IServerInterface;
 
   constructor() {

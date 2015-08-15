@@ -1,11 +1,12 @@
 import Channel = require('./lib/channel');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 
 interface TabNavProps {
   channels: Channel[];
 }
 
-class TabNav extends React.Component<TabNavProps, {}> {
+class TabNav extends ReactComponent<TabNavProps, {}> {
   render() {
     let tabs = this.props.channels.map(channel => {
       let className = '';

@@ -3,6 +3,7 @@ import Color = require('./lib/irc-color');
 import Log = require('./lib/log');
 import moment = require('moment');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/;
 const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/;
@@ -18,7 +19,7 @@ interface Media {
   url?: string;
 }
 
-class LogContent extends React.Component<LogContentProps, {}> {
+class LogContent extends ReactComponent<LogContentProps, {}> {
   media: Media
   render() {
     let date = moment(this.props.log.datetime).format('ddd D MMM h:mma');

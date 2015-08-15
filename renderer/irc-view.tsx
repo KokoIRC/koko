@@ -9,6 +9,7 @@ import Log = require('./lib/log');
 import Name = require('./lib/name');
 import NameView = require('./name-view');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import shortcut = require('./lib/shortcut-manager');
 import TabNav = require('./tab-nav');
 import TopicView = require('./topic-view');
@@ -25,7 +26,7 @@ interface IrcViewState {
   channels: Channel[];
 }
 
-class IrcView extends React.Component<IrcViewProps, IrcViewState> {
+class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
   getInitialState(): IrcViewState {
     return {
       nick: '',

@@ -3,6 +3,7 @@ import Channel = require('./lib/channel');
 import imageLib = require('./lib/image');
 import Log = require('./lib/log');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import shortcut = require('./lib/shortcut-manager');
 
 const followLogBuffer = 20;
@@ -12,7 +13,7 @@ interface BufferViewProps {
   channels: Channel[];
 }
 
-class BufferView extends React.Component<BufferViewProps, {}> {
+class BufferView extends ReactComponent<BufferViewProps, {}> {
   isFollowingLog: boolean;
   currentBuffer: string;
 

@@ -1,4 +1,5 @@
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import Topic = require('./lib/topic');
 
 interface TopicViewProps {
@@ -7,7 +8,7 @@ interface TopicViewProps {
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/;
 
-class TopicView extends React.Component<TopicViewProps, {}> {
+class TopicView extends ReactComponent<TopicViewProps, {}> {
   render() {
     if (!this.props.topic) {
       return null;

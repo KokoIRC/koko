@@ -5,6 +5,7 @@ import InputHistory = require('./lib/input-history');
 import ipc = require('./lib/ipc');
 import Name = require('./lib/name');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import shortcut = require('./lib/shortcut-manager');
 
 const rootBufferName = configuration.get('app', 'root-buffer-name');
@@ -16,7 +17,7 @@ interface InputBoxProps {
   submit: (text: string) => void;
 }
 
-class InputBox extends React.Component<InputBoxProps, {}> {
+class InputBox extends ReactComponent<InputBoxProps, {}> {
   inputHistory: InputHistory;
   autocompleter: Autocompleter;
 

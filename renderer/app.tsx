@@ -3,6 +3,7 @@ import ipc = require('./lib/ipc');
 import IrcView = require('./irc-view');
 import shortcut = require('./lib/shortcut-manager');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 import ServerForm = require('./server-form');
 
 interface AppState {
@@ -10,7 +11,7 @@ interface AppState {
   title: string;
 }
 
-class App extends React.Component<{}, AppState> {
+class App extends ReactComponent<{}, AppState> {
   errorHandler: AppErrorHandler;
 
   constructor() {

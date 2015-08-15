@@ -1,4 +1,5 @@
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 
 interface SelectProps {
   name: string;
@@ -10,7 +11,7 @@ interface SelectState {
   value: string;
 }
 
-class Select extends React.Component<SelectProps, SelectState> {
+class Select extends ReactComponent<SelectProps, SelectState> {
   getInitialState() {
     let options = this.props.options;
     let initialValue = options.length > 0 ? options[0] : '';

@@ -1,11 +1,12 @@
 import Name = require('./lib/name');
 import React = require('react');
+import ReactComponent = require('./lib/react-component');
 
 interface NameViewProps {
   names: Name[];
 }
 
-class NameView extends React.Component<NameViewProps, {}> {
+class NameView extends ReactComponent<NameViewProps, {}> {
   render() {
     if (!this.props.names || this.props.names.length === 0) {
       return null;
