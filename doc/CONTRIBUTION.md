@@ -37,7 +37,6 @@ please check them out as they are awesome libraries and tools by themselves.
 * [Electron](http://electron.atom.io): `nw.js` based shell where `ココ` is running
 * [TypeScript](http://typescriptlang.org): JavaScript superset helping us use JavaScript in type-safe and elegant way
 * [React](http://reactjs.com): Frontend framework built by Facebook
-  * [TypedReact](https://github.com/Asana/typed-react): A binding layer between React and TypeScript
 * [Browserify](http://browserify.org): Frontend JavaScript packager letting us `require('modules')`
 * [Less](http://lesscss.org): A CSS preprocessor
 * [noraesae/irc](https://github.com/noraesae/irc): A clone of [martynsmith/node-irc](https://github.com/martynsmith/node-irc)
