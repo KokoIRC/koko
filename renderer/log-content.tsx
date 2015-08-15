@@ -165,7 +165,7 @@ class LogContent extends ReactComponent<LogContentProps, {}> {
       return (
         <span>
           {this.processSpace(text.substring(0, nickIndex))}
-          <span className='highlight'>userNick</span>
+          <span className='highlight'>{userNick}</span>
           {this.highlightNickname(text.substring(nickIndex + userNick.length))}
         </span>
       );
