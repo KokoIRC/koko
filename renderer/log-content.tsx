@@ -140,7 +140,7 @@ class LogContent extends ReactComponent<LogContentProps, {}> {
       return (
         <span>
           {this.highlightNickname(text.substring(0, urlMatch.index))}
-          <a href={url} target='_blank'>url</a>
+          <a href={url} target='_blank'>{url}</a>
           {this.parseURL(text.substring(urlMatch.index + url.length))}
         </span>
       );
