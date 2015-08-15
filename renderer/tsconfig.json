@@ -5,6 +5,7 @@
     "preserveConstEnums": true,
     "outDir": "../build/renderer",
     "sourceMap": true,
+    "jsx": "react",
     "target": "ES5"
   }
 }

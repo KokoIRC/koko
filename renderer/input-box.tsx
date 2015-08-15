@@ -65,7 +65,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
   onInputHistoryKey(idxDiff: number) {
     let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
-    if ((<any>input).matches(':focus')) {
+    if ((input as any).matches(':focus')) {
       if (this.inputHistory.index() < 0) {
         this.inputHistory.setTempInput(input.value);
       }
@@ -77,7 +77,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
   onAutocompleteKey() {
     let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
     let value = input.value;
-    if ((<any>input).matches(':focus') && value.length > 0) {
+    if ((input as any).matches(':focus') && value.length > 0) {
       let caretIdx = input.selectionStart;
       let wordIdx = value.lastIndexOf(' ', caretIdx - 1) + 1;
       let word = value.substring(wordIdx, caretIdx);
@@ -106,7 +106,7 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
   shouldComponentUpdate(nextProps: InputBoxProps): boolean {
     let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
-    return !(<any>input).matches(':focus');
+    return !(input as any).matches(':focus');
   }
 
   submit(e: React.FormEvent) {
@@ -133,14 +133,15 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
   }
 
   keyDown(e: React.KeyboardEvent) {
+    let nativeEvent = e.nativeEvent as KeyboardEvent;
     let modified = _.some(['Alt', 'Control', 'Meta', 'Shift'], e.getModifierState.bind(e));
-    let special = _.contains(_.keys(shortcut.specialKeys), e.nativeEvent.keyIdentifier);
-    let arrow = _.contains(['Up', 'Down'], e.nativeEvent.keyIdentifier);
+    let special = _.contains(_.keys(shortcut.specialKeys), nativeEvent.keyIdentifier);
+    let arrow = _.contains(['Up', 'Down'], nativeEvent.keyIdentifier);
     if (!(modified || special || arrow)) {
       e.stopPropagation();
     }
 
-    if (e.nativeEvent.keyIdentifier === _.invert(shortcut.specialKeys)['tab']) {
+    if (nativeEvent.keyIdentifier === _.invert(shortcut.specialKeys)['tab']) {
       e.preventDefault();
     } else {
       this.autocompleter.reset();

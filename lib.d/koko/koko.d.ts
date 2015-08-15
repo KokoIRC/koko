@@ -47,6 +47,10 @@ interface ShortcutKeyConfig {
 
 interface ModifierState {
   [mod: string]: boolean;
+  alt: boolean;
+  control: boolean;
+  meta: boolean;
+  shift: boolean;
 }
 
 interface ServerInterface {

@@ -88,7 +88,7 @@ class ShortcutManager {
   }
 
   initialize() {
-    window.addEventListener('keydown', (e: NativeKeyboardEvent) => {
+    window.addEventListener('keydown', (e: KeyboardEvent) => {
       let key = e.keyIdentifier;
       if (key.startsWith('U+')) {
         key = specialKeys[key]
@@ -104,9 +104,9 @@ class ShortcutManager {
     });
   }
 
-  modifierState(e: KeyboardEvent) {
+  modifierState(e: KeyboardEvent): ModifierState {
     return ['Alt', 'Control', 'Meta', 'Shift'].reduce((result, key) =>
-      _.extend(result, {[key.toLowerCase()]: e.getModifierState(key)}), {});
+      _.extend(result, {[key.toLowerCase()]: e.getModifierState(key)}), {} as ModifierState);
   }
 
   keyEventHandler(key: string, modifierState: ModifierState) {

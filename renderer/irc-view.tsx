@@ -37,7 +37,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 
   setNick(nick: string) {
-    this.setState(<IrcViewState>{nick});
+    this.setState({nick} as IrcViewState);
     Log.setCurrentNick(nick);
   }
 
@@ -199,7 +199,7 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
 
   onChangeNick(data) {
     if (data.oldnick === this.state.nick) {
-      this.setState(<IrcViewState>{nick: data.newnick});
+      this.setState({nick: data.newnick} as IrcViewState);
       Log.setCurrentNick(data.newnick);
       data.channels.push(rootChannelName);
     }
