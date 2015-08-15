@@ -1,14 +1,11 @@
 import Channel = require('./lib/channel');
 import React = require('react');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 interface TabNavProps {
   channels: Channel[];
 }
 
-class TabNav extends TypedReact.Component<TabNavProps, {}> {
+class TabNav extends React.Component<TabNavProps, {}> {
   render() {
     let tabs = this.props.channels.map(channel => {
       let className = '';
@@ -18,15 +15,15 @@ class TabNav extends TypedReact.Component<TabNavProps, {}> {
       if (channel.unread) {
         className += ' unread';
       }
-      return D.li({key: channel.id, className}, channel.name)
+      return <li key={channel.id} className={className}>{channel.name}</li>;
     });
 
     return (
-      D.div({id: 'tab-nav'},
-        D.ul(null, tabs)
-      )
+      <div id='tab-nav'>
+        <ul>{tabs}</ul>
+      </div>
     );
   }
 }
 
-export = React.createFactory(TypedReact.createClass(TabNav));
+export = TabNav;

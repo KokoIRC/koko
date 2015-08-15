@@ -2,9 +2,6 @@ import ipc = require('./lib/ipc');
 import configuration = require('./lib/configuration');
 import React = require('react');
 import Select = require('./select');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 const user = configuration.getConfig('user') || {};
 const servers = configuration.getConfig('servers') || [];
@@ -18,7 +15,7 @@ interface ServerFormProps {
   connect: (any) => void;
 }
 
-class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
+class ServerForm extends React.Component<ServerFormProps, {}> {
   private server: IServerInterface;
 
   constructor() {
@@ -52,39 +49,41 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
 
   render() {
     let select = servers.length > 0 ?
-                 Select({name: 'name', onChange: this.onChange,
-                         options: servers.map(s => s.name)}) :
+                 <Select name='name' onChange={this.onChange}
+                         options={servers.map(s => s.name)} /> :
                  null;
     return (
-      D.div({id: 'server-form'},
-        D.div({className: 'logo'},
-          D.div({className: 'logo-wrapper'},
-            D.img({src: 'resource/image/logo.png'}),
-            D.div(null, 'ココ'))),
-        D.div({className: 'form-wrapper'},
-          D.form({onSubmit: this.connect},
-            select,
-            D.div(null,
-              D.div({className: 'field-name'}, 'Host'),
-              D.input({type: 'text', name: 'host', ref: 'host'})),
-            D.div(null,
-              D.div({className: 'field-name'}, 'Port'),
-              D.input({type: 'text', name: 'port', ref: 'port'})),
-            D.div(null,
-              D.div({className: 'field-name'}, 'Encoding'),
-              D.input({type: 'text', name: 'encoding', ref: 'encoding'})),
-            D.div(null,
-              D.div({className: 'field-name'}, 'Nick'),
-              D.input({type: 'text', name: 'nick', ref: 'nick'})),
-            D.div(null,
-              D.div({className: 'field-name'}, 'Username'),
-              D.input({type: 'text', name: 'username', ref: 'username'})),
-            D.div(null,
-              D.div({className: 'field-name'}, 'Real Name'),
-              D.input({type: 'text', name: 'realname', ref: 'realname'})),
-            D.button(null, 'Connect')
-          ))
-      )
+      <div id='server-form'>
+        <div className='logo'>
+          <div className='logo-wrapper'>
+            <img src='resource/image/logo.png' />
+            <div>ココ</div>
+          </div>
+        </div>
+        <div className='form-wrapper'>
+          <form onSubmit={this.connect}>
+            {select}
+            {[
+              {label: 'Host', inputName: 'host'},
+              {label: 'Port', inputName: 'port'},
+              {label: 'Encoding', inputName: 'encoding'},
+              {label: 'Nick', inputName: 'nick'},
+              {label: 'Username', inputName: 'username'},
+              {label: 'Real Name', inputName: 'realname'},
+            ].map(field => this.field(field.label, field.inputName))}
+            <button>Connect</button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  field(label: string, inputName: string): React.ReactElement<any> {
+    return (
+      <div>
+        <div className='field-name'>{label}</div>
+        <input type='text' name={inputName} ref={inputName} />
+      </div>
     );
   }
 
@@ -113,4 +112,4 @@ class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(ServerForm));
+export = ServerForm;

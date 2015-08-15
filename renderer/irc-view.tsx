@@ -12,9 +12,6 @@ import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
 import TabNav = require('./tab-nav');
 import TopicView = require('./topic-view');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 const rootChannelName = configuration.get('app', 'root-channel-name');
 const commandSymbol = configuration.get('app', 'command-symbol');
@@ -28,7 +25,7 @@ interface IrcViewState {
   channels: Channel[];
 }
 
-class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
+class IrcView extends React.Component<IrcViewProps, IrcViewState> {
   getInitialState(): IrcViewState {
     return {
       nick: '',
@@ -79,15 +76,14 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
     let className = topic ? 'with-topic' : '';
 
     return (
-      D.div({id: 'irc-view', className},
-        TabNav({channels: this.state.channels}),
-        TopicView({topic}),
-        NameView({names}),
-        BufferView({channels: this.state.channels}),
-        InputBox({channel: Channel.current(this.state.channels).name,
-                  names,
-                  submit: this.submitInput})
-      )
+      <div id='irc-view' className={className}>
+        <TabNav channels={this.state.channels} />
+        <TopicView topic={topic} />
+        <NameView names={names} />
+        <BufferView channels={this.state.channels} />
+        <InputBox channel={Channel.current(this.state.channels).name}
+                  names={names} submit={this.submitInput} />
+      </div>
     );
   }
 
@@ -281,4 +277,4 @@ class IrcView extends TypedReact.Component<IrcViewProps, IrcViewState> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(IrcView));
+export = IrcView;

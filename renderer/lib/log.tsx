@@ -24,7 +24,7 @@ class Log {
     this.text = text;
     this.datetime = new Date();
     this.adjacent = false;
-    let content = this.render(LogContent({userNick: Log.userNick, log: this}));
+    let content = this.render(<LogContent userNick={Log.userNick} log={this} />);
     this.htmlContent = content.innerHTML;
     this.textContent = content.querySelector('.text').textContent;
     this.sentByMe = this.nick === Log.userNick;
@@ -34,7 +34,7 @@ class Log {
   render(element: React.ReactElement<any>): HTMLDivElement {
     let tag = document.createElement('div');
     tag.innerHTML = React.renderToStaticMarkup(element);
-    return <HTMLDivElement>tag.children[0];
+    return tag.children[0] as HTMLDivElement;
   }
 
   static userNick: string;

@@ -3,9 +3,6 @@ import Color = require('./lib/irc-color');
 import Log = require('./lib/log');
 import moment = require('moment');
 import React = require('react');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/;
 const youtubeRegex = /(?:youtube\.com\/\S*(?:(?:\/e(?:mbed))?\/|watch\?(?:\S*?&?v\=))|youtu\.be\/)([a-zA-Z0-9_-]{6,11})/;
@@ -21,21 +18,21 @@ interface Media {
   url?: string;
 }
 
-class LogContent extends TypedReact.Component<LogContentProps, {}> {
+class LogContent extends React.Component<LogContentProps, {}> {
   media: Media
   render() {
     let date = moment(this.props.log.datetime).format('ddd D MMM h:mma');
     return (
-      D.div(null,
-        D.div({className: 'info'},
-          D.span({className: 'nick'}, this.props.log.nick),
-          D.span({className: 'datetime'}, date)
-        ),
-        D.div(null,
-          D.div({className: 'text'}, this.textNode()),
-          D.div({className: 'media'}, this.mediaNode())
-        )
-      )
+      <div>
+        <div className='info'>
+          <span className='nick'>{this.props.log.nick}</span>
+          <span className='datetime'>{date}</span>
+        </div>
+        <div>
+          <div className='text'>{this.textNode()}</div>
+          <div className='media'>{this.mediaNode()}</div>
+        </div>
+      </div>
     );
   }
 
@@ -53,7 +50,7 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
       if (idx === lines.length - 1) {
         return result.concat(line);
       } else {
-        return result.concat([line, D.br()]);
+        return result.concat([line, <br />]);
       }
     }, []);
   }
@@ -96,26 +93,26 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
         let colorIdx = head.index + head.length;
         let closeIdx = close.index + close.length;
         return (
-          D.span(null,
-            this.parseURL(text.substring(0, head.index)),
-            D.span({className},
-              this.coloredText(text.substring(colorIdx, close.index),
-                               _.first(tail, tail.indexOf(close)).map(this.subtractIdx(colorIdx)))
-            ),
-            this.coloredText(text.substring(closeIdx),
-                             _.rest(tail, tail.indexOf(close) + 1).map(this.subtractIdx(closeIdx)))
-          )
+          <span>
+            {this.parseURL(text.substring(0, head.index))}
+            <span className={className}>
+              {this.coloredText(text.substring(colorIdx, close.index),
+                                _.first(tail, tail.indexOf(close)).map(this.subtractIdx(colorIdx)))}
+            </span>
+            {this.coloredText(text.substring(closeIdx),
+                              _.rest(tail, tail.indexOf(close) + 1).map(this.subtractIdx(closeIdx)))}
+          </span>
         );
       } else {
         let colorIdx = head.index + head.length;
         return (
-          D.span(null,
-            this.parseURL(text.substring(0, head.index)),
-            D.span({className},
-              this.coloredText(text.substring(head.index + head.length),
-                               tail.map(this.subtractIdx(colorIdx)))
-            )
-          )
+          <span>
+            {this.parseURL(text.substring(0, head.index))}
+            <span className={className}>
+              {this.coloredText(text.substring(head.index + head.length),
+                                tail.map(this.subtractIdx(colorIdx)))}
+            </span>
+          </span>
         );
       }
     }
@@ -140,11 +137,11 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
         };
       }
       return (
-        D.span(null,
-          this.highlightNickname(text.substring(0, urlMatch.index)),
-          D.a({href: url, target: '_blank'}, url),
-          this.parseURL(text.substring(urlMatch.index + url.length))
-        )
+        <span>
+          {this.highlightNickname(text.substring(0, urlMatch.index))}
+          <a href={url} target='_blank'>url</a>
+          {this.parseURL(text.substring(urlMatch.index + url.length))}
+        </span>
       );
     } else {
       return this.highlightNickname(text);
@@ -165,11 +162,11 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
     let nickIndex = text.indexOf(userNick);
     if (nickIndex >= 0) {
       return (
-        D.span(null,
-          this.processSpace(text.substring(0, nickIndex)),
-          D.span({className: 'highlight'}, userNick),
-          this.highlightNickname(text.substring(nickIndex + userNick.length))
-        )
+        <span>
+          {this.processSpace(text.substring(0, nickIndex))}
+          <span className='highlight'>userNick</span>
+          {this.highlightNickname(text.substring(nickIndex + userNick.length))}
+        </span>
       );
     } else {
       return this.processSpace(text);
@@ -185,12 +182,13 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
     if (this.media) {
       switch (this.media.type) {
       case 'image':
-        mediaElement = D.a({href: this.media.url, target: '_blank'},
-                         D.img({src: this.media.url}));
+        mediaElement = <a href={this.media.url} target='_blank'>
+                         <img src={this.media.url} />
+                       </a>;
         break;
       case 'youtube':
         let embedSrc = `https://www.youtube.com/embed/${this.media.uuid}?rel=0`;
-        mediaElement = D.iframe({src: embedSrc, frameBorder: 0});
+        mediaElement = <iframe src={embedSrc} frameBorder='0' />;
         break;
       }
     }
@@ -198,4 +196,4 @@ class LogContent extends TypedReact.Component<LogContentProps, {}> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(LogContent));
+export = LogContent;

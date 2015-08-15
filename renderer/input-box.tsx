@@ -6,9 +6,6 @@ import ipc = require('./lib/ipc');
 import Name = require('./lib/name');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 const rootBufferName = configuration.get('app', 'root-buffer-name');
 const commandSymbol = configuration.get('app', 'command-symbol');
@@ -19,7 +16,7 @@ interface InputBoxProps {
   submit: (text: string) => void;
 }
 
-class InputBox extends TypedReact.Component<InputBoxProps, {}> {
+class InputBox extends React.Component<InputBoxProps, {}> {
   inputHistory: InputHistory;
   autocompleter: Autocompleter;
 
@@ -96,11 +93,11 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
 
   render() {
     return (
-      D.div({id: 'input-box'},
-        D.form({onSubmit: this.submit},
-          D.input({ref: 'input', type: 'text', onKeyDown: this.keyDown})
-        )
-      )
+      <div id='input-box'>
+        <form onSubmit={this.submit}>
+          <input ref='input' type='text' onKeyDown={this.keyDown} />
+        </form>
+      </div>
     );
   }
 
@@ -149,4 +146,4 @@ class InputBox extends TypedReact.Component<InputBoxProps, {}> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(InputBox));
+export = InputBox;

@@ -4,16 +4,13 @@ import IrcView = require('./irc-view');
 import shortcut = require('./lib/shortcut-manager');
 import React = require('react');
 import ServerForm = require('./server-form');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 interface AppState {
   connected: boolean;
   title: string;
 }
 
-class App extends TypedReact.Component<{}, AppState> {
+class App extends React.Component<{}, AppState> {
   errorHandler: AppErrorHandler;
 
   constructor() {
@@ -48,10 +45,10 @@ class App extends TypedReact.Component<{}, AppState> {
   render() {
     this.setWindowTitle();
     return this.state.connected ?
-      IrcView({errorHandler: this.errorHandler}) :
-      ServerForm({connect: this.connect});
+      <IrcView errorHandler={this.errorHandler} /> :
+      <ServerForm connect={this.connect} />;
   }
 };
 
-React.render(React.createElement(TypedReact.createClass(App)),
+React.render(<App />,
              document.getElementById('app'));

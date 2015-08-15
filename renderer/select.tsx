@@ -1,7 +1,4 @@
 import React = require('react');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 interface SelectProps {
   name: string;
@@ -13,7 +10,7 @@ interface SelectState {
   value: string;
 }
 
-class Select extends TypedReact.Component<SelectProps, SelectState> {
+class Select extends React.Component<SelectProps, SelectState> {
   getInitialState() {
     let options = this.props.options;
     let initialValue = options.length > 0 ? options[0] : '';
@@ -30,18 +27,23 @@ class Select extends TypedReact.Component<SelectProps, SelectState> {
         if (option === this.state.value) {
           className += ' current';
         }
-        return D.div({key, className, onClick: this.onChange}, option);
+        return (
+          <div key={key} className={className}
+              onClick={this.onChange}>
+            {option}
+          </div>
+        );
       });
   }
 
   render() {
     return (
-      D.div({ref: 'select', className: 'select', onClick: this.onClick},
-        D.div({className: 'arrow'}, '▾'),
-        D.div({className: 'label'}, this.state.value),
-        D.input({type: 'hidden', name: this.props.name, value: this.state.value}),
-        D.div({className: 'option-wrapper'}, this.options())
-      )
+      <div ref='select' className='select' onClick={this.onClick}>
+        <div className='arrow'>▾</div>
+        <div className= 'label'>{this.state.value}</div>
+        <input type='hidden' name={this.props.name} value={this.state.value} />
+        <div className='option-wrapper'>this.options()</div>
+      </div>
     );
   }
 
@@ -62,4 +64,4 @@ class Select extends TypedReact.Component<SelectProps, SelectState> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(Select));
+export = Select;

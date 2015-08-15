@@ -1,23 +1,20 @@
 import Name = require('./lib/name');
 import React = require('react');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 interface NameViewProps {
   names: Name[];
 }
 
-class NameView extends TypedReact.Component<NameViewProps, {}> {
+class NameView extends React.Component<NameViewProps, {}> {
   render() {
     if (!this.props.names || this.props.names.length === 0) {
       return null;
     }
 
     return (
-      D.div({id: 'name-view'},
-        D.ul(null, this.names())
-      )
+      <div id='name-view'>
+        <ul>{this.names()}</ul>
+      </div>
     );
   }
 
@@ -25,13 +22,13 @@ class NameView extends TypedReact.Component<NameViewProps, {}> {
     return this.props.names.map(function (name) {
       let cls = name.isMe ? 'me' : '';
       return (
-        D.li({key: name.nick, className: cls, title: name.nick},
-          D.span({className: 'mode'}, name.mode),
-          D.span({className: 'nick'}, name.nick)
-        )
+        <li key={name.nick} className={cls} title={name.nick}>
+          <span className='mode'>{name.mode}</span>
+          <span className='nick'>{name.nick}</span>
+        </li>
       );
     });
   }
 }
 
-export = React.createFactory(TypedReact.createClass(NameView));
+export = NameView;

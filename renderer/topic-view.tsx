@@ -1,8 +1,5 @@
 import React = require('react');
 import Topic = require('./lib/topic');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 interface TopicViewProps {
   topic: Topic;
@@ -10,16 +7,16 @@ interface TopicViewProps {
 
 const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([^\s'"`]*)/;
 
-class TopicView extends TypedReact.Component<TopicViewProps, {}> {
+class TopicView extends React.Component<TopicViewProps, {}> {
   render() {
     if (!this.props.topic) {
       return null;
     }
 
     return (
-      D.div({id: 'topic-view'},
-        this.topicElement()
-      )
+      <div id='topic-view'>
+        {this.topicElement()}
+      </div>
     );
   }
 
@@ -28,15 +25,17 @@ class TopicView extends TypedReact.Component<TopicViewProps, {}> {
     if (urlMatch) {
       let index = urlMatch.index;
       let url = urlMatch[0];
-      return D.span(null,
-        this.props.topic.text.substring(0, index),
-        D.a({target: '_blank', href: url}, url),
-        this.props.topic.text.substring(index + url.length)
+      return (
+        <span>
+          {this.props.topic.text.substring(0, index)}
+          <a target='_blank' href={url}>{url}</a>
+          {this.props.topic.text.substring(index + url.length)}
+        </span>
       );
     } else {
-      return D.span(null, this.props.topic.text);
+      return <span>{this.props.topic.text}</span>;
     }
   }
 }
 
-export = React.createFactory(TypedReact.createClass(TopicView));
+export = TopicView;

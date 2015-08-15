@@ -4,9 +4,6 @@ import imageLib = require('./lib/image');
 import Log = require('./lib/log');
 import React = require('react');
 import shortcut = require('./lib/shortcut-manager');
-import TypedReact = require('typed-react');
-
-const D = React.DOM;
 
 const followLogBuffer = 20;
 const minimumScrollHeight = 10;
@@ -15,7 +12,7 @@ interface BufferViewProps {
   channels: Channel[];
 }
 
-class BufferView extends TypedReact.Component<BufferViewProps, {}> {
+class BufferView extends React.Component<BufferViewProps, {}> {
   isFollowingLog: boolean;
   currentBuffer: string;
 
@@ -51,8 +48,8 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
       className += ' sent-by-me';
     }
 
-    return D.li({key: log.id, className,
-                 dangerouslySetInnerHTML: {__html: log.htmlContent}});
+    return <li key={log.id} className={className}
+               dangerouslySetInnerHTML={{__html: log.htmlContent}} />;
   }
 
   componentWillUpdate(nextProps: BufferViewProps) {
@@ -65,9 +62,9 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
   render() {
     this.currentBuffer = this.current().name;
     return (
-      D.div({id: 'buffer-view', ref: 'view'},
-        D.ul(null, this.current().logs.map(this.logElement))
-      )
+      <div id='buffer-view' ref='view'>
+        <ul>{this.current().logs.map(this.logElement)}</ul>
+      </div>
     );
   }
 
@@ -164,4 +161,4 @@ class BufferView extends TypedReact.Component<BufferViewProps, {}> {
   }
 }
 
-export = React.createFactory(TypedReact.createClass(BufferView));
+export = BufferView;
