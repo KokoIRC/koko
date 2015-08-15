@@ -61,13 +61,13 @@ class Log {
     return new Log(nick, text);
   }
 
-  static join(nick: string, message: IrcRawMessage): Log {
+  static join(nick: string, message: IIrcRawMessage): Log {
     // FIXME
     let text = `The user has joined. (${message.user}@${message.host})`;
     return new Log(nick, text);
   }
 
-  static part(nick: string, reason: string, message: IrcRawMessage): Log {
+  static part(nick: string, reason: string, message: IIrcRawMessage): Log {
     // FIXME
     reason = reason ? reason : 'no reason';
     let text = `The user has left. (${reason})`;
@@ -94,7 +94,7 @@ class Log {
     return new Log(to, text);
   }
 
-  static whois(info: Dict<string>): Log {
+  static whois(info: IDict<string>): Log {
     return new Log(info['nick'], _.keys(info).reduce((result, key) => {
       return result + `${key}: ${info[key]}\n`;
     }, ''));

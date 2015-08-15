@@ -57,15 +57,15 @@ class Channel {
     }
   }
 
-  join(nick: string, message: IrcRawMessage) {
+  join(nick: string, message: IIrcRawMessage) {
     this.logs = Log.append(this.logs, Log.join(nick, message));
   }
 
-  part(nick: string, reason: string, message: IrcRawMessage) {
+  part(nick: string, reason: string, message: IIrcRawMessage) {
     this.logs = Log.append(this.logs, Log.part(nick, reason, message));
   }
 
-  whois(info: Dict<string>) {
+  whois(info: IDict<string>) {
     this.logs = Log.append(this.logs, Log.whois(info));
   }
 

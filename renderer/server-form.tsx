@@ -10,7 +10,7 @@ const user = configuration.getConfig('user') || {};
 const servers = configuration.getConfig('servers') || [];
 const serverDefaults = configuration.get('defaults', 'server');
 
-function getServer(name: string): ServerInterface {
+function getServer(name: string): IServerInterface {
   return servers.filter(s => s.name === name)[0];
 }
 
@@ -19,7 +19,7 @@ interface ServerFormProps {
 }
 
 class ServerForm extends TypedReact.Component<ServerFormProps, {}> {
-  private server: ServerInterface;
+  private server: IServerInterface;
 
   constructor() {
     super();

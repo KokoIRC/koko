@@ -5,7 +5,7 @@ import IrcCommand = require('./irc-command');
 
 const Client = irc.Client;
 
-export function connect(data: ConnectionData, ipc: Ipc) {
+export function connect(data: IConnectionData, ipc: Ipc) {
   function sendRootMessage(text: string, nick: string) {
     ipc.send('message', {
       to: '~',
@@ -89,7 +89,7 @@ export function connect(data: ConnectionData, ipc: Ipc) {
     client.say(data.context.target, data.raw);
   });
 
-  ipc.on('command', function (data: {raw: string, context: CommandContext}) {
+  ipc.on('command', function (data: {raw: string, context: ICommandContext}) {
     try {
       let command = IrcCommand.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);

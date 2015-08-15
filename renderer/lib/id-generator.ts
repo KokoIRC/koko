@@ -1,6 +1,6 @@
 import _ = require('underscore');
 
-let ids: Dict<number> = {};
+let ids: IDict<number> = {};
 
 function generate(category: string) {
   if (_.isUndefined(ids[category])) {

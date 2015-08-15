@@ -1,7 +1,7 @@
 import _ = require('underscore');
 import configuration = require('./configuration');
 
-export const specialKeys: Dict<string> = {
+export const specialKeys: IDict<string> = {
   'U+001B': 'escape',
   'U+0020': 'space',
   'U+0008': 'backspace',
@@ -9,7 +9,7 @@ export const specialKeys: Dict<string> = {
   'U+0009': 'tab',
 };
 
-const keyAlias: Dict<string> = {
+const keyAlias: IDict<string> = {
   'esc': 'escape',
   'ctrl': 'control',
   'cmd': 'meta',
@@ -19,19 +19,19 @@ const waiterClearTimeout = configuration.get('app', 'shortcut-serial-input-timeo
 
 class KeyWaiter {
   eventName: string;
-  private _waitingKeys: ShortcutKeyInput[];
+  private _waitingKeys: IShortcutKeyInput[];
 
   constructor(eventName: string, keys) {
     this.eventName = eventName;
     this._waitingKeys = keys;
   }
 
-  static matches(configInput: ShortcutKeyInput, key: string, modifierState: ModifierState) {
+  static matches(configInput: IShortcutKeyInput, key: string, modifierState: IModifierState) {
     return configInput.key === key &&
            (!configInput.modifier || modifierState[configInput.modifier]);
   }
 
-  isWaiting(key: string, modifierState: ModifierState) {
+  isWaiting(key: string, modifierState: IModifierState) {
     return KeyWaiter.matches(this._waitingKeys[0], key, modifierState);
   }
 
@@ -39,7 +39,7 @@ class KeyWaiter {
     this._waitingKeys.shift();
   }
 
-  consume(key: string, modifierState: ModifierState) {
+  consume(key: string, modifierState: IModifierState) {
     if (this.isWaiting(key, modifierState)) {
       this.consumeOne();
     }
@@ -51,8 +51,8 @@ class KeyWaiter {
 }
 
 class ShortcutManager {
-  private config: ShortcutKeyConfig[];
-  private _handlers: {[eventName: string]: ShortcutCallback[]};
+  private config: IShortcutKeyConfig[];
+  private _handlers: {[eventName: string]: IShortcutCallback[]};
   private _waiters: KeyWaiter[];
   private _waiterClearTimer: number;
 
@@ -63,7 +63,7 @@ class ShortcutManager {
     this._waiterClearTimer = null;
   }
 
-  parseRawConfig(rawConfig: any): ShortcutKeyConfig[] {
+  parseRawConfig(rawConfig: any): IShortcutKeyConfig[] {
     return _.pairs(rawConfig).map(function (pair) {
       let action = pair[0];
       let shortcuts = pair[1].map(function (keyStr) {
@@ -104,12 +104,12 @@ class ShortcutManager {
     });
   }
 
-  modifierState(e: KeyboardEvent): ModifierState {
+  modifierState(e: KeyboardEvent): IModifierState {
     return ['Alt', 'Control', 'Meta', 'Shift'].reduce((result, key) =>
-      _.extend(result, {[key.toLowerCase()]: e.getModifierState(key)}), {} as ModifierState);
+      _.extend(result, {[key.toLowerCase()]: e.getModifierState(key)}), {} as IModifierState);
   }
 
-  keyEventHandler(key: string, modifierState: ModifierState) {
+  keyEventHandler(key: string, modifierState: IModifierState) {
     if (this._waiters.length > 0) {
       for (let waiter of this._waiters) {
         waiter.consume(key, modifierState);
@@ -150,7 +150,7 @@ class ShortcutManager {
     this._waiters = [];
   }
 
-  on(eventName: string, handler: ShortcutCallback) {
+  on(eventName: string, handler: IShortcutCallback) {
     let eventList = this._handlers[eventName];
     if (_.isUndefined(eventList)) {
       this._handlers[eventName] = [];

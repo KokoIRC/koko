@@ -1,17 +1,17 @@
-interface Dict<T> {
+interface IDict<T> {
   [key: string]: T;
 }
 
-interface CommandContext {
+interface ICommandContext {
   target: string;
 }
 
-interface IrcCommand {
+interface IIrcCommand {
   name: string;
   args: string[];
 }
 
-interface ConnectionData {
+interface IConnectionData {
   host: string;
   nick: string;
   username: string;
@@ -20,32 +20,32 @@ interface ConnectionData {
   encoding: string;
 }
 
-interface JsonCallback {
+interface IJsonCallback {
   (json: any): void;
 }
 
 declare function _require(moduleName: string): any;
 
-interface IrcRawMessage {
+interface IIrcRawMessage {
   user: string;
   host: string;
 }
 
-interface ShortcutCallback {
+interface IShortcutCallback {
   (): void;
 }
 
-interface ShortcutKeyInput {
+interface IShortcutKeyInput {
   key: string;
   modifier: string;
 }
 
-interface ShortcutKeyConfig {
+interface IShortcutKeyConfig {
   action: string;
-  shortcuts: (ShortcutKeyInput[])[];
+  shortcuts: (IShortcutKeyInput[])[];
 }
 
-interface ModifierState {
+interface IModifierState {
   [mod: string]: boolean;
   alt: boolean;
   control: boolean;
@@ -53,7 +53,7 @@ interface ModifierState {
   shift: boolean;
 }
 
-interface ServerInterface {
+interface IServerInterface {
   nick?: string;
   username?: string;
   realname?: string;

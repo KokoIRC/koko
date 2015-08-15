@@ -1,6 +1,6 @@
 import _ = require('underscore');
 
-const commands: Dict<string[]> = {
+const commands: IDict<string[]> = {
   'join': ['channel'],
   'part': ['?channel', '!message'],
   'ctcp': ['target', 'type', '!text'],
@@ -26,7 +26,7 @@ export class CommandError implements Error {
   }
 }
 
-export function parse(raw: string, context: CommandContext): IrcCommand {
+export function parse(raw: string, context: ICommandContext): IIrcCommand {
   let tokens = raw.split(' ');
   let commandName = tokens[0];
   let args = tokens.splice(1);
@@ -40,7 +40,7 @@ export function parse(raw: string, context: CommandContext): IrcCommand {
   return {name: commandName, args};
 }
 
-function parseArgs(commandName: string, argList: string[], args: string[], context: CommandContext): string[] {
+function parseArgs(commandName: string, argList: string[], args: string[], context: ICommandContext): string[] {
   let parsedArgs = [];
   while (true) {
     let argNeeded = argList.shift();
