@@ -47,15 +47,28 @@ clean-asar:
 download-shell: clean-shell
 	@mkdir shell
 	@curl -o shell/osx.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/osx.zip
-	@unzip shell/osx.zip -d shell
+	@curl -o shell/win32.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win32.zip
+	@curl -o shell/win64.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win64.zip
 
 clean-shell:
 	@rm -rf ./shell
 
-package: clean asar
+package: package-mac package-win
+
+package-mac: clean asar
+	@echo "packaging an executable for OS X executable"
 	@if [ ! -d ./shell ]; then make download-shell; fi
-	@cp -av shell/Koko.app build/
-	@mv build/app.asar build/Koko.app/Contents/Resources/
+	@unzip shell/osx.zip -d build
+	@cp build/app.asar build/Koko.app/Contents/Resources/
+	@echo "done"
+
+package-win: clean asar
+	@echo "packaging executables for Windows done"
+	@if [ ! -d ./shell ]; then make download-shell; fi
+	@unzip shell/win32.zip -d build/win32
+	@unzip shell/win64.zip -d build/win64
+	@cp build/app.asar build/win32/resources/
+	@cp build/app.asar build/win64/resources/
 	@echo "done"
 
 .PHONY: run dep build clean
