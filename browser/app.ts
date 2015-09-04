@@ -3,6 +3,7 @@ import configuration = require('./configuration');
 import crashReporter = require('crash-reporter');
 import IrcWindow = require('./irc-window');
 import menu = require('./menu');
+import os = require('os');
 
 export function run(mainUrl: string) {
   crashReporter.start();
@@ -14,7 +15,14 @@ export function run(mainUrl: string) {
   }
 
   app.on('ready', openNewWindow);
+  app.on('activate-with-no-open-windows', openNewWindow);
   app.on('window-all-closed', function () {
-    // do nothing
+    switch (os.platform()) {
+      case 'darwin':
+        // OS X: do nothing
+        break;
+      default:
+        app.quit();
+    }
   });
 }
