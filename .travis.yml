@@ -4,13 +4,13 @@ node_js:
 deploy:
   provider: releases
   api_key:
-    secure: Atjr6Sq1SUKeWxIDtn+5wCfRojIJfuNIVYqO/WgU5Jnv3gHeY0pBAVsLoNQCXQC/MA5+NSXT8kXKVaAVsfONfarhak9A9zZSuYuhDEeKNErlwvSelHQF4MKr14XdcbqFLZaIPbY6+vp/aZrSGXFq0jRvdR1/JU2q9b9Xzk/DTuc=
+    secure: GNtVxookccXE3FNDWAO3uONRSyvTK6yMhCJlWNhumAQNuQVRyE+Kv3XoWDYONAKVdxTTjdtG4Wu+Lj8onAyNrhg6FRwpGx7uw/M3E1lvE6QRCbPKMS6gl0SpJuqwbu++aEh1ErRbgC8+R+yGf313iJX51tT3GBilPznjmpExZ9k=
   file:
     - "./build/koko-mac.zip"
     - "./build/koko-win-32.zip"
     - "./build/koko-win-64.zip"
   on:
-    repo: hachibasu/koko
+    repo: noraesae/koko
     branch: master
     tags: true
 before_deploy:
