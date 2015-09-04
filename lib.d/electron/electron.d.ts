@@ -33,6 +33,7 @@ declare module 'menu' {
 
 declare module 'app' {
   function on(eventName: string, callback: () => void);
+  function getPath(pathName: string): string;
   function quit();
 }
 

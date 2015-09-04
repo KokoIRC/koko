@@ -1,11 +1,11 @@
 import _ = require('underscore');
+import app = require('app');
 import fs = require('fs');
 import path = require('path');
 import yaml = require('js-yaml');
 
 const configDir = path.join(__dirname, '../config');
-const userConfigPath = path.join(process.env.HOME || process.env.USERPROFILE,
-                                 '.koko.yml');
+const userConfigPath = path.join(app.getPath('home'), '.koko.yml');
 
 function customize(configs: any, userConfigs: any) {
   if (configs.constructor === Array) {
