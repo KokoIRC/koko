@@ -1,3 +1,9 @@
+# 0.2.0 (4 September 2015)
+
+* Move from TypedReact to native React support of TypeScript
+* Windows support
+* Fix typo and refactor code
+
 # 0.1.5 (1 June 2015)
 
 * Focus input onclick windows.
