@@ -12,7 +12,7 @@ interface SelectState {
 }
 
 class Select extends ReactComponent<SelectProps, SelectState> {
-  getInitialState() {
+  initialState() {
     let options = this.props.options;
     let initialValue = options.length > 0 ? options[0] : '';
     return {value: initialValue};

@@ -3,11 +3,11 @@ import React = require('react');
 class ReactComponent<Props, States> extends React.Component<Props, States> {
   constructor(props?: Props) {
     super(props);
-    this.state = this.getInitialState();
+    this.state = this.initialState();
     this.bindThisToMethods();
   }
 
-  getInitialState(): States {
+  initialState(): States {
     return {} as States;
   }
 

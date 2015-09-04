@@ -27,7 +27,7 @@ interface IrcViewState {
 }
 
 class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
-  getInitialState(): IrcViewState {
+  initialState(): IrcViewState {
     return {
       nick: '',
       channels: [new Channel(rootChannelName, true)],

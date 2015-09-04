@@ -20,7 +20,7 @@ class App extends ReactComponent<{}, AppState> {
     shortcut.Manager.initialize();
   }
 
-  getInitialState(): AppState {
+  initialState(): AppState {
     return {
       connected: false,
       title: 'Koko'
