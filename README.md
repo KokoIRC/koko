@@ -30,7 +30,7 @@ The logo is strongly inspired by
 # Features
 
 * Built on Electron
-* Cross platform (currently only for OS X :apple:)
+* Cross platform (currently for OS X and Windows)
 * VIM-like shortcuts
 * Minimalistic design
 * Several encoding support
