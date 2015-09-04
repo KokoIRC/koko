@@ -43,7 +43,7 @@ class Select extends ReactComponent<SelectProps, SelectState> {
         <div className='arrow'>▾</div>
         <div className= 'label'>{this.state.value}</div>
         <input type='hidden' name={this.props.name} value={this.state.value} />
-        <div className='option-wrapper'>this.options()</div>
+        <div className='option-wrapper'>{this.options()}</div>
       </div>
     );
   }
