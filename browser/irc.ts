@@ -20,6 +20,7 @@ export function connect(data: IConnectionData, ipc: Ipc) {
     port: data.port,
     encoding: data.encoding,
     autoConnect: false,
+    password: data.password,
   });
 
   client.connect();

@@ -34,7 +34,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
   }
 
   applyValues() {
-    let fields = ['host', 'port', 'encoding', 'nick', 'username', 'realname'];
+    let fields = ['host', 'port', 'encoding', 'nick', 'username', 'password', 'realname'];
     fields.forEach(fieldName => {
       React.findDOMNode<HTMLInputElement>(this.refs[fieldName]).value = this.val(fieldName);
     });
@@ -70,6 +70,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
               {label: 'Encoding', inputName: 'encoding'},
               {label: 'Nick', inputName: 'nick'},
               {label: 'Username', inputName: 'username'},
+              {label: 'Password', inputName: 'password'},
               {label: 'Real Name', inputName: 'realname'},
             ].map(field => this.field(field.label, field.inputName))}
             <button>Connect</button>
