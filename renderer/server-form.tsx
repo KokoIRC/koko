@@ -81,10 +81,11 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
   }
 
   field(label: string, inputName: string): React.ReactElement<any> {
+    let inputType = inputName == 'password' ? 'password' : 'text';
     return (
       <div>
         <div className='field-name'>{label}</div>
-        <input type='text' name={inputName} ref={inputName} />
+        <input type={inputType} name={inputName} ref={inputName} />
       </div>
     );
   }
