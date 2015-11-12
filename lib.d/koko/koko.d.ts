@@ -57,7 +57,7 @@ interface IModifierState {
 interface IServerInterface {
   nick?: string;
   username?: string;
-  password: string;
+  password?: string;
   realname?: string;
   name: string;
   host: string;
