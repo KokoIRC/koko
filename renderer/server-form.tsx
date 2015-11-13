@@ -34,7 +34,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
   }
 
   applyValues() {
-    let fields = ['host', 'port', 'encoding', 'nick', 'username', 'realname'];
+    let fields = ['host', 'port', 'encoding', 'nick', 'username', 'password', 'realname'];
     fields.forEach(fieldName => {
       React.findDOMNode<HTMLInputElement>(this.refs[fieldName]).value = this.val(fieldName);
     });
@@ -70,8 +70,10 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
               {label: 'Encoding', inputName: 'encoding'},
               {label: 'Nick', inputName: 'nick'},
               {label: 'Username', inputName: 'username'},
+              {label: 'Password', inputName: 'password', inputType: 'password'},
               {label: 'Real Name', inputName: 'realname'},
-            ].map(field => this.field(field.label, field.inputName))}
+            ].map((field: IServerFormField) =>
+              this.field(field.label, field.inputName, field.inputType))}
             <button>Connect</button>
           </form>
         </div>
@@ -79,11 +81,11 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
     );
   }
 
-  field(label: string, inputName: string): React.ReactElement<any> {
+  field(label: string, inputName: string, inputType: string = 'text'): React.ReactElement<any> {
     return (
       <div>
         <div className='field-name'>{label}</div>
-        <input type='text' name={inputName} ref={inputName} />
+        <input type={inputType} name={inputName} ref={inputName} />
       </div>
     );
   }

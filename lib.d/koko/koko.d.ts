@@ -15,6 +15,7 @@ interface IConnectionData {
   host: string;
   nick: string;
   username: string;
+  password: string;
   realname: string;
   port: string;
   encoding: string;
@@ -56,9 +57,16 @@ interface IModifierState {
 interface IServerInterface {
   nick?: string;
   username?: string;
+  password?: string;
   realname?: string;
   name: string;
   host: string;
   port?: string;
   encoding?: string;
+}
+
+interface IServerFormField {
+    label: string,
+    inputName: string,
+    inputType?: string
 }
