@@ -64,3 +64,9 @@ interface IServerInterface {
   port?: string;
   encoding?: string;
 }
+
+interface IServerFormField {
+    label: string,
+    inputName: string,
+    inputType?: string
+}

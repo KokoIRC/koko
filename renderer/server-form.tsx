@@ -70,9 +70,10 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
               {label: 'Encoding', inputName: 'encoding'},
               {label: 'Nick', inputName: 'nick'},
               {label: 'Username', inputName: 'username'},
-              {label: 'Password', inputName: 'password'},
+              {label: 'Password', inputName: 'password', inputType: 'password'},
               {label: 'Real Name', inputName: 'realname'},
-            ].map(field => this.field(field.label, field.inputName))}
+            ].map((field: IServerFormField) =>
+              this.field(field.label, field.inputName, field.inputType))}
             <button>Connect</button>
           </form>
         </div>
@@ -80,8 +81,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
     );
   }
 
-  field(label: string, inputName: string): React.ReactElement<any> {
-    let inputType = inputName == 'password' ? 'password' : 'text';
+  field(label: string, inputName: string, inputType: string = 'text'): React.ReactElement<any> {
     return (
       <div>
         <div className='field-name'>{label}</div>
