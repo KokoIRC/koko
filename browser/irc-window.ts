@@ -15,6 +15,7 @@ class IrcWindow {
 
     this.ipc = new Ipc(this._window);
     this._window.loadURL(url);
+    this._window.webContents.openDevTools();
     this._window.on('closed', () => {
       this._window = null;
       IrcWindow.remove(this);

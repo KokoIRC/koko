@@ -11,6 +11,7 @@ declare module 'browser-window' {
 }
 
 interface WebContents {
+  openDevTools(): void;
   on(eventName: string, callback: (e: Event, url: string) => void);
   send(eventName: string, data: string);
 }
