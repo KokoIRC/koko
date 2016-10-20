@@ -1,6 +1,6 @@
 declare class BrowserWindow {
   constructor(opt: any);
-  loadUrl(url: string);
+  loadURL(url: string);
   on(eventName: string, callback: () => void);
   webContents: WebContents;
   toggleDevTools(): void;

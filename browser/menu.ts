@@ -1,5 +1,5 @@
 import IrcWindow = require('./irc-window');
-import Menu = require('menu');
+const {Menu} = require('electron');
 
 export = {
   initialize(app, mainUrl: string) {

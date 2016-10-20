@@ -1,12 +1,20 @@
-import app = require('app');
 import configuration = require('./configuration');
 import crashReporter = require('crash-reporter');
 import IrcWindow = require('./irc-window');
 import menu = require('./menu');
 import os = require('os');
+const electron = require('electron');
 
 export function run(mainUrl: string) {
-  crashReporter.start();
+
+  const app = electron.app;
+
+  electron.crashReporter.start({
+    productName: 'koko',
+    companyName: 'mmarkman/koko',
+    submitURL: '',
+    autoSubmit: true
+  });
   global['configuration'] = configuration.load();
 
   function openNewWindow() {
