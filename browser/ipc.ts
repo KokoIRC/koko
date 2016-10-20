@@ -1,4 +1,5 @@
-import ipc = require('ipc');
+const {ipcMain} = require('electron')
+
 
 class Ipc {
   _webContents: WebContents;
@@ -8,7 +9,7 @@ class Ipc {
   }
 
   on(eventName: string, handler: IJsonCallback) {
-    ipc.on(eventName, (event , arg) => {
+    ipcMain.on(eventName, (event , arg) => {
       if (event.sender === this._webContents) {
         handler(JSON.parse(arg));
       }
