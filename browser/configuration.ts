@@ -1,11 +1,10 @@
 import _ = require('underscore');
+import app = require('app');
 import fs = require('fs');
 import path = require('path');
 import yaml = require('js-yaml');
 
 const configDir = path.join(__dirname, '../config');
-const electron = require('electron');
-const app = electron.app;
 const userConfigPath = path.join(app.getPath('home'), '.koko.yml');
 
 function customize(configs: any, userConfigs: any) {

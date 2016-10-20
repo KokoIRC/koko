@@ -10,7 +10,7 @@ interface String {
 }
 
 interface Error {
-  stack?: string;
+  stack?: string[];
 }
 
 interface ErrorConstructor {

@@ -1,8 +1,8 @@
-const {BrowserWindow} = require('electron');
-const {shell} = require('electron');
+import BrowserWindow = require('browser-window');
 import Ipc = require('./ipc');
 import irc = require('./irc');
 import nodeIrc = require('irc');
+import shell = require('shell');
 
 class IrcWindow {
   private _window: BrowserWindow;
@@ -14,7 +14,8 @@ class IrcWindow {
     this._window = new BrowserWindow({width: 800, height: 600});
 
     this.ipc = new Ipc(this._window);
-    this._window.loadURL(url);
+
+    this._window.loadUrl(url);
     this._window.on('closed', () => {
       this._window = null;
       IrcWindow.remove(this);

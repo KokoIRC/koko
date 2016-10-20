@@ -24,18 +24,18 @@
   "license": "MIT",
   "dependencies": {
     "irc": "git://github.com/noraesae/irc",
-    "js-yaml": "^3.6.1",
-    "moment": "^2.15.1",
-    "normalize.css": "^5.0.0",
-    "react": "^15.3.2",
+    "js-yaml": "^3.3.1",
+    "moment": "^2.10.3",
+    "normalize.css": "^3.0.2",
+    "react": "^0.13.3",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
-    "asar": "^0.12.3",
-    "browserify": "^13.1.0",
-    "electron": "^1.4.3",
-    "less": "^2.7.1",
-    "typescript": "^2.0.3"
+    "asar": "^0.6.1",
+    "browserify": "^9.0.3",
+    "electron-prebuilt": "^0.31.2",
+    "less": "^2.4.0",
+    "typescript": "^1.6.0-dev.20150815"
   },
   "scripts": {
     "test": "make"

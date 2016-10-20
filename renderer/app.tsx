@@ -16,7 +16,6 @@ class App extends ReactComponent<{}, AppState> {
 
   constructor() {
     super();
-    console.log("renderer/app created");  // never prints to console
     this.errorHandler = new AppErrorHandler();
     shortcut.Manager.initialize();
   }
