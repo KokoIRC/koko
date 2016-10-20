@@ -1,6 +1,6 @@
 const electron = require('electron');
 import configuration = require('./configuration');
-import crashReporter = require('crash-reporter');
+const crashReporter = electron.crashReporter;
 import IrcWindow = require('./irc-window');
 import menu = require('./menu');
 import os = require('os');
@@ -15,7 +15,7 @@ export function run(mainUrl: string) {
     submitURL: '',
     autoSubmit: true
   });
-  
+
   global['configuration'] = configuration.load();
 
   function openNewWindow() {

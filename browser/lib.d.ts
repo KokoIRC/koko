@@ -1,4 +1,4 @@
-/// <reference path="../lib.d/electron/electron.d.ts" />
+/// <reference path="../typings/globals/electron/index.d.ts" />
 /// <reference path="../lib.d/default/default.d.ts" />
 /// <reference path="../lib.d/irc/irc.d.ts" />
 /// <reference path="../lib.d/js-yaml/js-yaml.d.ts" />

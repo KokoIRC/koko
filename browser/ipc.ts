@@ -1,10 +1,11 @@
-const {ipcMain} = require('electron');
-
+const electron = require('electron');
+const ipcMain = electron.ipcMain;
+const BrowserWindow = electron.BrowserWindow;
 
 class Ipc {
-  _webContents: WebContents;
+  _webContents;
 
-  constructor(w: BrowserWindow) {
+  constructor(w) {
     this._webContents = w.webContents;
   }
 

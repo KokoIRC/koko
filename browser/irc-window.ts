@@ -1,11 +1,12 @@
-const {BrowserWindow} = require('electron');
+const electron = require('electron');
+const BrowserWindow = electron.BrowserWindow;
 const {shell} = require('electron');
 import Ipc = require('./ipc');
 import irc = require('./irc');
 import nodeIrc = require('irc');
 
 class IrcWindow {
-  private _window: BrowserWindow;
+  private _window;
   ipc: Ipc;
   focused: boolean;
   client: nodeIrc.Client;
@@ -86,7 +87,7 @@ class IrcWindow {
     });
   }
 
-  static currentBrowserWindow(): BrowserWindow {
+  static currentBrowserWindow() {
     return IrcWindow.windows.filter(w => w.focused)[0]._window;
   }
 }

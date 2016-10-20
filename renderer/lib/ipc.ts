@@ -1,4 +1,6 @@
-const {ipcMain} = require('electron');
+const electron = require('electron');
+const ipcMain = electron.ipcMain;
+
 
 export = {
   on(eventName: string, handler: IJsonCallback) {
