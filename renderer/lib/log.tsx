@@ -3,6 +3,7 @@ import configuration = require('./configuration');
 import generateId = require('./id-generator');
 import LogContent = require('../log-content');
 import React = require('react');
+import ReactDOMServer = require('react-dom/server');
 import Topic = require('./topic');
 
 const scrollbackLimit = configuration.get('app', 'scrollback-limit');
@@ -33,7 +34,7 @@ class Log {
 
   render(element: React.ReactElement<any>): HTMLDivElement {
     let tag = document.createElement('div');
-    tag.innerHTML = React.renderToStaticMarkup(element);
+    tag.innerHTML = ReactDOMServer.renderToStaticMarkup(element);
     return tag.children[0] as HTMLDivElement;
   }
 

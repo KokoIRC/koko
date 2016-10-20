@@ -28,6 +28,7 @@
     "moment": "^2.15.1",
     "normalize.css": "^5.0.0",
     "react": "^15.3.2",
+    "react-dom": "^15.3.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {

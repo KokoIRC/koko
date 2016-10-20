@@ -4,6 +4,7 @@ import imageLib = require('./lib/image');
 import Log = require('./lib/log');
 import React = require('react');
 import ReactComponent = require('./lib/react-component');
+import ReactDOM = require('react-dom');
 import shortcut = require('./lib/shortcut-manager');
 
 const followLogBuffer = 20;
@@ -24,7 +25,7 @@ class BufferView extends ReactComponent<BufferViewProps, {}> {
   }
 
   view(): HTMLDivElement {
-    return React.findDOMNode<HTMLDivElement>(this.refs['view']);
+    return ReactDOM.findDOMNode<HTMLDivElement>(this.refs['view']);
   }
 
   componentDidMount() {

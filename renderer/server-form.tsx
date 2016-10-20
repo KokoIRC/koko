@@ -2,6 +2,7 @@ import ipc = require('./lib/ipc');
 import configuration = require('./lib/configuration');
 import React = require('react');
 import ReactComponent = require('./lib/react-component');
+import ReactDOM = require('react-dom');
 import Select = require('./select');
 
 const user = configuration.getConfig('user') || {};
@@ -36,7 +37,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
   applyValues() {
     let fields = ['host', 'port', 'encoding', 'nick', 'username', 'password', 'realname'];
     fields.forEach(fieldName => {
-      React.findDOMNode<HTMLInputElement>(this.refs[fieldName]).value = this.val(fieldName);
+      ReactDOM.findDOMNode<HTMLInputElement>(this.refs[fieldName]).value = this.val(fieldName);
     });
   }
 
@@ -91,7 +92,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
   }
 
   formToJSON(): any {
-    let form = React.findDOMNode(this);
+    let form = ReactDOM.findDOMNode(this);
     let inputs = form.querySelectorAll('input');
     let result = Array.prototype.reduce.call(inputs, function (obj, input) {
       obj[input.name] = input.value;

@@ -5,6 +5,7 @@ import InputHistory = require('./lib/input-history');
 import ipc = require('./lib/ipc');
 import Name = require('./lib/name');
 import React = require('react');
+import ReactDOM = require('react-dom');
 import ReactComponent = require('./lib/react-component');
 import shortcut = require('./lib/shortcut-manager');
 
@@ -42,7 +43,7 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   onMessageKey() {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     if (input.value.startsWith(commandSymbol)) {
       input.value = '';
     }
@@ -50,7 +51,7 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   onCommandKey() {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     if (!input.value.startsWith(commandSymbol)) {
       input.value = commandSymbol;
     }
@@ -62,7 +63,7 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   onInputHistoryKey(idxDiff: number) {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     if ((input as any).matches(':focus')) {
       if (this.inputHistory.index() < 0) {
         this.inputHistory.setTempInput(input.value);
@@ -73,7 +74,7 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   onAutocompleteKey() {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     let value = input.value;
     if ((input as any).matches(':focus') && value.length > 0) {
       let caretIdx = input.selectionStart;
@@ -103,13 +104,13 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   shouldComponentUpdate(nextProps: InputBoxProps): boolean {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     return !(input as any).matches(':focus');
   }
 
   submit(e: React.FormEvent) {
     e.preventDefault();
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     let inputValue = input.value;
     if (inputValue.length > 0) {
       this.props.submit(inputValue);
@@ -121,12 +122,12 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   }
 
   focus() {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     input.focus();
   }
 
   blur() {
-    let input = React.findDOMNode<HTMLInputElement>(this.refs['input']);
+    let input = ReactDOM.findDOMNode<HTMLInputElement>(this.refs['input']);
     input.blur();
   }
 

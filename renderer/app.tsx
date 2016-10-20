@@ -3,6 +3,7 @@ import ipc = require('./lib/ipc');
 import IrcView = require('./irc-view');
 import shortcut = require('./lib/shortcut-manager');
 import React = require('react');
+import ReactDOM = require('react-dom');
 import ReactComponent = require('./lib/react-component');
 import ServerForm = require('./server-form');
 
@@ -52,5 +53,5 @@ class App extends ReactComponent<{}, AppState> {
   }
 };
 
-React.render(<App />,
+ReactDOM.render(<App />,
              document.getElementById('app'));

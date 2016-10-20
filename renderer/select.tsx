@@ -1,4 +1,5 @@
 import React = require('react');
+import ReactDOM = require('react-dom');
 import ReactComponent = require('./lib/react-component');
 
 interface SelectProps {
@@ -49,7 +50,7 @@ class Select extends ReactComponent<SelectProps, SelectState> {
   }
 
   node(): HTMLDivElement {
-    return React.findDOMNode<HTMLDivElement>(this.refs['select']);
+    return ReactDOM.findDOMNode<HTMLDivElement>(this.refs['select']);
   }
 
   onChange(e) {

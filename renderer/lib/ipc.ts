@@ -1,4 +1,4 @@
-const {ipcMain} = require('electron')
+const {ipcMain} = require('electron');
 
 export = {
   on(eventName: string, handler: IJsonCallback) {
@@ -11,4 +11,3 @@ export = {
     ipcMain.send(eventName, JSON.stringify(dataObj));
   }
 };
-

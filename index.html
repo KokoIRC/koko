@@ -8,9 +8,14 @@
   </head>
   <body>
     <div id='app'></div>
+    <!-- TODO: I should look into this:
     <script>
       var _require = window.require;
+    </script> -->
+    <script>
+      require('node-jsx').install({ harmony: true, extension: '.js' });
+      require('./build/renderer/app.js');
     </script>
-    <script src='./build/renderer.js'></script>
+    <!-- <script src='./build/renderer.js'></script> -->
   </body>
 </html>

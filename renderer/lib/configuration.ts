@@ -1,4 +1,4 @@
-let configs: any = _require('remote').getGlobal('configuration');
+let configs: any = require('electron').remote.getGlobal('configuration');
 
 export = {
   setConfigs(loadedConfigs: any) {

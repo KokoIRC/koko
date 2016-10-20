@@ -20,8 +20,8 @@ build: clean
 	# move config
 	cp -r config build/
 	# build renderer scripts
-	$(TSC) -p ./renderer
-	$(BROWSERIFY) ./build/renderer/app.js -o build/renderer.js --ignore ipc --debug
+	$(TSC) --jsx react --module commonjs -p ./renderer
+	# old: $(BROWSERIFY) ./build/renderer/app.js -o build/renderer.js --ignore ipc --debug --no-builtins
 	# build browser scripts
 	$(TSC) -p ./browser
 	# build styles
@@ -38,7 +38,7 @@ asar: clean-asar build
 	@cp -r ./build asar/
 	@cp -r ./config asar/
 	@cp -r ./resource asar/
-	@cd asar; npm install --production; cd ..
+	@cd asar; npm install --production --registry=https://registry.npm.taobao.org; cd ..
 	$(ASAR) pack asar build/app.asar
 
 clean-asar:
