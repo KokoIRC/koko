@@ -1,9 +1,8 @@
 NODE_BIN=./node_modules/.bin
 ELECTRON=$(NODE_BIN)/electron
-BROWSERIFY=$(NODE_BIN)/browserify
 TSC=$(NODE_BIN)/tsc
 LESS=$(NODE_BIN)/lessc
-ASAR=$(NODE_BIN)/asar
+ELECTRON_PKG=$(NODE_BIN)/electron-packager
 
 all: dep build
 
@@ -21,28 +20,24 @@ build: clean
 	cp -r config build/
 	# build renderer scripts
 	$(TSC) --jsx react --module commonjs -p ./renderer
-	# old: $(BROWSERIFY) ./build/renderer/app.js -o build/renderer.js --ignore ipc --debug --no-builtins
 	# build browser scripts
 	$(TSC) -p ./browser
 	# build styles
 	$(LESS) ./style/main.less > build/built.css
 
-clean: clean-asar
-	@rm -rf ./build
+clean:
+	@rm -rf ./build ./staging
 
-asar: clean-asar build
-	@mkdir asar
-	@cp ./main.js asar/
-	@cp ./index.html asar/
-	@cp ./package.json asar/
-	@cp -r ./build asar/
-	@cp -r ./config asar/
-	@cp -r ./resource asar/
-	@cd asar; npm install --production --registry=https://registry.npm.taobao.org; cd ..
-	$(ASAR) pack asar build/app.asar
-
-clean-asar:
-	@rm -rf ./asar
+copy-resources: clean build
+	@mkdir staging
+	@cp ./main.js staging/
+	@cp ./index.html staging/
+	@cp ./package.json staging/
+	@cp -r ./build staging/
+	@cp -r ./config staging/
+	@cp -r ./resource staging/
+	@cp -r ./typings staging/
+	@cd staging; npm install --production --registry=https://registry.npm.taobao.org; cd ..
 
 download-shell: clean-shell
 	@mkdir shell
@@ -55,20 +50,20 @@ clean-shell:
 
 package: package-mac package-win
 
-package-mac: clean asar
+package-mac: copy-resources
 	@echo "packaging an executable for OS X executable"
 	@if [ ! -d ./shell ]; then make download-shell; fi
-	@unzip shell/osx.zip -d build
-	@cp build/app.asar build/Koko.app/Contents/Resources/
+	@unzip shell/osx.zip -d build/osx
+	$(ELECTRON_PKG) ./staging Koko --platform=darwin --out=build/osx --icon=resource/image/logo.png
 	@echo "done"
 
-package-win: clean asar
+package-win: copy-resources
 	@echo "packaging executables for Windows done"
 	@if [ ! -d ./shell ]; then make download-shell; fi
 	@unzip shell/win32.zip -d build/win32
 	@unzip shell/win64.zip -d build/win64
-	@cp build/app.asar build/win32/resources/
-	@cp build/app.asar build/win64/resources/
+	$(ELECTRON_PKG) ./staging Koko --platform=win32 --arch=ia32 --out=build/win32 --icon=resource/image/logo.png
+	$(ELECTRON_PKG) ./staging Koko --platform=win32 --arch=x64 --out=build/win64 --icon=resource/image/logo.png
 	@echo "done"
 
 .PHONY: run dep build clean

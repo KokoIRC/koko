@@ -29,7 +29,7 @@ node_modules
 
 # Built files
 /build
-/asar
+/staging
 
 # Downloaded shell
 /shell

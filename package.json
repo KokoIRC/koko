@@ -1,6 +1,6 @@
 {
   "name": "Koko",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Yet another IRC client for me and you",
   "author": "Jun <me@noraesae.net>",
   "contributors": [
@@ -26,14 +26,15 @@
     "irc": "git://github.com/noraesae/irc",
     "js-yaml": "^3.6.1",
     "moment": "^2.15.1",
+    "node-jsx": "^0.13.3",
     "normalize.css": "^5.0.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "underscore": "^1.8.3"
   },
   "devDependencies": {
+    "electron-packager": "^8.1.0",
     "asar": "^0.12.3",
-    "browserify": "^13.1.0",
     "electron": "^1.4.3",
     "less": "^2.7.1",
     "typescript": "^2.0.3"
