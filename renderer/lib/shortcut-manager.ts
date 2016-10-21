@@ -89,7 +89,7 @@ class ShortcutManager {
 
   initialize() {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      let key = e.keyIdentifier;
+      let key = e.key;
       if (key.startsWith('U+')) {
         key = specialKeys[key]
           ? specialKeys[key]

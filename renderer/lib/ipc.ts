@@ -1,15 +1,14 @@
-const electron = require('electron');
-const ipcMain = electron.ipcMain;
+const {ipcRenderer} = require('electron');
 
 
 export = {
   on(eventName: string, handler: IJsonCallback) {
-    ipcMain.on(eventName, function (arg: string) {
+    ipcRenderer.on(eventName, function (arg: string) {
       handler(JSON.parse(arg));
     });
   },
 
   send(eventName: string, dataObj: any) {
-    ipcMain.send(eventName, JSON.stringify(dataObj));
+    ipcRenderer.send(eventName, JSON.stringify(dataObj));
   }
 };

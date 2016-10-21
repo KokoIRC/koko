@@ -134,13 +134,13 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
   keyDown(e: React.KeyboardEvent) {
     let nativeEvent = e.nativeEvent as KeyboardEvent;
     let modified = _.some(['Alt', 'Control', 'Meta', 'Shift'], e.getModifierState.bind(e));
-    let special = _.contains(_.keys(shortcut.specialKeys), nativeEvent.keyIdentifier);
-    let arrow = _.contains(['Up', 'Down'], nativeEvent.keyIdentifier);
+    let special = _.contains(_.keys(shortcut.specialKeys), nativeEvent.key);
+    let arrow = _.contains(['Up', 'Down'], nativeEvent.key);
     if (!(modified || special || arrow)) {
       e.stopPropagation();
     }
 
-    if (nativeEvent.keyIdentifier === _.invert(shortcut.specialKeys)['tab']) {
+    if (nativeEvent.key === _.invert(shortcut.specialKeys)['tab']) {
       e.preventDefault();
     } else {
       this.autocompleter.reset();
