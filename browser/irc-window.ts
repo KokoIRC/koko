@@ -35,7 +35,7 @@ class IrcWindow {
       e.preventDefault();
     });
 
-    ipcMain.on('connect', (data) => {
+    ipcMain.on('connect', (event, data) => {
       this.client = irc.connect(data, this._window);
     });
 

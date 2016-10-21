@@ -86,11 +86,11 @@ export function connect(data: IConnectionData, window) {
     sendRootMessage('Connection closed.', 'Connection');
   });
 
-  ipcMain.on('message', function (data) {
+  ipcMain.on('message', function (event, data) {
     client.say(data.context.target, data.raw);
   });
 
-  ipcMain.on('command', function (data: {raw: string, context: ICommandContext}) {
+  ipcMain.on('command', function (event, data: {raw: string, context: ICommandContext}) {
     try {
       let command = IrcCommand.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);
