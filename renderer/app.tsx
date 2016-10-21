@@ -1,5 +1,5 @@
 import AppErrorHandler = require('./lib/app-error-handler');
-import ipc = require('./lib/ipc');
+const {ipcRenderer} = require('electron');
 import IrcView = require('./irc-view');
 import shortcut = require('./lib/shortcut-manager');
 import React = require('react');
@@ -29,7 +29,7 @@ class App extends ReactComponent<{}, AppState> {
   }
 
   componentDidMount() {
-    ipc.on('error', (data) => this.errorHandler.handle(data));
+    ipcRenderer.on('error', (data) => this.errorHandler.handle(data));
   }
 
   connect(data) {

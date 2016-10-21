@@ -1,20 +1,18 @@
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 const {shell} = require('electron');
-import Ipc = require('./ipc');
+const {ipcMain} = require('electron');
 import irc = require('./irc');
 import nodeIrc = require('irc');
 
 class IrcWindow {
   private _window;
-  ipc: Ipc;
   focused: boolean;
   client: nodeIrc.Client;
 
   constructor(url: string) {
     this._window = new BrowserWindow({width: 800, height: 600});
 
-    this.ipc = new Ipc(this._window);
     this._window.loadURL(url);
     this._window.webContents.openDevTools();
     this._window.on('closed', () => {
@@ -25,11 +23,11 @@ class IrcWindow {
       }
     });
     this._window.on('focus', () => {
-      this.ipc.send('focus', {});
+      this._window.webContents.send('focus', {});
       IrcWindow.focus(this);
     });
     this._window.on('blur', () => {
-      this.ipc.send('blur', {});
+      this._window.webContents.send('blur', {});
       IrcWindow.blur();
     });
     this._window.webContents.on('new-window', function (e, url) {
@@ -37,8 +35,8 @@ class IrcWindow {
       e.preventDefault();
     });
 
-    this.ipc.on('connect', (data) => {
-      this.client = irc.connect(data, this.ipc);
+    ipcMain.on('connect', (data) => {
+      this.client = irc.connect(data, this._window);
     });
 
     this.focused = true;

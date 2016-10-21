@@ -1,4 +1,4 @@
-import ipc = require('./lib/ipc');
+const {ipcRenderer} = require('electron');
 import configuration = require('./lib/configuration');
 import React = require('react');
 import ReactComponent = require('./lib/react-component');
@@ -112,7 +112,7 @@ class ServerForm extends ReactComponent<ServerFormProps, {}> {
 
     let data = this.formToJSON();
     this.props.connect(data);
-    ipc.send('connect', data);
+    ipcRenderer.send('connect', data);
   }
 }
 

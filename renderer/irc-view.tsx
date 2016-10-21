@@ -4,7 +4,7 @@ import BufferView = require('./buffer-view');
 import Channel = require('./lib/channel');
 import configuration = require('./lib/configuration');
 import InputBox = require('./input-box');
-import ipc = require('./lib/ipc');
+const {ipcRenderer} = require('electron');
 import Log = require('./lib/log');
 import Name = require('./lib/name');
 import NameView = require('./name-view');
@@ -41,18 +41,18 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
 
   componentDidMount() {
     // irc events
-    ipc.on('registered', data => this.setNick(data.nick));
-    ipc.on('message', this.onMessage);
-    ipc.on('join', this.onJoin);
-    ipc.on('part', this.onPart);
-    ipc.on('nick', this.onChangeNick);
-    ipc.on('names', this.onNames);
-    ipc.on('+mode', this.onMode.bind(this, true));
-    ipc.on('-mode', this.onMode.bind(this, false));
-    ipc.on('quit', this.onQuit);
-    ipc.on('whois', this.onWhois);
-    ipc.on('kick', this.onKick);
-    ipc.on('topic', this.onTopic);
+    ipcRenderer.on('registered', (event, data) => this.setNick(data.nick));
+    ipcRenderer.on('message', this.onMessage);
+    ipcRenderer.on('join', this.onJoin);
+    ipcRenderer.on('part', this.onPart);
+    ipcRenderer.on('nick', this.onChangeNick);
+    ipcRenderer.on('names', this.onNames);
+    ipcRenderer.on('+mode', this.onMode.bind(this, true));
+    ipcRenderer.on('-mode', this.onMode.bind(this, false));
+    ipcRenderer.on('quit', this.onQuit);
+    ipcRenderer.on('whois', this.onWhois);
+    ipcRenderer.on('kick', this.onKick);
+    ipcRenderer.on('topic', this.onTopic);
 
     // shortcuts
     shortcut.Manager.on('next-tab', () => {
@@ -93,11 +93,11 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     if (raw.startsWith(commandSymbol)) {
       raw = raw.substring(1);
       if (!this.tryHandleLocally(raw)) {
-        ipc.send('command', {raw, context: {target: current.name}});
+        ipcRenderer.send('command', {raw, context: {target: current.name}});
       }
     } else {
       if (current.name !== rootChannelName) {
-        ipc.send('message', {raw, context: {target: current.name}});
+        ipcRenderer.send('message', {raw, context: {target: current.name}});
         current.send(this.state.nick, raw);
         this.forceUpdate();
       }
@@ -120,7 +120,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     return false;
   }
 
-  onMessage(data) {
+  onMessage(event, data) {
     let to = data.to[0] === '#' || data.to === rootChannelName ? data.to : data.nick;
     let channel = Channel.get(this.state.channels, to);
     if (!channel) {
@@ -131,7 +131,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onJoin(data) {
+  onJoin(event, data) {
     let isMe = data.nick === this.state.nick;
     let channel = Channel.get(this.state.channels, data.channel);
     if (!channel) {
@@ -147,7 +147,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onPart(data) {
+  onPart(event, data) {
     let isMe = data.nick === this.state.nick;
     if (isMe && data.channel !== rootChannelName) {
       let prev = Channel.previous(this.state.channels);
@@ -168,7 +168,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
         error: new Error('Invalid command arguments: [nick,message]'),
       });
     } else {
-      ipc.send('message', {raw, context: {target}});
+      ipcRenderer.send('message', {raw, context: {target}});
       let channel = Channel.get(this.state.channels, target);
       if (!channel) {
         channel = new Channel(target);
@@ -194,7 +194,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onChangeNick(data) {
+  onChangeNick(event, data) {
     if (data.oldnick === this.state.nick) {
       this.setState({nick: data.newnick} as IrcViewState);
       Log.setCurrentNick(data.newnick);
@@ -207,7 +207,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onNames(data) {
+  onNames(event, data) {
     let channel = Channel.get(this.state.channels, data.channel);
     let names = Object.keys(data.names).map<Name>((nick: string) => {
       return new Name(nick, data.names[nick], nick === this.state.nick);
@@ -230,14 +230,14 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onQuit(data) {
+  onQuit(event, data) {
     data.channels.forEach((channel) => {
       let dataForChannel = _.extend(_.omit(data, 'channels'), {channel});
-      this.onPart(dataForChannel);
+      this.onPart(event, dataForChannel);
     });
   }
 
-  onWhois(data) {
+  onWhois(event, data) {
     let info = data.info;
     let root = Channel.get(this.state.channels, rootChannelName);
     let current = Channel.current(this.state.channels);
@@ -246,7 +246,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onKick(data) {
+  onKick(event, data) {
     let isMe = data.nick === this.state.nick;
     let channel = Channel.get(this.state.channels, data.channel);
     if (isMe) {
@@ -261,7 +261,7 @@ class IrcView extends ReactComponent<IrcViewProps, IrcViewState> {
     this.forceUpdate();
   }
 
-  onTopic(data) {
+  onTopic(event, data) {
     let channel = Channel.get(this.state.channels, data.channel);
     channel.setTopic(data.topic, data.nick);
     this.forceUpdate();

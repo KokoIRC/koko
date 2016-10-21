@@ -2,7 +2,7 @@ import _ = require('underscore');
 import Autocompleter = require('./lib/autocompleter');
 import configuration = require('./lib/configuration');
 import InputHistory = require('./lib/input-history');
-import ipc = require('./lib/ipc');
+const {ipcRenderer} = require('electron');
 import Name = require('./lib/name');
 import React = require('react');
 import ReactDOM = require('react-dom');
@@ -38,8 +38,8 @@ class InputBox extends ReactComponent<InputBoxProps, {}> {
 
     // window events
     window.addEventListener('click', this.focus);
-    ipc.on('focus', this.focus);
-    ipc.on('blur', this.blur);
+    ipcRenderer.on('focus', this.focus);
+    ipcRenderer.on('blur', this.blur);
   }
 
   onMessageKey() {

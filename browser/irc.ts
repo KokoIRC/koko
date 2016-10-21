@@ -1,13 +1,13 @@
 import _ = require('underscore');
-import Ipc = require('./ipc');
+const {ipcMain, BrowserWindow} = require('electron')
 import irc = require('irc');
 import IrcCommand = require('./irc-command');
 
 const Client = irc.Client;
 
-export function connect(data: IConnectionData, ipc: Ipc) {
+export function connect(data: IConnectionData, window) {
   function sendRootMessage(text: string, nick: string) {
-    ipc.send('message', {
+    window.webContents.send('message', {
       to: '~',
       nick,
       text,
@@ -26,13 +26,13 @@ export function connect(data: IConnectionData, ipc: Ipc) {
   client.connect();
 
   client.on('registered', function (message) {
-    ipc.send('registered', {nick: message.args[0]});
+    window.webContents.send('registered', {nick: message.args[0]});
   });
 
   function propagate(eventName: string, parameters: string[]) {
     client.on(eventName, function () {
       let args = arguments;
-      ipc.send(eventName, parameters.reduce(function (result, key, idx) {
+      window.webContents.send(eventName, parameters.reduce(function (result, key, idx) {
         result[key] = args[idx];
         return result;
       }, {}))
@@ -54,18 +54,18 @@ export function connect(data: IConnectionData, ipc: Ipc) {
   client.on('notice', function (nick, to, text) {
     sendRootMessage(text, nick);
     if (nick && client._nick === to) {
-      ipc.send('message', {nick, to, text, isNotice: true});
+      window.webContents.send('message', {nick, to, text, isNotice: true});
     }
   });
 
   client.on('ctcp', function (from, to, text, type) {
-    // FIXME
+    // TODO: FIXME
   });
 
   client.on('motd', sendRootMessage);
 
   client.on('error', function (error) {
-    ipc.send('error', {type: 'irc', error});
+    window.webContents.send('error', {type: 'irc', error});
   });
 
   sendRootMessage('Looking up host...', 'Connection');
@@ -86,17 +86,17 @@ export function connect(data: IConnectionData, ipc: Ipc) {
     sendRootMessage('Connection closed.', 'Connection');
   });
 
-  ipc.on('message', function (data) {
+  ipcMain.on('message', function (data) {
     client.say(data.context.target, data.raw);
   });
 
-  ipc.on('command', function (data: {raw: string, context: ICommandContext}) {
+  ipcMain.on('command', function (data: {raw: string, context: ICommandContext}) {
     try {
       let command = IrcCommand.parse(data.raw, data.context);
       client[command.name].apply(client, command.args);
     } catch (error) {
       if (error instanceof IrcCommand.CommandError) {
-        ipc.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
+        window.webContents.send('error', {type: 'normal', error: _.pick(error, 'name', 'message')});
       } else {
         throw error;
       }
