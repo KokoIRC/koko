@@ -40,6 +40,7 @@
     "typescript": "^2.0.3"
   },
   "scripts": {
-    "test": "make"
+    "test": "make",
+    "start": "electron ."
   }
 }

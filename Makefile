@@ -11,6 +11,7 @@ run: build
 
 dep:
 	@npm install
+	@typings install
 
 build: clean
 	@mkdir build
@@ -54,7 +55,7 @@ package-mac: copy-resources
 	@echo "packaging an executable for OS X executable"
 	@if [ ! -d ./shell ]; then make download-shell; fi
 	@unzip shell/osx.zip -d build/osx
-	$(ELECTRON_PKG) ./staging Koko --platform=darwin --out=build/osx --icon=resource/image/logo.png
+	$(ELECTRON_PKG) ./staging/. Koko --platform=darwin --out=build/osx --icon=resource/image/koko.icns
 	@echo "done"
 
 package-win: copy-resources
