@@ -24,7 +24,7 @@ class App extends ReactComponent<{}, AppState> {
   initialState(): AppState {
     return {
       connected: false,
-      title: 'Koko'
+      title: 'koko'
     };
   }
 

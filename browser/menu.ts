@@ -4,15 +4,15 @@ const {Menu} = require('electron');
 export = {
   initialize(app, mainUrl: string) {
     let template = [
-      { label: 'Koko',
+      { label: 'koko',
         submenu: [
-          { label: 'About Koko',
+          { label: 'About koko',
             selector: 'orderFrontStandardAboutPanel:' },
           { type: 'separator' },
           { label: 'Services',
             submenu: [] },
           { type: 'separator' },
-          { label: 'Hide Koko',
+          { label: 'Hide koko',
             accelerator: 'Command+H',
             selector: 'hide:' },
           { label: 'Hide Others',

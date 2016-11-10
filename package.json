@@ -1,5 +1,5 @@
 {
-  "name": "Koko",
+  "name": "koko",
   "version": "0.3.0",
   "description": "Yet another IRC client for me and you",
   "author": "Jun <me@noraesae.net>",
@@ -12,10 +12,10 @@
   "main": "main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/noraesae/koko.git"
+    "url": "https://github.com/KokoIRC/koko.git"
   },
   "bugs": {
-    "url": "https://github.com/noraesae/koko/issues"
+    "url": "https://github.com/KokoIRC/koko/issues"
   },
   "keywords": [
     "irc",

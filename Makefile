@@ -42,9 +42,9 @@ copy-resources: clean build
 
 download-shell: clean-shell
 	@mkdir shell
-	@curl -o shell/osx.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/osx.zip
-	@curl -o shell/win32.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win32.zip
-	@curl -o shell/win64.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win64.zip
+	@curl -o shell/osx.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/osx.zip
+	@curl -o shell/win32.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/win32.zip
+	@curl -o shell/win64.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/win64.zip
 
 clean-shell:
 	@rm -rf ./shell
@@ -55,7 +55,7 @@ package-mac: copy-resources
 	@echo "packaging an executable for OS X executable"
 	@if [ ! -d ./shell ]; then make download-shell; fi
 	@unzip shell/osx.zip -d build/osx
-	$(ELECTRON_PKG) ./staging/. Koko --platform=darwin --out=build/osx --icon=resource/image/koko.icns
+	$(ELECTRON_PKG) ./staging/. koko --platform=darwin --out=build/osx --icon=resource/image/koko.icns
 	@echo "done"
 
 package-win: copy-resources
