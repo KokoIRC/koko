@@ -1,3 +1,8 @@
+# 0.2.1 (10 November 2016)
+
+* Added password field for easy identification.
+* Koko -> koko
+
 # 0.2.0 (4 September 2015)
 
 * Move from TypedReact to native React support of TypeScript
