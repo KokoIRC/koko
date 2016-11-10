@@ -46,9 +46,9 @@ clean-asar:
 
 download-shell: clean-shell
 	@mkdir shell
-	@curl -o shell/osx.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/osx.zip
-	@curl -o shell/win32.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win32.zip
-	@curl -o shell/win64.zip https://raw.githubusercontent.com/noraesae/koko-shell/master/zip/win64.zip
+	@curl -o shell/osx.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/osx.zip
+	@curl -o shell/win32.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/win32.zip
+	@curl -o shell/win64.zip https://raw.githubusercontent.com/KokoIRC/koko-shell/master/zip/win64.zip
 
 clean-shell:
 	@rm -rf ./shell
@@ -59,7 +59,7 @@ package-mac: clean asar
 	@echo "packaging an executable for OS X executable"
 	@if [ ! -d ./shell ]; then make download-shell; fi
 	@unzip shell/osx.zip -d build
-	@cp build/app.asar build/Koko.app/Contents/Resources/
+	@cp build/app.asar build/koko.app/Contents/Resources/
 	@echo "done"
 
 package-win: clean asar
