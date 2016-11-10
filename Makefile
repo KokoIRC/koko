@@ -38,7 +38,7 @@ copy-resources: clean build
 	@cp -r ./config staging/
 	@cp -r ./resource staging/
 	@cp -r ./typings staging/
-	@cd staging; npm install --production --registry=https://registry.npm.taobao.org; cd ..
+	@cd staging; npm install --production; cd ..
 
 download-shell: clean-shell
 	@mkdir shell
