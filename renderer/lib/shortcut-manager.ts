@@ -1,13 +1,13 @@
 import _ = require('underscore');
 import configuration = require('./configuration');
 
-export const specialKeys: IDict<string> = {
-  'U+001B': 'escape',
-  'U+0020': 'space',
-  'U+0008': 'backspace',
-  'U+007F': 'delete',
-  'U+0009': 'tab',
-};
+export const specialKeys = [
+  'Escape',
+  ' ',
+  'Backspace',
+  'Delete',
+  'Tab'
+];
 
 const keyAlias: IDict<string> = {
   'esc': 'escape',
@@ -89,18 +89,8 @@ class ShortcutManager {
 
   initialize() {
     window.addEventListener('keydown', (e: KeyboardEvent) => {
-      let key = e.key;
-      if (key.startsWith('U+')) {
-        key = specialKeys[key]
-          ? specialKeys[key]
-          : (<any>String).fromCodePoint(parseInt(key.substring(2), 16));
-      }
-
-      if (typeof key === 'string') {
-        let modifierState = this.modifierState(e);
-        key = (/^[a-zA-Z]$/.exec(key) && modifierState.shift) ? key.toUpperCase() : key.toLowerCase();
-        this.keyEventHandler(key, modifierState);
-      }
+      let modifierState = this.modifierState(e);
+      this.keyEventHandler(e.key, modifierState);
     });
   }
 
@@ -110,6 +100,7 @@ class ShortcutManager {
   }
 
   keyEventHandler(key: string, modifierState: IModifierState) {
+    console.log("handling event: " + key + " mod: " + modifierState);
     if (this._waiters.length > 0) {
       for (let waiter of this._waiters) {
         waiter.consume(key, modifierState);
