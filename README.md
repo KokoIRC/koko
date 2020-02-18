@@ -11,6 +11,8 @@
 
 # About `ココ`
 
+## ⚠️ Sadly, this project is no longer being maintained. See similar project [Lax](https://github.com/brandly/Lax)
+
 `ココ` is pronounced `koko`, which means `here` in Japanese.
 
 `ココ` is an open source and free IRC client mainly for me and hopefully for others.
